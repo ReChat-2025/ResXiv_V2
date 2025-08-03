@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8001
+    depends_on:
+      - backend
+    networks:
+      - resxiv-network
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://resxiv_user:resxiv_password@postgres:5432/resxiv_v2
+      - MONGODB_URL=mongodb://mongodb:27017/resxiv_v2
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    volumes:
+      - ./backend/repositories:/app/repositories
+      - ./backend/uploads:/app/uploads
+    networks:
+      - resxiv-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=resxiv_v2
+      - POSTGRES_USER=resxiv_user
+      - POSTGRES_PASSWORD=resxiv_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - resxiv-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7-jammy
+    environment:
+      - MONGO_INITDB_DATABASE=resxiv_v2
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - resxiv-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - resxiv-network
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+
+networks:
+  resxiv-network:
+    driver: bridge 

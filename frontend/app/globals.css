@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Beige Color Palette */
+    --background: 0 0% 96%;              /* EFEFED - Light background */
+    --foreground: 0 0% 15%;               /* 262626 - Dark text */
+    
+    --card: 30 11% 90%;                   /* E7E5E3 - Card background */
+    --card-foreground: 0 0% 15%;          /* 262626 - Dark text */
+    
+    --popover: 60 6% 93%;                /* E7E5E3 - Popover background */
+    --popover-foreground: 0 0% 15%;       /* 262626 - Dark text */
+    
+    --primary: 0 0% 15%;                  /* 262626 - Primary color */
+    --primary-foreground: 60 6% 93%;      /* EFEFED - Light text on primary */
+    
+    --secondary: 0 0% 9%;              /* E7E5E3 - Secondary background */
+    --secondary-foreground: 0 0% 15%;     /* 262626 - Dark text */
+    
+    --muted: 30 11% 90%;                  /* E7E5E3 - Muted background */
+    --muted-foreground: 30 10% 45%;       /* Muted brown */
+    
+    --accent: 30 11% 90%;                 /* E7E5E3 - Accent background */
+    --accent-foreground: 0 0% 15%;        /* 262626 - Dark text */
+    
+    --destructive: 0 85% 60%;             /* Red for errors */
+    --destructive-foreground: 60 6% 93%;  /* EFEFED - Light text */
+    
+    --border: 0 0% 85%;                 /* Very very light grey for borders */
+    --input: 30 11% 85%;                  /* Input background */
+    --ring: 0 0% 15%;                     /* 262626 - Focus ring */
+    
+    --radius: 0.5rem;                     /* Border radius */
+    
+    /* Custom beige shades */
+    --beige-100: 60 6% 93%;               /* EFEFED - Lightest beige */
+    --beige-200: 30 11% 90%;              /* E7E5E3 - Light beige */
+    --beige-300: 35 15% 85%;              /* Medium beige */
+    --beige-400: 30 20% 75%;              /* Darker beige */
+    --beige-500: 25 25% 65%;              /* Base beige */
+    --beige-600: 20 30% 55%;              /* Dark beige */
+    --beige-700: 15 35% 45%;              /* Darker beige */
+    --beige-800: 0 0% 15%;                /* 262626 - Very dark */
+    --beige-900: 10 40% 25%;              /* Darkest beige */
+
+    /* ChatSidebar Theme Colors - Used for consistent navigation and sidebar styling */
+    --chat-sidebar-bg: #EFEFED;          /* Main sidebar background */
+    --chat-sidebar-border: #E7E7E7;      /* Border color */
+    --chat-sidebar-text: #0D0D0D;        /* Primary text color */
+    --chat-sidebar-text-secondary: #737373; /* Secondary text color */
+    --chat-sidebar-text-muted: #8C8C8C;  /* Muted text color */
+    --chat-sidebar-divider: #E6E6E6;     /* Divider color */
+    --chat-sidebar-button-primary: #0D0D0D; /* Primary button background */
+    --chat-sidebar-button-primary-hover: #262626; /* Primary button hover */
+    --chat-sidebar-button-secondary: transparent; /* Secondary button background */
+    --chat-sidebar-button-secondary-hover: #F5F5F5; /* Secondary button hover */
+    --chat-sidebar-item: transparent;     /* Unselected conversation item */
+    --chat-sidebar-item-hover: #F0F0F0;  /* Conversation item hover */
+    --chat-sidebar-item-selected: #E7E5E3; /* Selected conversation item */
+    --chat-sidebar-item-selected-hover: #D9D7D4; /* Selected item hover */
+
+    /* Papers Page Theme Colors - From Figma Design */
+    --papers-bg-primary: #F6F6F6;        /* Main background */
+    --papers-bg-secondary: #FDFDFD;      /* Card/content backgrounds */
+    --papers-sidebar-bg: #EFEFED;        /* Sidebar background */
+    --papers-border-light: #F2F2F2;      /* Light borders */
+    --papers-border-medium: #E7E7E7;     /* Medium borders */
+    --papers-border-dark: #D9D9D9;       /* Input borders */
+    --papers-text-primary: #0D0D0D;      /* Primary text */
+    --papers-text-secondary: #404040;    /* Secondary text */
+    --papers-text-muted: #737373;        /* Muted text */
+    --papers-text-light: #8C8C8C;        /* Light text */
+    --papers-text-disabled: #A6A6A6;     /* Disabled text */
+    --papers-button-primary: #262626;    /* Primary button background */
+    --papers-button-primary-text: #F2F2F2; /* Primary button text */
+    --papers-selected-bg: #E7E5E3;       /* Selected item background */
+    --papers-shadow-light: rgba(230, 230, 230, 0.25); /* Light shadow */
+  }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-manrope), Manrope, system-ui, -apple-system, sans-serif;
+  }
+
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-beige-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-beige-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-beige-400;
+  }
+}
+
+/* Custom utility classes for beige theme */
+@layer utilities {
+  .bg-beige-50 { background-color: hsl(var(--beige-50)); }
+  .bg-beige-100 { background-color: hsl(var(--beige-100)); }
+  .bg-beige-200 { background-color: hsl(var(--beige-200)); }
+  .bg-beige-300 { background-color: hsl(var(--beige-300)); }
+  .bg-beige-400 { background-color: hsl(var(--beige-400)); }
+  .bg-beige-500 { background-color: hsl(var(--beige-500)); }
+  .bg-beige-600 { background-color: hsl(var(--beige-600)); }
+  .bg-beige-700 { background-color: hsl(var(--beige-700)); }
+  .bg-beige-800 { background-color: hsl(var(--beige-800)); }
+  .bg-beige-900 { background-color: hsl(var(--beige-900)); }
+  
+  .text-beige-50 { color: hsl(var(--beige-50)); }
+  .text-beige-100 { color: hsl(var(--beige-100)); }
+  .text-beige-200 { color: hsl(var(--beige-200)); }
+  .text-beige-300 { color: hsl(var(--beige-300)); }
+  .text-beige-400 { color: hsl(var(--beige-400)); }
+  .text-beige-500 { color: hsl(var(--beige-500)); }
+  .text-beige-600 { color: hsl(var(--beige-600)); }
+  .text-beige-700 { color: hsl(var(--beige-700)); }
+  .text-beige-800 { color: hsl(var(--beige-800)); }
+  .text-beige-900 { color: hsl(var(--beige-900)); }
+  
+  .border-beige-100 { border-color: hsl(var(--beige-100)); }
+  .border-beige-200 { border-color: hsl(var(--beige-200)); }
+  .border-beige-300 { border-color: hsl(var(--beige-300)); }
+  .border-beige-400 { border-color: hsl(var(--beige-400)); }
+  .border-beige-500 { border-color: hsl(var(--beige-500)); }
+  
+  /* ChatSidebar Theme Utility Classes */
+  .bg-chat-sidebar { background-color: var(--chat-sidebar-bg); }
+  .border-chat-sidebar { border-color: var(--chat-sidebar-border); }
+  .text-chat-sidebar { color: var(--chat-sidebar-text); }
+  .text-chat-sidebar-secondary { color: var(--chat-sidebar-text-secondary); }
+  .text-chat-sidebar-muted { color: var(--chat-sidebar-text-muted); }
+  .bg-chat-sidebar-item { background-color: var(--chat-sidebar-item); }
+  .bg-chat-sidebar-item-hover { background-color: var(--chat-sidebar-item-hover); }
+  .bg-chat-sidebar-item-selected { background-color: var(--chat-sidebar-item-selected); }
+  .bg-chat-sidebar-button-primary { background-color: var(--chat-sidebar-button-primary); }
+  .bg-chat-sidebar-button-secondary { background-color: var(--chat-sidebar-button-secondary); }
+
+  /* Papers Page Theme Utility Classes */
+  .bg-papers-primary { background-color: var(--papers-bg-primary); }
+  .bg-papers-secondary { background-color: var(--papers-bg-secondary); }
+  .bg-papers-sidebar { background-color: var(--papers-sidebar-bg); }
+  .border-papers-light { border-color: var(--papers-border-light); }
+  .border-papers-medium { border-color: var(--papers-border-medium); }
+  .border-papers-dark { border-color: var(--papers-border-dark); }
+  .text-papers-primary { color: var(--papers-text-primary); }
+  .text-papers-secondary { color: var(--papers-text-secondary); }
+  .text-papers-muted { color: var(--papers-text-muted); }
+  .text-papers-light { color: var(--papers-text-light); }
+  .text-papers-disabled { color: var(--papers-text-disabled); }
+  .bg-papers-button-primary { background-color: var(--papers-button-primary); }
+  .text-papers-button-primary { color: var(--papers-button-primary-text); }
+  .bg-papers-selected { background-color: var(--papers-selected-bg); }
+}
+
+/* Page transition animations */
+@layer components {
+  .page-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-200 hover:scale-[1.02];
+  }
+  
+  .button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors;
+  }
+  
+  .button-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors;
+  }
+}

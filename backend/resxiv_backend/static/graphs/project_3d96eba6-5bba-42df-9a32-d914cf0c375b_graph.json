@@ -1,0 +1,108 @@
+{
+  "success": true,
+  "graph": {
+    "nodes": [
+      {
+        "id": "117c63bd-e089-423a-ab5a-ecea015b10c0",
+        "title": "2407.06110v1.pdf",
+        "authors": [],
+        "abstract": "",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 11356498,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-07-31T19:12:27.703803+00:00",
+        "degree": 1,
+        "cluster": 1,
+        "position": {
+          "x": 0.0,
+          "y": 1000.0
+        }
+      },
+      {
+        "id": "fb76eae1-17b5-4611-a42b-b7e591acfd52",
+        "title": "to reproduce the tables and figures in this paper solely for use in journalistic or scholarly works.",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer",
+          "Google Brain",
+          "Niki Parmar",
+          "Jakob Uszkoreit",
+          "Llion Jones",
+          "Aidan N Gomez",
+          "\u0141ukasz Kaiser",
+          "Jimmy Lei Ba",
+          "Jamie Ryan Kiros"
+        ],
+        "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and...",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 2215244,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-07-31T18:05:48.552751+00:00",
+        "degree": 1,
+        "cluster": 0,
+        "position": {
+          "x": 1000.0,
+          "y": 0.0
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "117c63bd-e089-423a-ab5a-ecea015b10c0",
+        "target": "fb76eae1-17b5-4611-a42b-b7e591acfd52",
+        "weight": 0.37248522217610797,
+        "strength": 0.10355031739443997,
+        "type": "similarity"
+      }
+    ],
+    "layout": "force-directed",
+    "metadata": {
+      "total_possible_edges": 1,
+      "actual_edges": 1,
+      "graph_density": 1.0,
+      "average_similarity": 0.37248522217610797,
+      "max_similarity": 0.37248522217610797,
+      "min_similarity": 0.37248522217610797,
+      "basic_metrics": {
+        "node_count": 2,
+        "edge_count": 1,
+        "density": 1.0,
+        "is_connected": true
+      },
+      "centrality_metrics": {
+        "average_degree_centrality": 1.0,
+        "max_degree_centrality": 1.0,
+        "average_betweenness_centrality": 0.0,
+        "max_betweenness_centrality": 0.0,
+        "average_closeness_centrality": 1.0,
+        "max_closeness_centrality": 1.0
+      },
+      "clustering_metrics": {
+        "average_clustering_coefficient": 0.0,
+        "transitivity": 0.0
+      },
+      "component_analysis": {
+        "number_of_components": 1,
+        "largest_component_size": 2,
+        "component_sizes": [
+          2
+        ]
+      },
+      "generation_timestamp": "2025-08-03T09:29:08.498536",
+      "similarity_threshold": 0.3,
+      "total_papers_processed": 2
+    }
+  },
+  "processing_time": 0.0,
+  "message": "Graph generated successfully with 2 nodes and 1 edges",
+  "saved_at": "2025-08-03T09:29:08.498585",
+  "project_id": "3d96eba6-5bba-42df-9a32-d914cf0c375b"
+}

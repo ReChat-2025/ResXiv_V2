@@ -1,0 +1,286 @@
+# ==============================================================================
+# ResXiv V2 - Git Ignore File
+# ==============================================================================
+
+# ==============================================================================
+# FRONTEND (Node.js/Next.js)
+# ==============================================================================
+
+# Dependencies
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.js
+
+# Production builds
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+
+# Environment variables
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Next.js cache
+frontend/.next/
+frontend/.turbo/
+
+# Vercel
+frontend/.vercel
+
+# Package manager logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# ==============================================================================
+# BACKEND (Python/FastAPI)
+# ==============================================================================
+
+# Python
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/*.so
+backend/.Python
+backend/build/
+backend/develop-eggs/
+backend/dist/
+backend/downloads/
+backend/eggs/
+backend/.eggs/
+backend/lib/
+backend/lib64/
+backend/parts/
+backend/sdist/
+backend/var/
+backend/wheels/
+backend/pip-wheel-metadata/
+backend/share/python-wheels/
+backend/*.egg-info/
+backend/.installed.cfg
+backend/*.egg
+backend/MANIFEST
+
+# Virtual environments
+backend/venv/
+backend/env/
+backend/.venv/
+backend/.env/
+backend/ENV/
+backend/env.bak/
+backend/venv.bak/
+
+# Environment variables
+backend/.env
+backend/.env.local
+backend/.env.development
+backend/.env.production
+backend/.env.test
+
+# Database
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+
+# Logs
+backend/logs/
+backend/*.log
+
+# PyCharm
+backend/.idea/
+
+# Jupyter Notebook
+backend/.ipynb_checkpoints
+
+# pyenv
+backend/.python-version
+
+# pytest
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+
+# mypy
+backend/.mypy_cache/
+backend/.dmypy.json
+backend/dmypy.json
+
+# ==============================================================================
+# REPOSITORIES & DATA
+# ==============================================================================
+
+# Git repositories (these are user data, not source code)
+backend/repositories/*/
+!backend/repositories/.gitkeep
+
+# Compiled LaTeX outputs
+backend/repositories/*/compilations/
+*.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Paper uploads and processed files
+backend/uploads/
+backend/processed_papers/
+backend/temp/
+
+# ==============================================================================
+# IDE & EDITOR
+# ==============================================================================
+
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.swp
+*.swo
+*~
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ==============================================================================
+# SYSTEM FILES
+# ==============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==============================================================================
+# SECURITY & CREDENTIALS
+# ==============================================================================
+
+# API Keys and secrets
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+.secrets/
+
+# ==============================================================================
+# TEMPORARY & CACHE FILES
+# ==============================================================================
+
+# General temp files
+tmp/
+temp/
+cache/
+.cache/
+.tmp/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# ==============================================================================
+# DEVELOPMENT & TESTING
+# ==============================================================================
+
+# Coverage reports
+coverage/
+.coverage
+.coverage.*
+htmlcov/
+
+# Testing
+.pytest_cache/
+.tox/
+.coverage
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Profiling
+*.prof
+
+# ==============================================================================
+# DOCUMENTATION
+# ==============================================================================
+
+# Generated docs
+docs/_build/
+docs/build/
+site/
+
+# ==============================================================================
+# MISC
+# ==============================================================================
+
+# Compressed files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs
+*.log
+logs/ 

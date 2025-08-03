@@ -1,0 +1,877 @@
+{
+  "success": true,
+  "graph": {
+    "nodes": [
+      {
+        "id": "1174a96b-fe0b-44bf-b599-e884df804b1d",
+        "title": "C-lisp and Flexible Macro Programming with S-expressions",
+        "authors": [
+          "Vedanth Padmaraman",
+          "Sasank Chilamkurthy"
+        ],
+        "abstract": "Llama.lisp is a compiler framework intended to target offload processor backends such as GPUs, using intermediate representation languages (IRs) that are device-agnostic. The Llama.lisp IRs are formul...",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 94664,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-02T18:16:58.778096+00:00",
+        "degree": 0,
+        "cluster": 2,
+        "position": {
+          "x": 602.4858165974201,
+          "y": 0.0
+        },
+        "cluster_color": "#45B7D1"
+      },
+      {
+        "id": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+        "title": "A LIGHTWEIGHT FEATURE FUSION ARCHITECTURE FOR RESOURCE-CONSTRAINED CROWD COUNTING",
+        "authors": [
+          "Yashwardhan Chaudhuri",
+          "Ankit Kumar",
+          "Chetia Phukan",
+          "Arun Buduru"
+        ],
+        "abstract": "Crowd counting finds direct applications in real-world situations, making computational efficiency and performance crucial. However, most of the previous methods rely on a heavy backbone and a complex...",
+        "keywords": [],
+        "metadata": {
+          "file_type": null,
+          "file_size": 1902431,
+          "doi": null,
+          "arxiv_id": "2401.05968"
+        },
+        "created_at": "2025-08-02T06:40:21.800078+00:00",
+        "degree": 3,
+        "cluster": 0,
+        "position": {
+          "x": 150.09002006659608,
+          "y": 357.5961749106614
+        },
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "732d15ec-f248-405b-ab70-8f007e123865",
+        "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+        "authors": [
+          "Yashwardhan Chaudhuri",
+          "Ankit Kumar",
+          "Arun Buduru",
+          "Adel Alshamrani"
+        ],
+        "abstract": "Crowd counting is gaining societal relevance, particularly in domains of Urban Planning, Crowd Management, and Public Safety. This paper introduces Fourier-guided attention (FGA), a novel attention me...",
+        "keywords": [
+          "Crowd Count Estimation",
+          "Fast Fourier Transformation",
+          "Attention",
+          "Channel Attention",
+          "Spatial Attention",
+          "CNN"
+        ],
+        "metadata": {
+          "file_type": null,
+          "file_size": 11356498,
+          "doi": null,
+          "arxiv_id": "2407.06110"
+        },
+        "created_at": "2025-08-02T06:40:08.175462+00:00",
+        "degree": 1,
+        "cluster": 0,
+        "position": {
+          "x": 0.0,
+          "y": 486.10301854897256
+        },
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+        "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+        "authors": [
+          "Paridhi Mundra",
+          "Manik Sharma",
+          "Yashwardhan Chaudhuri",
+          "Chetia Phukan",
+          "Arun Buduru"
+        ],
+        "abstract": "As respiratory illnesses become more common, it is crucial to quickly and accurately detect them to improve patient care. There is a need for improved diagnostic methods for immediate medical assessme...",
+        "keywords": [],
+        "metadata": {
+          "file_type": null,
+          "file_size": 541047,
+          "doi": null,
+          "arxiv_id": "2407.18926"
+        },
+        "created_at": "2025-08-02T06:39:55.870218+00:00",
+        "degree": 5,
+        "cluster": 0,
+        "position": {
+          "x": 362.25107435850333,
+          "y": 1000.0
+        },
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "55ec319f-c23d-41d9-982f-dd096edfef7f",
+        "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+        "authors": [
+          "Yashwardhan Chaudhuri",
+          "Paridhi Mundra",
+          "Arnesh Batra",
+          "Chetia Phukan",
+          "Arun Buduru"
+        ],
+        "abstract": "Recognition and interpretation of bird vocalizations are pivotal in ornithological research and ecological conservation efforts due to their significance in understanding avian behaviour, performing h...",
+        "keywords": [
+          "speech recognition",
+          "human-computer interaction",
+          "bird-sound",
+          "information retrieval"
+        ],
+        "metadata": {
+          "file_type": null,
+          "file_size": 8814578,
+          "doi": null,
+          "arxiv_id": "2407.18927"
+        },
+        "created_at": "2025-08-02T06:39:43.274176+00:00",
+        "degree": 2,
+        "cluster": 0,
+        "position": {
+          "x": 47.755326011017196,
+          "y": 925.5689365383898
+        },
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+        "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+        "authors": [
+          "Israa Odeh",
+          "Mouhammd Alkasassbeh",
+          "Mohammad Alauthman"
+        ],
+        "abstract": "Diabetic Retinopathy (DR) is among the world's leading vision loss causes in diabetic patients. DR is a microvascular disease that affects the eye retina, which causes vessel blockage and therefore cu...",
+        "keywords": [
+          "Diabetic Retinopathy",
+          "Ensemble learning",
+          "Machine learning"
+        ],
+        "metadata": {
+          "file_type": null,
+          "file_size": 1348767,
+          "doi": null,
+          "arxiv_id": "2106.12545v1"
+        },
+        "created_at": "2025-08-02T05:46:33.579081+00:00",
+        "degree": 4,
+        "cluster": 1,
+        "position": {
+          "x": 843.103070627443,
+          "y": 760.1691223415885
+        },
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+        "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+        "authors": [
+          "Misgina Hagos",
+          "Shri Kant",
+          "Surayya Ado Bala"
+        ],
+        "abstract": "Early diagnosis of diabetic retinopathy for treatment of the disease has been failing to reach diabetic people living in rural areas. Shortage of trained ophthalmologists, limited availability of heal...",
+        "keywords": [],
+        "metadata": {
+          "file_type": null,
+          "file_size": 552043,
+          "doi": null,
+          "arxiv_id": "2004.03408v1"
+        },
+        "created_at": "2025-08-02T05:19:11.595511+00:00",
+        "degree": 4,
+        "cluster": 1,
+        "position": {
+          "x": 954.6622050360171,
+          "y": 598.2212159294673
+        },
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+        "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+        "authors": [
+          "Saket Chaturvedi",
+          "Kajol Gupta",
+          "Vaishali Ninawe",
+          "Prakash Prasad"
+        ],
+        "abstract": "Diabetic Retinopathy is a global health problem, influences 100 million individuals worldwide, and in the next few decades, these incidences are expected to reach epidemic proportions. Diabetic Retino...",
+        "keywords": [
+          "Deep Learning",
+          "Diabetic Retinopathy",
+          "DenseNet network",
+          "Fundus Photography",
+          "Computeraided diagnosis"
+        ],
+        "metadata": {
+          "file_type": null,
+          "file_size": 2066818,
+          "doi": null,
+          "arxiv_id": "2004.06334v1"
+        },
+        "created_at": "2025-08-02T05:19:03.466951+00:00",
+        "degree": 4,
+        "cluster": 1,
+        "position": {
+          "x": 785.898311984116,
+          "y": 620.3898690777052
+        },
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+        "title": "DIABETIC RETINOPATHY DETECTION USING QUANTUM TRANSFER LEARNING",
+        "authors": [
+          "Ankush Jain",
+          "Rinav Gupta",
+          "Jai Singhal",
+          "New Delhi \n\t\t\t\t\t\t\t\t Netaji Subhas University of Technology",
+          "Netaji Subhas University of Technology New Delhi"
+        ],
+        "abstract": "Diabetic Retinopathy (DR), a prevalent complication in diabetes patients, can lead to vision impairment due to lesions formed on the retina. Detecting DR at an advanced stage often results in irrevers...",
+        "keywords": [
+          "Diabetic Retinopathy",
+          "Quantum Transfer Learning",
+          "Deep Learning"
+        ],
+        "metadata": {
+          "file_type": null,
+          "file_size": 699042,
+          "doi": null,
+          "arxiv_id": "2405.01734v1"
+        },
+        "created_at": "2025-08-02T05:18:44.216846+00:00",
+        "degree": 3,
+        "cluster": 1,
+        "position": {
+          "x": 1000.0,
+          "y": 835.9816705213058
+        },
+        "cluster_color": "#4ECDC4"
+      }
+    ],
+    "edges": [
+      {
+        "source": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+        "target": "732d15ec-f248-405b-ab70-8f007e123865",
+        "weight": 0.5767306853039076,
+        "strength": 0.39532955043415374,
+        "type": "similarity"
+      },
+      {
+        "source": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+        "target": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+        "weight": 0.3278810731512556,
+        "strength": 0.039830104501793716,
+        "type": "similarity"
+      },
+      {
+        "source": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+        "target": "55ec319f-c23d-41d9-982f-dd096edfef7f",
+        "weight": 0.35229732612734443,
+        "strength": 0.07471046589620635,
+        "type": "similarity"
+      },
+      {
+        "source": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+        "target": "55ec319f-c23d-41d9-982f-dd096edfef7f",
+        "weight": 0.5231399469181475,
+        "strength": 0.31877135274021073,
+        "type": "similarity"
+      },
+      {
+        "source": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+        "target": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+        "weight": 0.3640105762238578,
+        "strength": 0.09144368031979687,
+        "type": "similarity"
+      },
+      {
+        "source": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+        "target": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+        "weight": 0.3584884548628561,
+        "strength": 0.08355493551836585,
+        "type": "similarity"
+      },
+      {
+        "source": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+        "target": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+        "weight": 0.3533326536998599,
+        "strength": 0.07618950528551414,
+        "type": "similarity"
+      },
+      {
+        "source": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+        "target": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+        "weight": 0.7305849118363235,
+        "strength": 0.6151213026233193,
+        "type": "similarity"
+      },
+      {
+        "source": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+        "target": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+        "weight": 0.7488418351344572,
+        "strength": 0.6412026216206532,
+        "type": "similarity"
+      },
+      {
+        "source": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+        "target": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+        "weight": 0.7138515116564181,
+        "strength": 0.5912164452234545,
+        "type": "similarity"
+      },
+      {
+        "source": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+        "target": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+        "weight": 0.741997248318675,
+        "strength": 0.63142464045525,
+        "type": "similarity"
+      },
+      {
+        "source": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+        "target": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+        "weight": 0.6156962177386414,
+        "strength": 0.4509945967694877,
+        "type": "similarity"
+      },
+      {
+        "source": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+        "target": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+        "weight": 0.6187749226619318,
+        "strength": 0.4553927466599026,
+        "type": "similarity"
+      }
+    ],
+    "layout": "force-directed",
+    "metadata": {
+      "total_possible_edges": 36,
+      "actual_edges": 13,
+      "graph_density": 0.3611111111111111,
+      "average_similarity": 0.38329122041618235,
+      "max_similarity": 1.0000000000000004,
+      "min_similarity": 0.11102853501714814,
+      "basic_metrics": {
+        "node_count": 9,
+        "edge_count": 13,
+        "density": 0.3611111111111111,
+        "is_connected": false
+      },
+      "centrality_metrics": {
+        "average_degree_centrality": 0.3611111111111111,
+        "max_degree_centrality": 0.625,
+        "average_betweenness_centrality": 0.08730158730158728,
+        "max_betweenness_centrality": 0.42857142857142855,
+        "average_closeness_centrality": 0.45346574721574723,
+        "max_closeness_centrality": 0.6805555555555556
+      },
+      "clustering_metrics": {
+        "average_clustering_coefficient": 0.5814814814814815,
+        "transitivity": 0.6857142857142857
+      },
+      "component_analysis": {
+        "number_of_components": 2,
+        "largest_component_size": 8,
+        "component_sizes": [
+          1,
+          8
+        ]
+      },
+      "generation_timestamp": "2025-08-03T08:46:58.607744",
+      "similarity_threshold": 0.3,
+      "total_papers_processed": 9
+    },
+    "clustering_enabled": true,
+    "clustering_algorithm": "hierarchical",
+    "cluster_visualization": {
+      "points": [
+        {
+          "id": "1174a96b-fe0b-44bf-b599-e884df804b1d",
+          "title": "C-lisp and Flexible Macro Programming with S-expressions",
+          "x": 0.29443317867224955,
+          "y": -0.7707905703687478,
+          "cluster": 2,
+          "authors": [
+            "Vedanth Padmaraman",
+            "Sasank Chilamkurthy"
+          ]
+        },
+        {
+          "id": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+          "title": "A LIGHTWEIGHT FEATURE FUSION ARCHITECTURE FOR RESOURCE-CONSTRAINED CROWD COUNTING",
+          "x": 0.5224108880430779,
+          "y": -0.057985881290778134,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Chetia Phukan"
+          ]
+        },
+        {
+          "id": "732d15ec-f248-405b-ab70-8f007e123865",
+          "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+          "x": 0.46915250710863454,
+          "y": -0.08758106177283165,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Arun Buduru"
+          ]
+        },
+        {
+          "id": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+          "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+          "x": 0.20917153571155875,
+          "y": 0.4588773611929181,
+          "cluster": 0,
+          "authors": [
+            "Paridhi Mundra",
+            "Manik Sharma",
+            "Yashwardhan Chaudhuri"
+          ]
+        },
+        {
+          "id": "55ec319f-c23d-41d9-982f-dd096edfef7f",
+          "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+          "x": 0.45082016820988624,
+          "y": 0.4518829090007538,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Paridhi Mundra",
+            "Arnesh Batra"
+          ]
+        },
+        {
+          "id": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+          "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+          "x": -0.5017620797393388,
+          "y": 0.012297153957233325,
+          "cluster": 1,
+          "authors": [
+            "Israa Odeh",
+            "Mouhammd Alkasassbeh",
+            "Mohammad Alauthman"
+          ]
+        },
+        {
+          "id": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+          "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+          "x": -0.5001162352044963,
+          "y": 0.04187819481004953,
+          "cluster": 1,
+          "authors": [
+            "Misgina Hagos",
+            "Shri Kant",
+            "Surayya Ado Bala"
+          ]
+        },
+        {
+          "id": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+          "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+          "x": -0.4423177795905774,
+          "y": 0.02292976029979628,
+          "cluster": 1,
+          "authors": [
+            "Saket Chaturvedi",
+            "Kajol Gupta",
+            "Vaishali Ninawe"
+          ]
+        },
+        {
+          "id": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+          "title": "DIABETIC RETINOPATHY DETECTION USING QUANTUM TRANSFER LEARNING",
+          "x": -0.5017921832109944,
+          "y": -0.07150786582839351,
+          "cluster": 1,
+          "authors": [
+            "Ankush Jain",
+            "Rinav Gupta",
+            "Jai Singhal"
+          ]
+        }
+      ],
+      "dimensionality_reduction": {
+        "method": "PCA",
+        "explained_variance_ratio": [
+          0.3239818890112723,
+          0.18742958148946215
+        ],
+        "total_explained_variance": 0.5114114705007344
+      },
+      "layout_algorithm": "scatter",
+      "color_scheme": "cluster_based"
+    }
+  },
+  "processing_time": 0.0,
+  "message": "Graph generated successfully with 9 nodes and 13 edges",
+  "clustering": {
+    "success": true,
+    "algorithm_used": "hierarchical",
+    "parameters": {
+      "n_clusters": 3
+    },
+    "cluster_labels": [
+      2,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1
+    ],
+    "cluster_analysis": {
+      "clusters": {
+        "0": {
+          "label": 0,
+          "size": 4,
+          "papers": [
+            {
+              "id": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+              "title": "A LIGHTWEIGHT FEATURE FUSION ARCHITECTURE FOR RESOURCE-CONSTRAINED CROWD COUNTING",
+              "authors": [
+                "Yashwardhan Chaudhuri",
+                "Ankit Kumar",
+                "Chetia Phukan",
+                "Arun Buduru"
+              ]
+            },
+            {
+              "id": "732d15ec-f248-405b-ab70-8f007e123865",
+              "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+              "authors": [
+                "Yashwardhan Chaudhuri",
+                "Ankit Kumar",
+                "Arun Buduru",
+                "Adel Alshamrani"
+              ]
+            },
+            {
+              "id": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+              "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+              "authors": [
+                "Paridhi Mundra",
+                "Manik Sharma",
+                "Yashwardhan Chaudhuri",
+                "Chetia Phukan",
+                "Arun Buduru"
+              ]
+            },
+            {
+              "id": "55ec319f-c23d-41d9-982f-dd096edfef7f",
+              "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+              "authors": [
+                "Yashwardhan Chaudhuri",
+                "Paridhi Mundra",
+                "Arnesh Batra",
+                "Chetia Phukan",
+                "Arun Buduru"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 0.38706946802985326,
+            "common_keywords": [
+              {
+                "keyword": "Crowd Count Estimation",
+                "frequency": 1
+              },
+              {
+                "keyword": "Fast Fourier Transformation",
+                "frequency": 1
+              },
+              {
+                "keyword": "Attention",
+                "frequency": 1
+              },
+              {
+                "keyword": "Channel Attention",
+                "frequency": 1
+              },
+              {
+                "keyword": "Spatial Attention",
+                "frequency": 1
+              },
+              {
+                "keyword": "CNN",
+                "frequency": 1
+              },
+              {
+                "keyword": "speech recognition",
+                "frequency": 1
+              },
+              {
+                "keyword": "human-computer interaction",
+                "frequency": 1
+              },
+              {
+                "keyword": "bird-sound",
+                "frequency": 1
+              },
+              {
+                "keyword": "information retrieval",
+                "frequency": 1
+              }
+            ],
+            "centroid_norm": 0.7350523448864033
+          }
+        },
+        "1": {
+          "label": 1,
+          "size": 4,
+          "papers": [
+            {
+              "id": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+              "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+              "authors": [
+                "Israa Odeh",
+                "Mouhammd Alkasassbeh",
+                "Mohammad Alauthman"
+              ]
+            },
+            {
+              "id": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+              "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+              "authors": [
+                "Misgina Hagos",
+                "Shri Kant",
+                "Surayya Ado Bala"
+              ]
+            },
+            {
+              "id": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+              "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+              "authors": [
+                "Saket Chaturvedi",
+                "Kajol Gupta",
+                "Vaishali Ninawe",
+                "Prakash Prasad"
+              ]
+            },
+            {
+              "id": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+              "title": "DIABETIC RETINOPATHY DETECTION USING QUANTUM TRANSFER LEARNING",
+              "authors": [
+                "Ankush Jain",
+                "Rinav Gupta",
+                "Jai Singhal",
+                "New Delhi \n\t\t\t\t\t\t\t\t Netaji Subhas University of Technology",
+                "Netaji Subhas University of Technology New Delhi"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 0.6949577745577411,
+            "common_keywords": [
+              {
+                "keyword": "Diabetic Retinopathy",
+                "frequency": 3
+              },
+              {
+                "keyword": "Deep Learning",
+                "frequency": 2
+              },
+              {
+                "keyword": "Ensemble learning",
+                "frequency": 1
+              },
+              {
+                "keyword": "Machine learning",
+                "frequency": 1
+              },
+              {
+                "keyword": "DenseNet network",
+                "frequency": 1
+              },
+              {
+                "keyword": "Fundus Photography",
+                "frequency": 1
+              },
+              {
+                "keyword": "Computeraided diagnosis",
+                "frequency": 1
+              },
+              {
+                "keyword": "Quantum Transfer Learning",
+                "frequency": 1
+              }
+            ],
+            "centroid_norm": 0.8781903552424226
+          }
+        },
+        "2": {
+          "label": 2,
+          "size": 1,
+          "papers": [
+            {
+              "id": "1174a96b-fe0b-44bf-b599-e884df804b1d",
+              "title": "C-lisp and Flexible Macro Programming with S-expressions",
+              "authors": [
+                "Vedanth Padmaraman",
+                "Sasank Chilamkurthy"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 1.0,
+            "common_keywords": [],
+            "centroid_norm": 0.9999995195158846
+          }
+        }
+      },
+      "summary": {
+        "total_clusters": 3,
+        "largest_cluster_size": 4,
+        "smallest_cluster_size": 1
+      }
+    },
+    "visualization": {
+      "points": [
+        {
+          "id": "1174a96b-fe0b-44bf-b599-e884df804b1d",
+          "title": "C-lisp and Flexible Macro Programming with S-expressions",
+          "x": 0.29443317867224955,
+          "y": -0.7707905703687478,
+          "cluster": 2,
+          "authors": [
+            "Vedanth Padmaraman",
+            "Sasank Chilamkurthy"
+          ]
+        },
+        {
+          "id": "1cc36034-44e7-4263-83a6-1429ddaf942d",
+          "title": "A LIGHTWEIGHT FEATURE FUSION ARCHITECTURE FOR RESOURCE-CONSTRAINED CROWD COUNTING",
+          "x": 0.5224108880430779,
+          "y": -0.057985881290778134,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Chetia Phukan"
+          ]
+        },
+        {
+          "id": "732d15ec-f248-405b-ab70-8f007e123865",
+          "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+          "x": 0.46915250710863454,
+          "y": -0.08758106177283165,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Arun Buduru"
+          ]
+        },
+        {
+          "id": "de319dd4-3b19-4b7a-a600-78640f6efc08",
+          "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+          "x": 0.20917153571155875,
+          "y": 0.4588773611929181,
+          "cluster": 0,
+          "authors": [
+            "Paridhi Mundra",
+            "Manik Sharma",
+            "Yashwardhan Chaudhuri"
+          ]
+        },
+        {
+          "id": "55ec319f-c23d-41d9-982f-dd096edfef7f",
+          "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+          "x": 0.45082016820988624,
+          "y": 0.4518829090007538,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Paridhi Mundra",
+            "Arnesh Batra"
+          ]
+        },
+        {
+          "id": "cb0e2444-93f0-49af-ab24-4cf22a513038",
+          "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+          "x": -0.5017620797393388,
+          "y": 0.012297153957233325,
+          "cluster": 1,
+          "authors": [
+            "Israa Odeh",
+            "Mouhammd Alkasassbeh",
+            "Mohammad Alauthman"
+          ]
+        },
+        {
+          "id": "238482c3-56c7-4b58-ad9a-bc43944ea93e",
+          "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+          "x": -0.5001162352044963,
+          "y": 0.04187819481004953,
+          "cluster": 1,
+          "authors": [
+            "Misgina Hagos",
+            "Shri Kant",
+            "Surayya Ado Bala"
+          ]
+        },
+        {
+          "id": "900cc3f3-57b2-4d62-817a-9541ba2aa686",
+          "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+          "x": -0.4423177795905774,
+          "y": 0.02292976029979628,
+          "cluster": 1,
+          "authors": [
+            "Saket Chaturvedi",
+            "Kajol Gupta",
+            "Vaishali Ninawe"
+          ]
+        },
+        {
+          "id": "09a6eed0-001d-4912-9e1b-b5bcc932b7e9",
+          "title": "DIABETIC RETINOPATHY DETECTION USING QUANTUM TRANSFER LEARNING",
+          "x": -0.5017921832109944,
+          "y": -0.07150786582839351,
+          "cluster": 1,
+          "authors": [
+            "Ankush Jain",
+            "Rinav Gupta",
+            "Jai Singhal"
+          ]
+        }
+      ],
+      "dimensionality_reduction": {
+        "method": "PCA",
+        "explained_variance_ratio": [
+          0.3239818890112723,
+          0.18742958148946215
+        ],
+        "total_explained_variance": 0.5114114705007344
+      },
+      "layout_algorithm": "scatter",
+      "color_scheme": "cluster_based"
+    },
+    "quality_metrics": {
+      "silhouette_score": 0.21326218189457724,
+      "cluster_distribution": {
+        "0": 4,
+        "1": 4,
+        "2": 1
+      },
+      "number_of_clusters": 3
+    }
+  },
+  "saved_at": "2025-08-03T08:46:58.642559",
+  "project_id": "d48e12e3-c462-4688-8d9f-13d563d412b0"
+}
