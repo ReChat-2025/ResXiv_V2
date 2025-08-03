@@ -119,7 +119,7 @@ export class PapersService {
       store.setLoading(true);
       
       const updatedPaper = await papersApi.updatePaper({ project_id: "default", paper_id: id, ...updates } as any);
-      store.updatePaper(id, updatedPaper);
+      store.updatePaper(id, updatedPaper as any);
       
       this.showNotification('Paper updated successfully', 'success');
       return true;
@@ -139,7 +139,7 @@ export class PapersService {
     try {
       store.setLoading(true);
       
-      await papersApi.deletePaper(id);
+      await papersApi.deletePaper("default", id);
       store.removePaper(id);
       
       this.showNotification('Paper deleted successfully', 'success');
