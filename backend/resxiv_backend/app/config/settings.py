@@ -136,7 +136,7 @@ class CORSSettings(BaseSettings):
     }
     
     origins: Union[str, List[str]] = Field(
-        default=["http://localhost:3000"], 
+        default=["http://35.154.171.72:3000"], 
         env="CORS_ORIGINS"
     )
     credentials: bool = Field(default=True, env="CORS_CREDENTIALS")
@@ -299,7 +299,7 @@ class Settings(BaseSettings):
     reload: bool = Field(default=True, env="RELOAD")
 
     # Frontend URL (used in e-mails for links)
-    frontend_url: str = Field(default="http://localhost:3000", env="FRONTEND_URL")
+    frontend_url: str = Field(default="http://35.154.171.72:3000", env="FRONTEND_URL")
     
     # Sub-settings
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)

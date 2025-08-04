@@ -1,0 +1,1426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+				<date type="published" when="2020-04-07">7 Apr 2020</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Misgina</forename><forename type="middle">Tsighe</forename><surname>Hagos</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Research and Technology Development Center Sharda University Greater Noida</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Shri</forename><surname>Kant</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Research and Technology Development Center Sharda University Greater Noida</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author role="corresp">
+							<persName><forename type="first">Surayya</forename><surname>Ado Bala</surname></persName>
+							<email>surayyaadob@gmail.com</email>
+							<affiliation key="aff0">
+								<orgName type="department">Research and Technology Development Center Sharda University Greater Noida</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2020-04-07">7 Apr 2020</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">19850897270A7E79B1CD592B2453C05F</idno>
+					<idno type="arXiv">arXiv:2004.03408v1[eess.IV]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2025-08-03T22:03+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Early diagnosis of diabetic retinopathy for treatment of the disease has been failing to reach diabetic people living in rural areas. Shortage of trained ophthalmologists, limited availability of healthcare centers, and expensiveness of diagnostic equipment are among the reasons. Although many deep learning-based automatic diagnosis of diabetic retinopathy techniques have been implemented in the literature, these methods still fail to provide a point-of-care diagnosis. This raises the need for an independent diagnostic of diabetic retinopathy that can be used by a non-expert. Recently the usage of smartphones has been increasing across the world. Automated diagnoses of diabetic retinopathy can be deployed on smartphones in order to provide an instant diagnosis to diabetic people residing in remote areas. In this paper, inception based convolutional neural network and binary decision tree-based ensemble of classifiers have been proposed and implemented to detect and classify diabetic retinopathy. The proposed method was further imported into a smartphone application for mobile-based classification, which provides an offline and automatic system for diagnosis of diabetic retinopathy.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">INTRODUCTION</head><p>1.1 DIABETIC RETINOPATHY DIAGNOSIS Diabetic Retinopathy (DR) is a retinal complication caused when retinal blood vessels are damaged by diabetes. Signs of DR start with microaneurysms, which are small red spots that appear when there is a blood escape from retinal blood vessels. If microaneurysms are not treated early walls of capillaries may get broken which form hemorrhages. Exudates may appear on the retina if treatment of the disease is delayed, and this can lead to permanent vision loss or vision impairment.</p><p>DR diagnosis is clinically performed by ophthalmologists with the help of high-end fundus images capturing devices. In order to capture retinal images, different imaging techniques, such as optical coherence, tomography, and fundus photography, have been used <ref type="bibr" target="#b39">(Salz &amp; Witkin, 2015)</ref>. All of these techniques come with the challenge of expensive design, deployment, and usage costs. Trained professionals are needed to use these techniques. In addition to the trained professional need of these techniques, an ophthalmologist or more are required to study and diagnose a fundus image that is captured by the imaging methodology. An ophthalmologist usually requires two to seven days for retinal image diagnosis. Diabetes patients that reside in rural and remote areas usually suffer from delayed diagnosis and treatment of DR because of the expensive deployment of diagnosing equipment and shortage of ophthalmologists and health care centers.</p><p>Limited access to point-of-care diagnostic services was identified as one of the barriers of medical diagnosis in rural areas <ref type="bibr" target="#b17">(Huaynate et al., 2015)</ref>. <ref type="bibr" target="#b11">Foster &amp; Resnikoff (2005)</ref> put four strategies to fight the challenges the diagnoses process of DR faces in order to implement treatment for preventable blindness; (1) Creating academic, public and governmental awareness of the effects of blindness and visual loss, and the fact that 75% of diseases that cause blindness are preventable; (2) Automating and mobilizing existing techniques and methods; (3) Implementing district-specific and country-specific prioritizing strategies of diagnosing and treatment resources for a productive process; (4) Providing comprehensive, maintainable and fair diagnosis services of visual diseases at district level, which includes staff training, distributing diagnosis and treatment resources, and infrastructure, such as health care center buildings.</p><p>A timely and accurate automatic diagnosis of DR could enable diabetic patients to get treatment for preventable visual diseases, thereby avoiding permanent vision loss or impairment. Point-of-care DR diagnostic service, which aims to diagnose DR instantly at a patients place, is achieved in this paper using a smartphone for data collection and trained model for detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.2">ANNOTATED TRAINING DATA</head><p>One of the main issues with incorporating deep learning in medical image analyses is the shortage of available annotated training dataset <ref type="bibr" target="#b25">(Miotto et al., 2017</ref><ref type="bibr" target="#b38">)(Razzak et al., 2018)</ref>. Transfer learning techniques have gained wider acceptance because of the unavailability of enough annotated training data in the design and training of deep convolutional neural network models <ref type="bibr" target="#b10">(Erhan et al., 2010)</ref> <ref type="bibr" target="#b22">(Litjens et al., 2017)</ref>. In <ref type="bibr" target="#b2">Altaf et al. (2019)</ref>, annotated training data insufficiency was identified as the main challenge of applying deep learning models in the healthcare automation industry. Furthermore, <ref type="bibr" target="#b2">Altaf et al. (2019)</ref> recommended that methods that exploit deep learning using reduced data need to be devised and implemented. We have combined inception module based convolutional neural networks with a binary tree-based ensemble of classifiers to increase the performance of our proposed neural network model with limited training data. This paper is structured into five sections. Section 2 presents a review of related works. The proposed methodology and implementation are discussed in Section 3. Results and discussions are presented in Section 4. Lastly, we conclude in Section 5.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2">RELATED WORK</head><p>Although the literature of automated DR detection and classification contains various works, the methods employed can be generally classified into two, which are feature extraction based and image-level based classifications. In order to provide an onsite diagnosis of DR, mobile detection works have also been proposed and implemented. Deep learning models such as Convolutional Neural Networks (CNN) are usually used to classify fundus images. A fundus images dataset that is uploaded to the Kaggle website for DR detection competition (California-Healthcare-Foundation, 2015) has been extensively used in the image level DR classification literature. End-to-end approach has been used to train a deep learning model from scratch. In order to avoid the cost of training, transfer learning has also been used.</p><p>In multi-class classification, DR has been classified into one of five stages, which are normal, mild, moderate, severe, and proliferative stages, as proposed by <ref type="bibr" target="#b43">Wilkinson et al. (2003)</ref>. In the following subsections, different works that have been performed in detecting DR will be reviewed.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">FEATURE EXTRACTION BASED CLASSIFICATION OF DIABETIC RETINOPATHY</head><p>Lesions of DR such as macular edema, exudates, microaneurysms, and hemorrhages have been automatically identified, segmented and detected in order to classify DR. End-to-end and transfer learning of Convolutional Neural Networks (CNN) and Fully Convolved Residual Networks (FCRN) have been employed for classifying the extracted lesions. Table <ref type="table" target="#tab_1">A</ref>.1 (See Appendix A) presents a summary of lesion detection based approaches for detecting DR.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">IMAGE LEVEL CLASSIFICATION OF DIABETIC RETINOPATHY</head><p>In image level-based classification of DR from fundus images, there is no need to segment and extract lesions. The detection is performed on the whole fundus image. Table <ref type="table" target="#tab_1">A</ref>.2 (See Appendix A) summarizes the image level DR detection literature.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">MOBILE CLASSIFICATION OF DIABETIC RETINOPATHY</head><p>One of the strategies suggested by <ref type="bibr" target="#b11">Foster &amp; Resnikoff (2005)</ref> for prevention of treatable blindness was the distribution of maintainable and unbiased eye care services at the district level. Tele-retina has been implemented to capture retinal images by non-experts from remote areas and transferring to the ophthalmic center for DR diagnosis <ref type="bibr" target="#b5">(Cavallerano et al., 2004)</ref> <ref type="bibr" target="#b3">(Bursell et al., 2012)</ref> <ref type="bibr" target="#b7">(Coronado, 2014)</ref>. Tele retina needs a strong network connection between patients and health care centers. Teleophthalmology, which includes analysis of collected images, can be implemented to provide DR diagnosis remotely <ref type="bibr" target="#b28">(Mohammadpour et al., 2017)</ref>.</p><p>As is put by <ref type="bibr" target="#b11">Foster &amp; Resnikoff (2005)</ref>, in order to automate and mobilize existing techniques and methods, a smartphone device with mobile retinal image capturing cameras could be used to diagnose DR in remote and rural areas. This can solve the cost and time challenges of the traditional diagnosis of DR.</p><p>One of the main challenges of deploying DR automatic diagnosis on a smartphone is the quality of the retinal images captured and the limited processing power and memory inside. A speedy, easy to use, and cheap retinal imaging device could be used as an add-on with a smartphone to collect fundus images of patients as in <ref type="bibr" target="#b21">Kim et al. (2018)</ref>.</p><p>Smartphone based automatic diagnosis of DR can be implemented in two ways. The first way is an internet-based diagnosis, and the second one is a stand-alone independent smartphone application software-based diagnosis. In an internet-based diagnosis, the smartphone is only used to capture a fundus image of a patient with the help of an add-on retinal camera. After a fundus image is captured, it is sent to a professional ophthalmologist for diagnosis, and results would be sent back over the internet. This would require the user to have a stable internet connection for sending the fundus images and receiving back the results of the diagnosis. The challenge of low internet coverage can be solved using an independent smartphone application that is able to process a captured fundus image and automatically diagnose the stage of DR without any network connection.</p><p>Table A.3 (See Appendix A) summarized the review of mobile-based classification services developed for DR classification. <ref type="bibr" target="#b37">Rajalakshmi et al. (2018)</ref> resulted in the highest performance by using a cloud-based diagnostic service while the fundus image is captured with a smartphone.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">PROPOSED METHODOLOGY</head><p>In order to provide an easy to use and independent smartphone based diagnoses of DR, a deep learning model needs to be trained first. After training, the model needs to be deployed in a smartphone application. For clarification, Figure <ref type="figure" target="#fig_1">1</ref>  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">DEEP LEARNING MODEL TRAINING</head><p>For training a deep learning model, a dataset of fundus images that are uploaded to Kaggle website (California-Healthcare-Foundation, 2015) has been used. The dataset contains fundus images labeled into five stages of DR. Inspired by the inception module presented in <ref type="bibr" target="#b40">Szegedy et al. (2015)</ref> inception based convolutional neural network was designed and implemented. We further discuss image pre-processing, inception based network, and binary decision tree-based ensemble of classifiers.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.1">IMAGE PRE-PROCESSING</head><p>For model training, 200 images were selected from each stage of DR. In order to exploit high performance from a deep learning model and smaller training dataset; image pre-processing was performed by adopting Graham (2015)'s method. The fundus images were cropped to remove unnecessary black background pixels. The local average was subtracted from the cropped fundus image. Cropping of the images 10% was repeated to remove white rounding noise. Figure <ref type="figure" target="#fig_4">2</ref>   </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.2">INCEPTION BASED NETWORK</head><p>After the automatic diagnosis is performed, the designed deep learning model should be smartphone adaptable in order to be imported into a mobile application and fit to the memory limit of smartphones. For this reason, an inception module based convolutional neural network was designed. The inception modules architecture is presented in Figure <ref type="figure" target="#fig_5">3(b)</ref>. It was designed based on the inception module presented in <ref type="bibr" target="#b40">Szegedy et al. (2015)</ref>.</p><p>The framework of our proposed inception based convolutional neural network is illustrated in Figure <ref type="figure" target="#fig_5">3</ref>(a). The network was trained using Stochastic Gradient Decent (SGD) with an ascending learning rate of 0.0001. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1.3">BINARY DECISION TREE-BASED ENSEMBLE OF CLASSIFIERS</head><p>In order to increase the performance of our proposed inception based convolutional neural network, a binary tree-based ensemble of four binary classifiers were used. Four binary classifiers were trained to classify between normal and mild, normal and moderate, normal and severe, and normal and proliferative stages of DR. The mild, moderate, severe and proliferative stages of the disease are considered to be unhealthy states of the retina. Figure <ref type="figure" target="#fig_1">1</ref>(b) presents our proposed binary decision tree-based ensemble of classifiers.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">SMARTPHONE APPLICATION DEVELOPMENT</head><p>A standalone smartphone application software was designed to import the trained binary deep learning networks and implement a binary decision tree-based ensemble to classify fundus images into healthy and unhealthy. The smartphone devices operating system used was ColorOS version 6.0, which is a variety of Android. Size of the trained binary classifying models was 5757 kilobytes.</p><p>A retinal image is proposed to be captured using add on camera or from the smartphones gallery by tapping on the GET button as is shown in Figure <ref type="bibr">A.1(a)</ref>. And the label of the imported retinal image is predicted by tapping on the CLASSIFY button.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">RESULTS AND DISCUSSION</head><p>In this section, we compare the performance of our trained model with similar works, which have classified DR into binary classes using the Kaggle dataset (California-Healthcare-Foundation, 2015), as shown in Table <ref type="table" target="#tab_0">4</ref>.1.   </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head></head><label></label><figDesc>(a)  presents the flow of the proposed development process. tree based ensemble of binary classifiers</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 1 :</head><label>1</label><figDesc>Figure 1: Development process and binary tree based ensemble of binary models.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>(a), 2(b) and 2(c) show the implemented preprocessing on a sample fundus image.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Figure 2 :</head><label>2</label><figDesc>Figure 2: Image pre-processing on a sample fundus image. A sample input fundus image is shown in (a). (b) Cropped and local average subtracted from the original image. (c) 90% of Figure 2(b).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Figure 3 :</head><label>3</label><figDesc>Figure 3: Framework of the designed model and inception module.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head></head><label></label><figDesc>Figure A.1: Smartphone based diagnosis.</figDesc><graphic coords="9,130.94,171.39,158.39,316.78" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 4</head><label>4</label><figDesc>this paper, inception based convolutional neural network, binary decision tree-based ensemble of classifiers, and android smartphone application development have been combined in order to provide a standalone smartphone based automatic diagnosis of DR with an accuracy of 99.86%. Using our implemented system, diabetic people residing in remote and rural areas with less coverage of healthcare centers and shortage of professional ophthalmologists only need an Android smartphone, and a portable fundus camera add on for an instant DR diagnosis. The methods followed in this paper can lead the way in providing a non-expert usable point-of-care diagnostic services for DR in specific and other medical image classification tasks in general. At this stage, the developed application only diagnoses images from a phone's gallery. For future work, we plan to perform a multi-class classification of DR, and incorporate a handheld fundus camera to start deployment. Xiayu Xu, Wenxiang Ding, Xuemin Wang, Ruofan Cao, Maiye Zhang, Peilin Lv, and Feng Xu.Smartphone-based accurate analysis of retinal vasculature towards point-of-care diagnostics. Scientific reports, 6:34603, 2016.</figDesc><table><row><cell></cell><cell cols="4">.1: Comparison of parameters and results</cell></row><row><cell cols="3">POINTS OF COMPARISON Mohammadian</cell><cell>Hagos</cell><cell>&amp;</cell><cell>PROPOSED</cell></row><row><cell></cell><cell></cell><cell>et al. (2017)</cell><cell cols="2">Kant (2019)</cell><cell>METHOD</cell></row><row><cell>Training pa-</cell><cell>Training</cell><cell>35126</cell><cell>2500</cell><cell></cell><cell>1000</cell></row><row><cell>rameters</cell><cell>dataset size</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell>Optimizer</cell><cell>ADAM</cell><cell>SGD</cell><cell></cell><cell>SGD</cell></row><row><cell></cell><cell>Learning rate</cell><cell>-</cell><cell>Ascending</cell><cell></cell><cell>Ascending</cell></row><row><cell></cell><cell></cell><cell></cell><cell>0.0001</cell><cell></cell><cell>0.0001</cell></row><row><cell></cell><cell cols="2">Loss function -</cell><cell>Cosine loss</cell><cell></cell><cell>Cosine loss</cell></row><row><cell></cell><cell>Data augmen-</cell><cell>Yes</cell><cell>No</cell><cell></cell><cell>No</cell></row><row><cell></cell><cell>tation used?</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Results</cell><cell>Accuracy</cell><cell>87.12%</cell><cell>90.90%</cell><cell></cell><cell>99.86</cell></row><row><cell></cell><cell cols="2">Sensitivity(%) -</cell><cell>-</cell><cell></cell><cell>99.25</cell></row><row><cell></cell><cell cols="2">Specificity(%) -</cell><cell>-</cell><cell></cell><cell>99.60</cell></row><row><cell></cell><cell>Loss(%)</cell><cell>-</cell><cell>3.94</cell><cell></cell><cell>-</cell></row><row><cell cols="6">From Table 4.1, our proposed model achieved the best performance with 99.86% accuracy, 99.25%</cell></row><row><cell cols="6">sensitivity and 99.60% specificity followed by the work of Hagos &amp; Kant (2019) and Mohammadian</cell></row><row><cell cols="6">et al. (2017). From this analysis, it shows that our proposed method with limited training data, and</cell></row><row><cell cols="6">without data augmentation performs better than other previous methods. Figure A.1(b) shows our</cell></row><row><cell cols="6">developed smartphone application's classification output on a sample fundus image.</cell></row><row><cell>5 CONCLUSION</cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table><note><p>In</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table A .</head><label>A</label><figDesc>1: Summary of Feature Extraction Based Diabetic Retinopathy Classification</figDesc><table><row><cell cols="9">Table A.2: Summary of Image-Level Diabetic Retinopathy Classification</cell></row><row><cell>AUTHORS AUTHORS</cell><cell cols="3">METHODS METHODS</cell><cell cols="2">TRAINING TRAINING</cell><cell cols="3">LESIONS PERFORMANCE PERFORMANCE SN(%) SP(%) ACC(%) SN(%) SP(%) ACC(%) AUC</cell></row><row><cell cols="4">Perdomo et al. Gulshan et al. CNN Inception-V3</cell><cell cols="2">Transfer Transfer</cell><cell>Macula 90.30</cell><cell>56.50 90.00</cell><cell>-</cell><cell>92.80</cell><cell>77.00 0.99</cell></row><row><cell>(2016) (2016)</cell><cell></cell><cell>CNN</cell><cell></cell><cell cols="2">learning learning</cell><cell>edema</cell><cell></cell></row><row><cell cols="4">Prentašić Colas et al. CNN with 11 CNN</cell><cell cols="2">End-to-end End-to-end</cell><cell>Exudates 96.20</cell><cell>78.00 66.60</cell><cell>-</cell><cell>-</cell><cell>-0.95</cell></row><row><cell>&amp; Lončarić (2016)</cell><cell cols="2">layers</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">(2016) Pratt et al.</cell><cell cols="3">CNN with 13</cell><cell>End-to-end</cell><cell>95.00</cell><cell>30.00</cell><cell>75.00</cell><cell>-</cell></row><row><cell>Abràmoff (2016)</cell><cell cols="2">CNN layers</cell><cell></cell><cell cols="2">End-to-end</cell><cell>Macula</cell><cell cols="2">100.00 -</cell><cell>-</cell></row><row><cell cols="2">et al. (2016) Mohammadian</cell><cell cols="2">Inception-V3</cell><cell></cell><cell>Transfer</cell><cell>edema -</cell><cell>-</cell><cell>87.12</cell><cell>-</cell></row><row><cell>Perdomo et al. et al. (2017)</cell><cell cols="2">LeNet CNN</cell><cell></cell><cell cols="2">Transfer learning</cell><cell>Exudates</cell><cell>99.80</cell><cell>99.60</cell><cell>99.60</cell></row><row><cell cols="2">(2017) Quellec et al.</cell><cell cols="4">learning AlexNet CNN Transfer</cell><cell>-</cell><cell>-</cell><cell>-</cell><cell>0.95</cell></row><row><cell>Mo et al. (2017)</cell><cell cols="2">FCRN</cell><cell></cell><cell cols="2">End-to-end learning</cell><cell>Macula</cell><cell>92.55</cell><cell>-</cell><cell>-</cell></row><row><cell>(2018) Costa</cell><cell>&amp;</cell><cell>CNN</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell>edema 78.00</cell><cell>-</cell><cell>-</cell><cell>0.97</cell></row><row><cell>Gondal et al. Campilho</cell><cell cols="3">Octree based</cell><cell cols="2">Transfer</cell><cell cols="2">Microaneurysms 52.00</cell><cell>-</cell><cell>-</cell></row><row><cell>(2017) (2017)</cell><cell cols="2">CNN and</cell><cell></cell><cell cols="2">learning</cell><cell></cell><cell></cell></row><row><cell>et al. (2016) Abràmoff</cell><cell cols="2">Transfer learning CNN</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell cols="2">Haemorrhages 91.00 96.80 87.00</cell><cell>-</cell><cell>-</cell><cell>-0.98</cell></row><row><cell>Gargeya</cell><cell>&amp;</cell><cell>ResNet</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell>94.00</cell><cell>98.00</cell><cell>-</cell><cell>-</cell></row><row><cell cols="2">Leng (2017)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Ting et al.</cell><cell>CNN</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell>90.5</cell><cell>91.60</cell><cell>-</cell><cell>0.94</cell></row><row><cell>(2017)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Dutta et al.</cell><cell cols="3">Deep neural</cell><cell>End-to-end</cell><cell>-</cell><cell>-</cell><cell>86.30</cell><cell>-</cell></row><row><cell>(2018)</cell><cell></cell><cell>network</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Mateen et al.</cell><cell cols="2">VGGNet-19</cell><cell></cell><cell>End-to-end</cell><cell>-</cell><cell>-</cell><cell>98.34</cell><cell>-</cell></row><row><cell>(2018)</cell><cell></cell><cell cols="2">with SVM</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Mansour</cell><cell></cell><cell>AlexNet</cell><cell></cell><cell></cell><cell>Transfer</cell><cell cols="2">100.00 93.00</cell><cell>97.93</cell><cell>-</cell></row><row><cell>(2018)</cell><cell></cell><cell>with</cell><cell cols="2">SVM</cell><cell>learning</cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell cols="2">classifier</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Orlando et al.</cell><cell>CNN</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell>97.21</cell><cell>50.00</cell><cell>-</cell><cell>0.93</cell></row><row><cell>(2018)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Adly et al.</cell><cell>VggNet</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell>81.80</cell><cell>89.30</cell><cell>83.20</cell><cell>-</cell></row><row><cell>(2019)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>Nagasawa</cell><cell></cell><cell>CNN</cell><cell></cell><cell></cell><cell>End-to-end</cell><cell>94.70</cell><cell>97.20</cell><cell>-</cell><cell>0.97</cell></row><row><cell>et al. (2019)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Verbraak et al.</cell><cell cols="2">Detection</cell><cell></cell><cell>End-to-end</cell><cell cols="2">100.00 -</cell><cell>-</cell><cell>-</cell></row><row><cell>(2019)</cell><cell></cell><cell cols="3">Validation of</cell><cell></cell><cell></cell><cell></cell></row><row><cell></cell><cell></cell><cell>a device</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>González-</cell><cell></cell><cell cols="2">Performance</cell><cell></cell><cell>End-to-end</cell><cell>92.00</cell><cell>92.10</cell><cell>-</cell><cell>0.97</cell></row><row><cell cols="2">Gonzalo et al.</cell><cell cols="2">validation</cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell>(2019)</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">Hagos &amp; Kant</cell><cell cols="2">Inception-V3</cell><cell></cell><cell>Transfer</cell><cell>-</cell><cell>-</cell><cell>90.90</cell><cell>-</cell></row><row><cell>(2019)</cell><cell></cell><cell>network</cell><cell></cell><cell></cell><cell cols="2">learning with</cell><cell></cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>fine-tuning</cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0" />			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Improved automated detection of diabetic retinopathy on a publicly available dataset through integration of deep learning</title>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>David Abràmoff</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yiyue</forename><surname>Lou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ali</forename><surname>Erginay</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Warren</forename><surname>Clarida</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ryan</forename><surname>Amelon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">James</forename><forename type="middle">C</forename><surname>Folk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Meindert</forename><surname>Niemeijer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Investigative ophthalmology &amp; visual science</title>
+		<imprint>
+			<biblScope unit="volume">57</biblScope>
+			<biblScope unit="issue">13</biblScope>
+			<biblScope unit="page" from="5200" to="5206" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">On the grading of diabetic retinopathies using a binary-tree-based multiclass classifier of cnns</title>
+		<author>
+			<persName><forename type="first">Mohamed</forename><forename type="middle">M</forename><surname>Adly</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amr</forename><forename type="middle">S</forename><surname>Ghoneim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">Aliaa</forename><surname>Youssif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Science and Information Security (IJCSIS)</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<author>
+			<persName><forename type="first">Fouzia</forename><surname>Altaf</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Syed</forename><surname>Islam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Naveed</forename><surname>Akhtar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Naeem</forename><forename type="middle">K</forename><surname>Janjua</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1902.05655</idno>
+		<title level="m">Going deep in medical image analysis: Concepts, methods, challenges and future directions</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Telemedicine and ocular health in diabetes mellitus</title>
+		<author>
+			<persName><forename type="first">Sven-Erik</forename><surname>Bursell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Laima</forename><surname>Brazionis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alicia</forename><surname>Jenkins</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Clinical and Experimental Optometry</title>
+		<imprint>
+			<biblScope unit="volume">95</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="311" to="327" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<ptr target="https://www.kaggle.com/c/diabetic-retinopathy-detection" />
+		<title level="m">Diabetic retinopathy detection</title>
+		<imprint>
+			<publisher>California-Healthcare-Foundation</publisher>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Telehealth practice recommendations for diabetic retinopathy</title>
+		<author>
+			<persName><surname>Cavallerano</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Lawrence</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zimmer-Galler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bauman</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bursell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gardner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Horton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hildebrand</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Federman</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Carnahan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Telemedicine journal and e-health: the official journal of the American Telemedicine Association</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="469" to="482" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Deep learning approach for diabetic retinopathy screening</title>
+		<author>
+			<persName><surname>Colas</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Besse</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Orgogozo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Schmauch</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Meric</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Besse</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Acta Ophthalmologica</title>
+		<imprint>
+			<biblScope unit="volume">94</biblScope>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<author>
+			<persName><forename type="first">Andrea</forename><forename type="middle">C</forename><surname>Coronado</surname></persName>
+		</author>
+		<title level="m">Diagnostic accuracy of tele-ophthalmology for diabetic retinopathy assessment: A meta-analysis and economic analysis</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Convolutional bag of words for diabetic retinopathy detection from eye fundus images</title>
+		<author>
+			<persName><forename type="first">Pedro</forename><surname>Costa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aurélio</forename><surname>Campilho</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IPSJ Transactions on Computer Vision and Applications</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">10</biblScope>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Classification of diabetic retinopathy images by using deep learning models</title>
+		<author>
+			<persName><forename type="first">Suvajit</forename><surname>Dutta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">S</forename><surname>Bonthala</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Manideep</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Muzamil</forename><surname>Syed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ronnie</forename><forename type="middle">D</forename><surname>Basha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Caytiles</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="middle">S N</forename><surname>Ch</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Iyengar</surname></persName>
+		</author>
+		<idno type="DOI">10.14257/ijgdc.2018.11.1.09</idno>
+		<ptr target="https://doi.org/10.14257/ijgdc.2018.11.1.09" />
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Grid and Distributed Computing</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="99" to="106" />
+			<date type="published" when="2018-01">January 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Why does unsupervised pre-training help deep learning</title>
+		<author>
+			<persName><forename type="first">Yoshua</forename><surname>Dumitru Erhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aaron</forename><surname>Bengio</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pierre-Antoine</forename><surname>Courville</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pascal</forename><surname>Manzagol</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Samy</forename><surname>Vincent</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="page" from="625" to="660" />
+			<date type="published" when="2010-02">Feb. 2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Rishab Gargeya and Theodore Leng. Automated identification of diabetic retinopathy using deep learning</title>
+		<author>
+			<persName><forename type="first">Allen</forename><surname>Foster</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Serge</forename><surname>Resnikoff</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">10</biblScope>
+			<biblScope unit="page" from="962" to="969" />
+			<date type="published" when="2005">2005. 2017</date>
+		</imprint>
+	</monogr>
+	<note>Eye</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Weaklysupervised localization of diabetic retinopathy lesions in retinal fundus images</title>
+		<author>
+			<persName><forename type="first">Jan</forename><forename type="middle">M</forename><surname>Waleed M Gondal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">René</forename><surname>Köhler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gernot</forename><forename type="middle">A</forename><surname>Grzeszick</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Fink</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Hirsch</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2017 IEEE International Conference on Image Processing</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="2069" to="2073" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Evaluation of a deep learning system for the joint automated detection of diabetic retinopathy and age-related macular degeneration</title>
+		<author>
+			<persName><forename type="first">Cristina</forename><surname>González-Gonzalo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Verónica</forename><surname>Sánchez-Gutiérrez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paula</forename><surname>Hernández-Martínez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Inés</forename><surname>Contreras</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Yara</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Artin</forename><surname>Lechanteur</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bram</forename><surname>Domanian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Clara</forename><forename type="middle">I</forename><surname>Van Ginneken</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sánchez</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1903.09555</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Kaggle diabetic retinopathy detection competition report</title>
+		<author>
+			<persName><forename type="first">Ben</forename><surname>Graham</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+		<respStmt>
+			<orgName>University of Warwick</orgName>
+		</respStmt>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs</title>
+		<author>
+			<persName><forename type="first">Lily</forename><surname>Varun Gulshan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Marc</forename><surname>Peng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Martin</forename><forename type="middle">C</forename><surname>Coram</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Derek</forename><surname>Stumpe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arunachalam</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Subhashini</forename><surname>Narayanaswamy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kasumi</forename><surname>Venugopalan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tom</forename><surname>Widner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jorge</forename><surname>Madams</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Cuadros</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Jama</title>
+		<imprint>
+			<biblScope unit="volume">316</biblScope>
+			<biblScope unit="issue">22</biblScope>
+			<biblScope unit="page" from="2402" to="2410" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title level="m" type="main">Transfer learning based detection of diabetic retinopathy from small dataset</title>
+		<author>
+			<persName><forename type="first">Misgina</forename><surname>Tsighe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hagos</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shri</forename><surname>Kant</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1905.07203</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<author>
+			<persName><forename type="first">Cynthia</forename><surname>Fiorella</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anticona</forename><surname>Huaynate</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Monica</forename><surname>Jehnny</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pajuelo</forename><surname>Travezaño</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Malena</forename><surname>Correa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mayta</forename><surname>Holger</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Richard</forename><surname>Malpartida</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Laura</forename><forename type="middle">L</forename><surname>Oberhelman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Valerie</forename><forename type="middle">A</forename><surname>Murphy</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Paz-Soldan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Diagnostics barriers and innovations in rural areas: insights from junior medical doctors on the frontlines of rural care in peru</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="page">454</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Smart phone: A smart technology for fundus photography in diabetic retinopathy screening</title>
+		<author>
+			<persName><forename type="first">Ahmad</forename><surname>Zeeshan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jamil</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Luqman</forename><surname>Ali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Muhammad</forename><forename type="middle">Younis</forename><surname>Tahir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fazal</forename><surname>Shah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shiraz</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pakistan Journal of Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Mobile phone based diabetic retinopathy detection system using ann-dwt</title>
+		<author>
+			<persName><forename type="first">Nikita</forename><surname>Kashyap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dharmendra</forename><forename type="middle">Kumar</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Girish</forename><forename type="middle">Kumar</forename><surname>Singh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2017 4th IEEE Uttar Pradesh Section International Conference on Electrical, Computer and Electronics (UPCON)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="463" to="467" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Color histogram-and smartphone-based diabetic retinopathy detection system</title>
+		<author>
+			<persName><forename type="first">Nikita</forename><surname>Kashyap</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dharmendra</forename><forename type="middle">Kumar</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Girish</forename><forename type="middle">Kumar</forename><surname>Singh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Engineering Vibration, Communication and Information Processing</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="669" to="678" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">A smartphone-based tool for rapid, portable, and automated wide-field retinal imaging</title>
+		<author>
+			<persName><forename type="first">Frank</forename><surname>Tyson N Kim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Clay</forename><surname>Myers</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Reber</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Panagiota</forename><surname>Loury</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Doug</forename><surname>Loumou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chris</forename><surname>Webster</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Patrick</forename><surname>Echanique</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jose</forename><forename type="middle">R</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Robi</forename><forename type="middle">N</forename><surname>Davila</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Maamari</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Translational vision science &amp; technology</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="21" to="21" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">A survey on deep learning in medical image analysis</title>
+		<author>
+			<persName><forename type="first">Geert</forename><surname>Litjens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Thijs</forename><surname>Kooi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ehteshami</forename><surname>Babak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Arnaud</forename><surname>Bejnordi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Adiyoso</forename><surname>Arindra</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Francesco</forename><surname>Setio</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohsen</forename><surname>Ciompi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jeroen</forename><surname>Ghafoorian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Awm</forename><surname>Van Der Laak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bram</forename><surname>Van Ginneken</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Clara</forename><forename type="middle">I</forename><surname>Sánchez</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medical image analysis</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="page" from="60" to="88" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Deep-learning-based automatic computer-aided diagnosis system for diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">F</forename><surname>Romany</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Mansour</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s13534-017-0047-y</idno>
+		<ptr target="https://doi.org/10.1007/s13534-017-0047-y" />
+	</analytic>
+	<monogr>
+		<title level="j">Biomedical Engineering Letters</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="41" to="57" />
+			<date type="published" when="2018-02">Feb 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Fundus image classification using VGG-19 architecture with PCA and SVD</title>
+		<author>
+			<persName><forename type="first">Muhammad</forename><surname>Mateen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Junhao</forename><surname>Wen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sun</forename><surname>Nasrullah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhouping</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Huang</surname></persName>
+		</author>
+		<idno type="DOI">10.3390/sym11010001</idno>
+		<ptr target="https://doi.org/10.3390/sym11010001" />
+	</analytic>
+	<monogr>
+		<title level="j">Symmetry</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">1</biblScope>
+			<date type="published" when="2018-12">December 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Deep learning for healthcare: review, opportunities and challenges</title>
+		<author>
+			<persName><forename type="first">Riccardo</forename><surname>Miotto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fei</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shuang</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiaoqian</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joel</forename><forename type="middle">T</forename><surname>Dudley</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Briefings in bioinformatics</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1236" to="1246" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Exudate-based diabetic macular edema recognition in retinal images using cascaded deep residual networks</title>
+		<author>
+			<persName><forename type="first">Juan</forename><surname>Mo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lei</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yangqin</forename><surname>Feng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neurocomputing</title>
+		<imprint>
+			<biblScope unit="volume">290</biblScope>
+			<biblScope unit="page" from="161" to="171" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Comparative study of fine-tuning of pretrained convolutional neural networks for diabetic retinopathy screening</title>
+		<author>
+			<persName><forename type="first">Ali</forename><surname>Saboora Mohammadian</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Karsaz</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yaser M Roshan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2017 24th National and 2nd International Iranian Conference on Biomedical Engineering (ICBME)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Smartphones, tele-ophthalmology, and vision 2020</title>
+		<author>
+			<persName><forename type="first">Mehrdad</forename><surname>Mohammadpour</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zahra</forename><surname>Heidari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Masoud</forename><surname>Mirghorbani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hassan</forename><surname>Hashemi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International journal of ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page">1909</biblScope>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Accuracy of ultrawide-field fundus ophthalmoscopy-assisted deep learning for detecting treatment-naïve proliferative diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">Toshihiko</forename><surname>Nagasawa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hitoshi</forename><surname>Tabuchi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hiroki</forename><surname>Masumoto</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hiroki</forename><surname>Enno</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Masanori</forename><surname>Niki</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zaigen</forename><surname>Ohara</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yuki</forename><surname>Yoshizumi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hideharu</forename><surname>Ohsugi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yoshinori</forename><surname>Mitamura</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International ophthalmology</title>
+		<imprint>
+			<biblScope unit="page" from="1" to="7" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">An ensemble deep learning based approach for red lesion detection in fundus images</title>
+		<author>
+			<persName><forename type="first">Ignacio</forename><surname>Jose</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Elena</forename><surname>Orlando</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mariana</forename><surname>Prokofyeva</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Matthew</forename><forename type="middle">B</forename><surname>Del Fresno</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Blaschko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computer methods and programs in biomedicine</title>
+		<imprint>
+			<biblScope unit="volume">153</biblScope>
+			<biblScope unit="page" from="115" to="127" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<monogr>
+		<title level="m" type="main">A novel machine learning model based on exudate localization to detect diabetic macular edema</title>
+		<author>
+			<persName><forename type="first">Oscar</forename><surname>Perdomo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sebastian</forename><surname>Otalora</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Francisco</forename><surname>Rodríguez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">John</forename><surname>Arevalo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fabio</forename><forename type="middle">A</forename><surname>González</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Convolutional network to detect exudates in eye fundus images of diabetic subjects</title>
+		<author>
+			<persName><forename type="first">Oscar</forename><surname>Perdomo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">John</forename><surname>Arevalo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fabio</forename><forename type="middle">A</forename><surname>González</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">12th International Symposium on Medical Information Processing and Analysis</title>
+		<imprint>
+			<publisher>International Society for Optics and Photonics</publisher>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="volume">10160</biblScope>
+			<biblScope unit="page">101600</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Decision support system for detection of diabetic retinopathy using smartphones</title>
+		<author>
+			<persName><forename type="first">Prateek</forename><surname>Prasanna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shubham</forename><surname>Jain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Neelakshi</forename><surname>Bhagat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anant</forename><surname>Madabhushi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2013 7th International Conference on Pervasive Computing Technologies for Healthcare and Workshops</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="176" to="179" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Convolutional neural networks for diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">Harry</forename><surname>Pratt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Frans</forename><surname>Coenen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Deborah</forename><forename type="middle">M</forename><surname>Broadbent</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Simon</forename><forename type="middle">P</forename><surname>Harding</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yalin</forename><surname>Zheng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia Computer Science</title>
+		<imprint>
+			<biblScope unit="volume">90</biblScope>
+			<biblScope unit="page" from="200" to="205" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Detection of exudates in fundus photographs using deep neural networks and anatomical landmark detection fusion</title>
+		<author>
+			<persName><forename type="first">Pavle</forename><surname>Prentašić</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sven</forename><surname>Lončarić</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computer methods and programs in biomedicine</title>
+		<imprint>
+			<biblScope unit="volume">137</biblScope>
+			<biblScope unit="page" from="281" to="292" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Deep image mining for diabetic retinopathy screening</title>
+		<author>
+			<persName><forename type="first">Gwenolé</forename><surname>Quellec</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Katia</forename><surname>Charrière</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yassine</forename><surname>Boudi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Béatrice</forename><surname>Cochener</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mathieu</forename><surname>Lamard</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medical image analysis</title>
+		<imprint>
+			<biblScope unit="volume">39</biblScope>
+			<biblScope unit="page" from="178" to="193" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Automated diabetic retinopathy detection in smartphone-based fundus photography using artificial intelligence</title>
+		<author>
+			<persName><forename type="first">Ramachandran</forename><surname>Rajalakshmi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Radhakrishnan</forename><surname>Subashini</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ranjit</forename><surname>Mohan Anjana</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Viswanathan</forename><surname>Mohan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Eye</title>
+		<imprint>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page">1138</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Deep learning for medical image processing: Overview, challenges and the future</title>
+		<author>
+			<persName><forename type="first">Saeeda</forename><surname>Muhammad Imran Razzak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ahmad</forename><surname>Naz</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zaib</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Classification in BioApps</title>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="323" to="350" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Imaging in diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>David</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andre</forename><forename type="middle">J</forename><surname>Salz</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Witkin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Middle East African journal of ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page">145</biblScope>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Going deeper with convolutions</title>
+		<author>
+			<persName><forename type="first">Christian</forename><surname>Szegedy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yangqing</forename><surname>Jia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pierre</forename><surname>Sermanet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Scott</forename><surname>Reed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dragomir</forename><surname>Anguelov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dumitru</forename><surname>Erhan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Vincent</forename><surname>Vanhoucke</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrew</forename><surname>Rabinovich</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<biblScope unit="page" from="1" to="9" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes</title>
+		<author>
+			<persName><forename type="first">Daniel</forename><surname>Shu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Ting</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carol</forename><surname>Yim-Lui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gilbert</forename><surname>Cheung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gavin</forename><surname>Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Siew</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alfred</forename><surname>Nguyen D Quang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Haslina</forename><surname>Gan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Renata</forename><surname>Hamzah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ian</forename><surname>Garcia-Franco</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yew San</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shu</forename><surname>Yeo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yen</forename><surname>Lee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Jama</title>
+		<imprint>
+			<biblScope unit="volume">318</biblScope>
+			<biblScope unit="issue">22</biblScope>
+			<biblScope unit="page" from="2211" to="2223" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Diagnostic accuracy of a device for the automated detection of diabetic retinopathy in a primary care setting</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Frank</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Verbraak</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Michael D Abramoff</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">F</forename><surname>Gonny</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Caroline</forename><surname>Bausch</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Giel</forename><surname>Klaver</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Nijpels</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amber</forename><forename type="middle">A</forename><surname>Reinier O Schlingemann</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Van Der Heijden</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Diabetes care</title>
+		<imprint>
+			<biblScope unit="volume">42</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="651" to="656" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<analytic>
+		<title level="a" type="main">Proposed international clinical diabetic retinopathy and diabetic macular edema disease severity scales</title>
+		<author>
+			<persName><forename type="first">Frederick</forename><forename type="middle">L</forename><surname>Cp Wilkinson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Iii</forename><surname>Ferris</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ronald</forename><forename type="middle">E</forename><surname>Klein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paul</forename><forename type="middle">P</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carl</forename><surname>David Agardh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Matthew</forename><surname>Davis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Diana</forename><surname>Dills</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anselm</forename><surname>Kampik</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Pararajasegaram</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Juan</forename><forename type="middle">T</forename><surname>Verdaguer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">110</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="1677" to="1682" />
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

@@ -42,17 +42,20 @@ class UserVerificationService:
         """
         # Validate token
         verification_token = await self.repository.get_email_verification_token(token)
-        if not verification_token or verification_token.is_expired():
+        if not verification_token or verification_token.is_expired:
             raise ServiceError(
                 "Invalid or expired verification token",
                 ErrorCodes.VALIDATION_ERROR
             )
         
-        # Verify email
-        await self.repository.verify_user_email(verification_token.user_id)
+        # Verify email using token (this also marks token as verified and user as email verified)
+        user = await self.repository.verify_email_token(token)
         
-        # Invalidate token
-        await self.repository.invalidate_email_verification_token(token)
+        if not user:
+            raise ServiceError(
+                "Failed to verify email",
+                ErrorCodes.VALIDATION_ERROR
+            )
         
         return {
             "success": True,

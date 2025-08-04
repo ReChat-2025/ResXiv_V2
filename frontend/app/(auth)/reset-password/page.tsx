@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ interface FormErrors {
   general?: string;
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const resetToken = searchParams.get('token');
@@ -162,7 +162,7 @@ export default function ResetPasswordPage() {
         links={[{
           text: "Continue to",
           linkText: "Login",
-          href: "/Authentication/login"
+          href: "/login"
         }]}
       >
         <div className="text-center space-y-4">
@@ -181,7 +181,7 @@ export default function ResetPasswordPage() {
 
           <div className="pt-4">
             <Button 
-              onClick={() => router.push('/Authentication/login?message=password-reset')}
+              onClick={() => router.push('/login?message=password-reset')}
               className="w-full"
             >
               Continue to login
@@ -195,81 +195,80 @@ export default function ResetPasswordPage() {
   return (
     <AuthLayout
       title="Reset your password"
-      cardTitle="Set new password"
+      cardTitle="Create new password"
       links={[{
         text: "Remember your password?",
         linkText: "Back to login",
-        href: "/Authentication/login"
+        href: "/login"
       }]}
     >
-      <div className="space-y-4">
-        <p className="text-sm text-muted-foreground text-center">
-          Enter your new password below.
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* General Error */}
-          {errors.general && (
-            <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-              {errors.general}
-            </div>
-          )}
-
-          {/* New Password Field */}
-          <div className="space-y-2">
-            <Label htmlFor="newPassword">
-              New password <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              required
-              value={formData.newPassword}
-              onChange={handleFieldChange}
-              placeholder="Create a strong password"
-              disabled={isLoading}
-              className={errors.newPassword ? "border-destructive" : undefined}
-            />
-            {errors.newPassword && (
-              <p className="text-sm text-destructive">{errors.newPassword}</p>
-            )}
-            <p className="text-xs text-muted-foreground">
-              Must contain uppercase, lowercase, number and special character
-            </p>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* General Error */}
+        {errors.general && (
+          <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+            {errors.general}
           </div>
+        )}
 
-          {/* Confirm Password Field */}
-          <div className="space-y-2">
-            <Label htmlFor="confirmNewPassword">
-              Confirm new password <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="confirmNewPassword"
-              name="confirmNewPassword"
-              type="password"
-              required
-              value={formData.confirmNewPassword}
-              onChange={handleFieldChange}
-              placeholder="Confirm your new password"
-              disabled={isLoading}
-              className={errors.confirmNewPassword ? "border-destructive" : undefined}
-            />
-            {errors.confirmNewPassword && (
-              <p className="text-sm text-destructive">{errors.confirmNewPassword}</p>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full"
+        {/* New Password */}
+        <div className="space-y-2">
+          <Label htmlFor="newPassword">New Password</Label>
+          <Input
+            id="newPassword"
+            name="newPassword"
+            type="password"
+            value={formData.newPassword}
+            onChange={handleFieldChange}
             disabled={isLoading}
-          >
-            {isLoading ? "Updating password..." : "Update password"}
-          </Button>
-        </form>
-      </div>
+            placeholder="Enter your new password"
+            className={errors.newPassword ? 'border-destructive' : ''}
+          />
+          {errors.newPassword && (
+            <p className="text-sm text-destructive">{errors.newPassword}</p>
+          )}
+        </div>
+
+        {/* Confirm New Password */}
+        <div className="space-y-2">
+          <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+          <Input
+            id="confirmNewPassword"
+            name="confirmNewPassword"
+            type="password"
+            value={formData.confirmNewPassword}
+            onChange={handleFieldChange}
+            disabled={isLoading}
+            placeholder="Confirm your new password"
+            className={errors.confirmNewPassword ? 'border-destructive' : ''}
+          />
+          {errors.confirmNewPassword && (
+            <p className="text-sm text-destructive">{errors.confirmNewPassword}</p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <Button 
+          type="submit" 
+          disabled={isLoading}
+          className="w-full"
+        >
+          {isLoading ? 'Resetting...' : 'Reset Password'}
+        </Button>
+      </form>
     </AuthLayout>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <AuthLayout title="Loading..." cardTitle="Loading..." links={[]}>
+        <div className="flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </AuthLayout>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 } 

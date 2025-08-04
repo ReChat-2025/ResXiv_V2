@@ -96,7 +96,7 @@ export default function ForgotPasswordPage() {
         links={[{
           text: "Remember your password?",
           linkText: "Back to login",
-          href: "/Authentication/login"
+          href: "/login"
         }]}
       >
         <div className="text-center space-y-4">
@@ -138,7 +138,7 @@ export default function ForgotPasswordPage() {
       links={[{
         text: "Remember your password?",
         linkText: "Back to login",
-        href: "/Authentication/login"
+        href: "/login"
       }]}
     >
       <div className="space-y-4">

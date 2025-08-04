@@ -4,7 +4,7 @@
  */
 
 // Get the API base URL from environment or use development default
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 // Export for legacy compatibility
 export const getApiBaseUrl = () => API_BASE_URL;

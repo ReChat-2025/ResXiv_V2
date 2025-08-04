@@ -98,7 +98,7 @@ export const authApi = {
     password: string,
     remember_me = false
   ): Promise<LoginSuccess> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     
     const url = `${API_BASE_URL}/api/v1/auth/login`;
     const requestBody = { email, password, remember_me };
@@ -148,7 +148,7 @@ export const authApi = {
    * Refresh access token using refresh token
    */
   async refreshToken(refreshToken: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     
     const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
       method: 'POST',
@@ -198,7 +198,7 @@ export const authApi = {
     accepted_terms: boolean,
     interests: string[] = []
   ): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     
     const url = `${API_BASE_URL}/api/v1/auth/register`;
     
@@ -250,7 +250,7 @@ export const authApi = {
    * Verify email address using verification token
    */
   async verifyEmail(token: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     
     const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`, {
       method: 'POST',
@@ -362,7 +362,7 @@ export const authApi = {
    * Request password reset email
    */
   async forgotPassword(email: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     
     const response = await fetch(`${API_BASE_URL}/api/v1/auth/forgot-password`, {
       method: 'POST',

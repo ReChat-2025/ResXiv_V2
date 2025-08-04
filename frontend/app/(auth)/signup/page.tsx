@@ -161,9 +161,9 @@ export default function SignupPage() {
       
       // Check if email verification is required
       if (result.requires_verification) {
-        router.push('/Authentication/login?message=verification-required');
+        router.push('/login?message=verification-required');
       } else {
-        router.push('/Authentication/login?message=registration-success');
+        router.push('/login?message=registration-success');
       }
       
     } catch (error: any) {

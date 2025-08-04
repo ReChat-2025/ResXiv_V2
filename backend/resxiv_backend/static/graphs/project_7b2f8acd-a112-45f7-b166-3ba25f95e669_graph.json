@@ -1,0 +1,904 @@
+{
+  "success": true,
+  "project_id": "7b2f8acd-a112-45f7-b166-3ba25f95e669",
+  "graph": {
+    "nodes": [
+      {
+        "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
+        "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+        "authors": [
+          "Israa Odeh",
+          "Mouhammd Alkasassbeh",
+          "Mohammad Alauthman"
+        ],
+        "abstract": "Diabetic Retinopathy (DR) is among the world's leading vision loss causes in diabetic patients. DR is a microvascular disease that affects the eye retina, which causes vessel blockage and therefore cu...",
+        "keywords": [
+          "Diabetic Retinopathy",
+          "Ensemble learning",
+          "Machine learning"
+        ],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 1348767,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T22:04:32.718726+00:00",
+        "degree": 3,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 1,
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "135598cf-16f6-46c7-948a-db8275485a68",
+        "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+        "authors": [
+          "Saket Chaturvedi",
+          "Kajol Gupta",
+          "Vaishali Ninawe",
+          "Prakash Prasad"
+        ],
+        "abstract": "Diabetic Retinopathy is a global health problem, influences 100 million individuals worldwide, and in the next few decades, these incidences are expected to reach epidemic proportions. Diabetic Retino...",
+        "keywords": [
+          "Deep Learning",
+          "Diabetic Retinopathy",
+          "DenseNet network",
+          "Fundus Photography",
+          "Computeraided diagnosis"
+        ],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 2066818,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T22:04:04.858776+00:00",
+        "degree": 5,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 1,
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+        "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+        "authors": [
+          "Misgina Hagos",
+          "Shri Kant",
+          "Surayya Ado Bala"
+        ],
+        "abstract": "Early diagnosis of diabetic retinopathy for treatment of the disease has been failing to reach diabetic people living in rural areas. Shortage of trained ophthalmologists, limited availability of heal...",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 552043,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T22:03:41.382870+00:00",
+        "degree": 3,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 1,
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
+        "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
+        "authors": [
+          "Yuhong Li",
+          "Xiaofan Zhang",
+          "Deming Chen"
+        ],
+        "abstract": "We propose a network for Congested Scene Recognition called CSRNet to provide a data-driven and deep learning method that can understand highly congested scenes and perform accurate count estimation a...",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 9144250,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T22:03:14.876021+00:00",
+        "degree": 4,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 2,
+        "cluster_color": "#45B7D1"
+      },
+      {
+        "id": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "title": "DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING",
+        "authors": [
+          "Jay Nandy",
+          "Wynne Hsu",
+          "Mong Lee"
+        ],
+        "abstract": "Deep learning-based models are developed to automatically detect if a retina image is 'referable' in diabetic retinopathy (DR) screening. However, their classification accuracy degrades as the input i...",
+        "keywords": [
+          "Distributional Shift",
+          "Dirichlet Prior Network",
+          "Diabetic Retinopathy Screening",
+          "Out-of-distribution"
+        ],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 1390856,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T21:59:20.751396+00:00",
+        "degree": 5,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 1,
+        "cluster_color": "#4ECDC4"
+      },
+      {
+        "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
+        "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
+        "authors": [
+          "Maitham Yousif",
+          "Fadhil Al-Amran",
+          "Salman Rawaf",
+          "Mohammad Grmt",
+          "Maithm Ghaly"
+        ],
+        "abstract": "The COVID-19 pandemic, caused by the novel coronavirus SARS-CoV-2, has posed significant health challenges worldwide. While respiratory symptoms have been the primary focus, emerging evidence has high...",
+        "keywords": [
+          "COVID-19",
+          "gastrointestinal symptoms",
+          "machine learning",
+          "predictive factors",
+          "post-COVID-19 care",
+          "long COVID"
+        ],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 327398,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T20:44:34.902459+00:00",
+        "degree": 0,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 0,
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
+        "title": "C-lisp and Flexible Macro Programming with S-expressions",
+        "authors": [
+          "Vedanth Padmaraman",
+          "Sasank Chilamkurthy"
+        ],
+        "abstract": "Llama.lisp is a compiler framework intended to target offload processor backends such as GPUs, using intermediate representation languages (IRs) that are device-agnostic. The Llama.lisp IRs are formul...",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 94664,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T20:43:42.907500+00:00",
+        "degree": 0,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 0,
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+        "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+        "authors": [
+          "Yashwardhan Chaudhuri",
+          "Ankit Kumar",
+          "Arun Buduru",
+          "Adel Alshamrani"
+        ],
+        "abstract": "Crowd counting is gaining societal relevance, particularly in domains of Urban Planning, Crowd Management, and Public Safety. This paper introduces Fourier-guided attention (FGA), a novel attention me...",
+        "keywords": [
+          "Crowd Count Estimation",
+          "Fast Fourier Transformation",
+          "Attention",
+          "Channel Attention",
+          "Spatial Attention",
+          "CNN"
+        ],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 11356498,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T20:43:20.706106+00:00",
+        "degree": 2,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 2,
+        "cluster_color": "#45B7D1"
+      },
+      {
+        "id": "00b2848f-d0b0-4623-a321-bc74539f9703",
+        "title": "Attention Is All You Need",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer",
+          "Google Brain",
+          "Niki Parmar",
+          "Jakob Uszkoreit",
+          "Llion Jones",
+          "Aidan Gomez",
+          "\u0141ukasz Kaiser",
+          "Google Research",
+          "University of Toronto",
+          "31st Conference on Neural Information Processing Systems (NIPS 2017) \n\t\t\t\t\t\t\t\t \n\t\t\t\t\t\t\t\t\t Long Beach \n\t\t\t\t\t\t\t\t\t CA \n\t\t\t\t\t\t\t\t\t USA"
+        ],
+        "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and...",
+        "keywords": [],
+        "metadata": {
+          "file_type": "application/pdf",
+          "file_size": 2215244,
+          "doi": null,
+          "arxiv_id": null
+        },
+        "created_at": "2025-08-03T20:42:51.525921+00:00",
+        "degree": 4,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 2,
+        "cluster_color": "#45B7D1"
+      }
+    ],
+    "edges": [
+      {
+        "source": "d28b3211-9f93-4271-8d5b-680807b486e0",
+        "target": "135598cf-16f6-46c7-948a-db8275485a68",
+        "weight": 0.7488417100303989,
+        "strength": 0.6412024429005699,
+        "type": "similarity"
+      },
+      {
+        "source": "d28b3211-9f93-4271-8d5b-680807b486e0",
+        "target": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+        "weight": 0.7305849741299018,
+        "strength": 0.6151213916141454,
+        "type": "similarity"
+      },
+      {
+        "source": "d28b3211-9f93-4271-8d5b-680807b486e0",
+        "target": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "weight": 0.6724970402158448,
+        "strength": 0.5321386288797783,
+        "type": "similarity"
+      },
+      {
+        "source": "135598cf-16f6-46c7-948a-db8275485a68",
+        "target": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+        "weight": 0.7419971851500022,
+        "strength": 0.631424550214289,
+        "type": "similarity"
+      },
+      {
+        "source": "135598cf-16f6-46c7-948a-db8275485a68",
+        "target": "f9c43b41-6e01-4571-ae88-909821c25fed",
+        "weight": 0.4832804319897236,
+        "strength": 0.261829188556748,
+        "type": "similarity"
+      },
+      {
+        "source": "135598cf-16f6-46c7-948a-db8275485a68",
+        "target": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "weight": 0.726777478802322,
+        "strength": 0.6096821125747458,
+        "type": "similarity"
+      },
+      {
+        "source": "135598cf-16f6-46c7-948a-db8275485a68",
+        "target": "00b2848f-d0b0-4623-a321-bc74539f9703",
+        "weight": 0.3199821063296776,
+        "strength": 0.028545866185253743,
+        "type": "similarity"
+      },
+      {
+        "source": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+        "target": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "weight": 0.600060906659133,
+        "strength": 0.4286584380844758,
+        "type": "similarity"
+      },
+      {
+        "source": "f9c43b41-6e01-4571-ae88-909821c25fed",
+        "target": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "weight": 0.44155621897382885,
+        "strength": 0.20222316996261266,
+        "type": "similarity"
+      },
+      {
+        "source": "f9c43b41-6e01-4571-ae88-909821c25fed",
+        "target": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+        "weight": 0.47735623231295127,
+        "strength": 0.253366046161359,
+        "type": "similarity"
+      },
+      {
+        "source": "f9c43b41-6e01-4571-ae88-909821c25fed",
+        "target": "00b2848f-d0b0-4623-a321-bc74539f9703",
+        "weight": 0.4089468683832879,
+        "strength": 0.15563838340469704,
+        "type": "similarity"
+      },
+      {
+        "source": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "target": "00b2848f-d0b0-4623-a321-bc74539f9703",
+        "weight": 0.3434769098956431,
+        "strength": 0.06210987127949018,
+        "type": "similarity"
+      },
+      {
+        "source": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+        "target": "00b2848f-d0b0-4623-a321-bc74539f9703",
+        "weight": 0.3494823232093997,
+        "strength": 0.07068903315628532,
+        "type": "similarity"
+      }
+    ],
+    "layout": "force-directed",
+    "metadata": {
+      "node_count": 9,
+      "edge_count": 13,
+      "similarity_threshold": 0.3
+    },
+    "clustering_enabled": true,
+    "clustering_algorithm": "hierarchical",
+    "cluster_visualization": {
+      "points": [
+        {
+          "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
+          "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+          "x": -0.4917868730382568,
+          "y": 0.06293927090863534,
+          "cluster": 1,
+          "authors": [
+            "Israa Odeh",
+            "Mouhammd Alkasassbeh",
+            "Mohammad Alauthman"
+          ]
+        },
+        {
+          "id": "135598cf-16f6-46c7-948a-db8275485a68",
+          "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+          "x": -0.3884171761858972,
+          "y": -0.16771563430398,
+          "cluster": 1,
+          "authors": [
+            "Saket Chaturvedi",
+            "Kajol Gupta",
+            "Vaishali Ninawe"
+          ]
+        },
+        {
+          "id": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+          "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+          "x": -0.5228760795210041,
+          "y": 0.039496765280517245,
+          "cluster": 1,
+          "authors": [
+            "Misgina Hagos",
+            "Shri Kant",
+            "Surayya Ado Bala"
+          ]
+        },
+        {
+          "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
+          "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
+          "x": 0.2964627800759964,
+          "y": -0.46267284534424624,
+          "cluster": 2,
+          "authors": [
+            "Yuhong Li",
+            "Xiaofan Zhang",
+            "Deming Chen"
+          ]
+        },
+        {
+          "id": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+          "title": "DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING",
+          "x": -0.34761466895663456,
+          "y": -0.21211814754059333,
+          "cluster": 1,
+          "authors": [
+            "Jay Nandy",
+            "Wynne Hsu",
+            "Mong Lee"
+          ]
+        },
+        {
+          "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
+          "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
+          "x": 0.018022067600396735,
+          "y": 0.6083912837981692,
+          "cluster": 0,
+          "authors": [
+            "Maitham Yousif",
+            "Fadhil Al-Amran",
+            "Salman Rawaf"
+          ]
+        },
+        {
+          "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
+          "title": "C-lisp and Flexible Macro Programming with S-expressions",
+          "x": 0.45246313246609116,
+          "y": 0.5831568462974233,
+          "cluster": 0,
+          "authors": [
+            "Vedanth Padmaraman",
+            "Sasank Chilamkurthy"
+          ]
+        },
+        {
+          "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+          "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+          "x": 0.5125909647974732,
+          "y": -0.29478069220343445,
+          "cluster": 2,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Arun Buduru"
+          ]
+        },
+        {
+          "id": "00b2848f-d0b0-4623-a321-bc74539f9703",
+          "title": "Attention Is All You Need",
+          "x": 0.47115585276183536,
+          "y": -0.15669684689249125,
+          "cluster": 2,
+          "authors": [
+            "Ashish Vaswani",
+            "Noam Shazeer",
+            "Google Brain"
+          ]
+        }
+      ],
+      "dimensionality_reduction": {
+        "method": "PCA",
+        "explained_variance_ratio": [
+          0.2819026252707235,
+          0.20077827546390406
+        ],
+        "total_explained_variance": 0.48268090073462755
+      },
+      "layout_algorithm": "scatter",
+      "color_scheme": "cluster_based"
+    }
+  },
+  "metrics": {
+    "basic_metrics": {
+      "node_count": 9,
+      "edge_count": 13,
+      "density": 0.3611111111111111,
+      "is_connected": false
+    },
+    "centrality_metrics": {
+      "average_degree_centrality": 0.3611111111111111,
+      "max_degree_centrality": 0.625,
+      "average_betweenness_centrality": 0.03968253968253968,
+      "max_betweenness_centrality": 0.10714285714285714,
+      "average_closeness_centrality": 0.4095238095238095,
+      "max_closeness_centrality": 0.6428571428571428
+    },
+    "clustering_metrics": {
+      "average_clustering_coefficient": 0.6148148148148149,
+      "transitivity": 0.6923076923076923
+    },
+    "component_analysis": {
+      "number_of_components": 3,
+      "largest_component_size": 7,
+      "component_sizes": [
+        7,
+        1,
+        1
+      ]
+    }
+  },
+  "parameters": {
+    "similarity_threshold": 0.3,
+    "papers_count": 9,
+    "edges_count": 13
+  },
+  "generated_at": "2025-08-03T22:06:05.279966",
+  "clustering": {
+    "success": true,
+    "algorithm_used": "hierarchical",
+    "parameters": {
+      "n_clusters": 3
+    },
+    "cluster_labels": [
+      1,
+      1,
+      1,
+      2,
+      1,
+      0,
+      0,
+      2,
+      2
+    ],
+    "cluster_analysis": {
+      "clusters": {
+        "0": {
+          "label": 0,
+          "size": 2,
+          "papers": [
+            {
+              "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
+              "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
+              "authors": [
+                "Maitham Yousif",
+                "Fadhil Al-Amran",
+                "Salman Rawaf",
+                "Mohammad Grmt",
+                "Maithm Ghaly"
+              ]
+            },
+            {
+              "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
+              "title": "C-lisp and Flexible Macro Programming with S-expressions",
+              "authors": [
+                "Vedanth Padmaraman",
+                "Sasank Chilamkurthy"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 0.04693715069410887,
+            "common_keywords": [
+              {
+                "keyword": "COVID-19",
+                "frequency": 1
+              },
+              {
+                "keyword": "gastrointestinal symptoms",
+                "frequency": 1
+              },
+              {
+                "keyword": "machine learning",
+                "frequency": 1
+              },
+              {
+                "keyword": "predictive factors",
+                "frequency": 1
+              },
+              {
+                "keyword": "post-COVID-19 care",
+                "frequency": 1
+              },
+              {
+                "keyword": "long COVID",
+                "frequency": 1
+              }
+            ],
+            "centroid_norm": 0.7235109965529204
+          }
+        },
+        "1": {
+          "label": 1,
+          "size": 4,
+          "papers": [
+            {
+              "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
+              "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+              "authors": [
+                "Israa Odeh",
+                "Mouhammd Alkasassbeh",
+                "Mohammad Alauthman"
+              ]
+            },
+            {
+              "id": "135598cf-16f6-46c7-948a-db8275485a68",
+              "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+              "authors": [
+                "Saket Chaturvedi",
+                "Kajol Gupta",
+                "Vaishali Ninawe",
+                "Prakash Prasad"
+              ]
+            },
+            {
+              "id": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+              "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+              "authors": [
+                "Misgina Hagos",
+                "Shri Kant",
+                "Surayya Ado Bala"
+              ]
+            },
+            {
+              "id": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+              "title": "DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING",
+              "authors": [
+                "Jay Nandy",
+                "Wynne Hsu",
+                "Mong Lee"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 0.7034598824979338,
+            "common_keywords": [
+              {
+                "keyword": "Diabetic Retinopathy",
+                "frequency": 2
+              },
+              {
+                "keyword": "Ensemble learning",
+                "frequency": 1
+              },
+              {
+                "keyword": "Machine learning",
+                "frequency": 1
+              },
+              {
+                "keyword": "Deep Learning",
+                "frequency": 1
+              },
+              {
+                "keyword": "DenseNet network",
+                "frequency": 1
+              },
+              {
+                "keyword": "Fundus Photography",
+                "frequency": 1
+              },
+              {
+                "keyword": "Computeraided diagnosis",
+                "frequency": 1
+              },
+              {
+                "keyword": "Distributional Shift",
+                "frequency": 1
+              },
+              {
+                "keyword": "Dirichlet Prior Network",
+                "frequency": 1
+              },
+              {
+                "keyword": "Diabetic Retinopathy Screening",
+                "frequency": 1
+              }
+            ],
+            "centroid_norm": 0.8818133502328455
+          }
+        },
+        "2": {
+          "label": 2,
+          "size": 3,
+          "papers": [
+            {
+              "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
+              "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
+              "authors": [
+                "Yuhong Li",
+                "Xiaofan Zhang",
+                "Deming Chen"
+              ]
+            },
+            {
+              "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+              "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+              "authors": [
+                "Yashwardhan Chaudhuri",
+                "Ankit Kumar",
+                "Arun Buduru",
+                "Adel Alshamrani"
+              ]
+            },
+            {
+              "id": "00b2848f-d0b0-4623-a321-bc74539f9703",
+              "title": "Attention Is All You Need",
+              "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Google Brain",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan Gomez",
+                "\u0141ukasz Kaiser",
+                "Google Research",
+                "University of Toronto",
+                "31st Conference on Neural Information Processing Systems (NIPS 2017) \n\t\t\t\t\t\t\t\t \n\t\t\t\t\t\t\t\t\t Long Beach \n\t\t\t\t\t\t\t\t\t CA \n\t\t\t\t\t\t\t\t\t USA"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 0.411928474635213,
+            "common_keywords": [
+              {
+                "keyword": "Crowd Count Estimation",
+                "frequency": 1
+              },
+              {
+                "keyword": "Fast Fourier Transformation",
+                "frequency": 1
+              },
+              {
+                "keyword": "Attention",
+                "frequency": 1
+              },
+              {
+                "keyword": "Channel Attention",
+                "frequency": 1
+              },
+              {
+                "keyword": "Spatial Attention",
+                "frequency": 1
+              },
+              {
+                "keyword": "CNN",
+                "frequency": 1
+              }
+            ],
+            "centroid_norm": 0.7797127085189063
+          }
+        }
+      },
+      "summary": {
+        "total_clusters": 3,
+        "largest_cluster_size": 4,
+        "smallest_cluster_size": 2
+      }
+    },
+    "visualization": {
+      "points": [
+        {
+          "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
+          "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
+          "x": -0.4917868730382568,
+          "y": 0.06293927090863534,
+          "cluster": 1,
+          "authors": [
+            "Israa Odeh",
+            "Mouhammd Alkasassbeh",
+            "Mohammad Alauthman"
+          ]
+        },
+        {
+          "id": "135598cf-16f6-46c7-948a-db8275485a68",
+          "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
+          "x": -0.3884171761858972,
+          "y": -0.16771563430398,
+          "cluster": 1,
+          "authors": [
+            "Saket Chaturvedi",
+            "Kajol Gupta",
+            "Vaishali Ninawe"
+          ]
+        },
+        {
+          "id": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+          "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
+          "x": -0.5228760795210041,
+          "y": 0.039496765280517245,
+          "cluster": 1,
+          "authors": [
+            "Misgina Hagos",
+            "Shri Kant",
+            "Surayya Ado Bala"
+          ]
+        },
+        {
+          "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
+          "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
+          "x": 0.2964627800759964,
+          "y": -0.46267284534424624,
+          "cluster": 2,
+          "authors": [
+            "Yuhong Li",
+            "Xiaofan Zhang",
+            "Deming Chen"
+          ]
+        },
+        {
+          "id": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+          "title": "DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING",
+          "x": -0.34761466895663456,
+          "y": -0.21211814754059333,
+          "cluster": 1,
+          "authors": [
+            "Jay Nandy",
+            "Wynne Hsu",
+            "Mong Lee"
+          ]
+        },
+        {
+          "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
+          "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
+          "x": 0.018022067600396735,
+          "y": 0.6083912837981692,
+          "cluster": 0,
+          "authors": [
+            "Maitham Yousif",
+            "Fadhil Al-Amran",
+            "Salman Rawaf"
+          ]
+        },
+        {
+          "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
+          "title": "C-lisp and Flexible Macro Programming with S-expressions",
+          "x": 0.45246313246609116,
+          "y": 0.5831568462974233,
+          "cluster": 0,
+          "authors": [
+            "Vedanth Padmaraman",
+            "Sasank Chilamkurthy"
+          ]
+        },
+        {
+          "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+          "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
+          "x": 0.5125909647974732,
+          "y": -0.29478069220343445,
+          "cluster": 2,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Arun Buduru"
+          ]
+        },
+        {
+          "id": "00b2848f-d0b0-4623-a321-bc74539f9703",
+          "title": "Attention Is All You Need",
+          "x": 0.47115585276183536,
+          "y": -0.15669684689249125,
+          "cluster": 2,
+          "authors": [
+            "Ashish Vaswani",
+            "Noam Shazeer",
+            "Google Brain"
+          ]
+        }
+      ],
+      "dimensionality_reduction": {
+        "method": "PCA",
+        "explained_variance_ratio": [
+          0.2819026252707235,
+          0.20077827546390406
+        ],
+        "total_explained_variance": 0.48268090073462755
+      },
+      "layout_algorithm": "scatter",
+      "color_scheme": "cluster_based"
+    },
+    "quality_metrics": {
+      "silhouette_score": 0.17324673017362585,
+      "cluster_distribution": {
+        "0": 2,
+        "1": 4,
+        "2": 3
+      },
+      "number_of_clusters": 3
+    }
+  },
+  "saved_at": "2025-08-03T22:06:05.351077"
+}

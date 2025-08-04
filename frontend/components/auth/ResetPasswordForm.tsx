@@ -71,7 +71,7 @@ export default function ResetPasswordForm() {
       
       // Redirect to login after success
       setTimeout(() => {
-        router.push('/Authentication/login?message=password_reset');
+        router.push('/login?message=password_reset');
       }, 3000);
       
     } catch (error: any) {
@@ -103,7 +103,7 @@ export default function ResetPasswordForm() {
   };
 
   const handleBackToLogin = () => {
-    router.push('/Authentication/login');
+    router.push('/login');
   };
 
   const handleForgotPassword = () => {

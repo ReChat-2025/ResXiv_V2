@@ -139,6 +139,12 @@ class EmailVerificationToken(Base):
     # Relationships
     user = relationship("User", back_populates="email_verification_tokens")
     
+    @property
+    def is_expired(self) -> bool:
+        """Return True if token is expired or already verified."""
+        from datetime import datetime, timezone
+        return self.verified_at is not None or (self.expires_at <= datetime.now(timezone.utc))
+    
     def __repr__(self):
         return f"<EmailVerificationToken(id={self.id}, user_id={self.user_id}, email={self.email})>"
 

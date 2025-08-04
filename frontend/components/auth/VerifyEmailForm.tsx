@@ -51,7 +51,7 @@ export default function VerifyEmailForm() {
       
       // Redirect to login after success
       setTimeout(() => {
-        router.push('/Authentication/login?message=email-verified');
+        router.push('/login?message=email-verified');
       }, 4000);
       
     } catch (error: any) {
@@ -115,7 +115,7 @@ export default function VerifyEmailForm() {
               <p className="text-xs text-gray-500 mt-3">Redirecting to login in a few seconds...</p>
             </div>
             <Button
-              onClick={() => router.push('/Authentication/login?message=email-verified')}
+              onClick={() => router.push('/login?message=email-verified')}
               className="w-full"
             >
               Continue to Login
@@ -138,14 +138,14 @@ export default function VerifyEmailForm() {
             </div>
             <div className="space-y-2">
               <Button
-                onClick={() => router.push('/Authentication/signup')}
+                onClick={() => router.push('/signup')}
                 className="w-full"
               >
                 Register Again
               </Button>
               <Button
                 variant="outline"
-                onClick={() => router.push('/Authentication/login')}
+                onClick={() => router.push('/login')}
                 className="w-full"
               >
                 Back to Login
@@ -173,7 +173,7 @@ export default function VerifyEmailForm() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => router.push('/Authentication/login')}
+                onClick={() => router.push('/login')}
                 className="w-full"
               >
                 Back to Login

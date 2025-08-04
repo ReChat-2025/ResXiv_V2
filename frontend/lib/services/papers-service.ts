@@ -387,10 +387,17 @@ export class PapersService {
     try {
       store.setLoading(true);
       
-      const result = await papersApi.uploadPaperPdf(paperId, file);
+      const result = await papersApi.uploadPaper({
+        project_id: "default", // You may want to get this from context/store
+        file: file,
+        title: file.name,
+        process_with_grobid: true,
+        run_diagnostics: false,
+        private_uploaded: false
+      });
       
       // Update paper with PDF URL
-      store.updatePaper(paperId, { pdfUrl: result.url });
+      store.updatePaper(paperId, { pdfUrl: result.pdf_path || undefined });
       
       this.showNotification('PDF uploaded successfully', 'success');
       return true;
@@ -411,7 +418,9 @@ export class PapersService {
   // Get paper recommendations
   async getPaperRecommendations(paperId: string): Promise<Paper[]> {
     try {
-      const recommendations = await papersApi.getRecommendations(paperId);
+      // For now, return empty array since the API method doesn't exist yet
+      // TODO: Implement getRecommendations in papersApi when backend is ready
+      const recommendations: Paper[] = [];
       return recommendations;
     } catch (error) {
       console.error('Failed to get recommendations:', error);

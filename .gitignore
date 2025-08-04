@@ -2,6 +2,12 @@
 # ResXiv V2 - Git Ignore File
 # ==============================================================================
 
+# RAILWAY DEPLOYMENT - Include demo files
+!DEMO_CREDENTIALS.txt
+!RAILWAY_DEPLOYMENT.md
+!railway.json
+!setup_demo_data.py
+
 # ==============================================================================
 # FRONTEND (Node.js/Next.js)
 # ==============================================================================

@@ -307,6 +307,11 @@ class PaperEmbeddingRepository:
         try:
             # pgvector expects a string literal like '[0.1,0.2, ...]'
             embedding_str = '[' + ','.join(f"{x:.6f}" for x in embedding) + ']'
+            
+            # Clean source text to remove null bytes and other problematic characters
+            cleaned_text = source_text.replace('\x00', '').replace('\0', '')
+            # Also remove other control characters that might cause issues
+            cleaned_text = ''.join(char for char in cleaned_text if ord(char) >= 32 or char in '\n\r\t')
 
             await self.session.execute(
                 text("""
@@ -326,7 +331,7 @@ class PaperEmbeddingRepository:
                 {
                     "paper_id": str(paper_id),
                     "embedding": embedding_str,
-                    "source_text": source_text,
+                    "source_text": cleaned_text,
                     "model_name": model_name,
                 }
             )

@@ -24,7 +24,7 @@ UserService = RefactoredUserService
 from .paper.paper_service_integrated import PaperService as RefactoredPaperService
 from .paper.paper_storage_service import PaperStorageService
 from .paper.paper_processing_service import PaperProcessingService
-from .paper.paper_embedding_service import PaperEmbeddingService
+# from .paper.paper_embedding_service import PaperEmbeddingService  # Disabled for demo
 from .paper.paper_crud_service import PaperCrudService
 
 # Import the old service for gradual migration
@@ -37,7 +37,7 @@ except ImportError:
 PaperService = RefactoredPaperService
 # Compatibility aliases
 PaperProcessingService = PaperProcessingService  # type: ignore  # noqa: F811
-PaperEmbeddingService = PaperEmbeddingService  # type: ignore  # noqa: F811
+# PaperEmbeddingService = PaperEmbeddingService  # type: ignore  # noqa: F811  # Disabled for demo
 
 from .email_service import EmailService, get_email_service
 

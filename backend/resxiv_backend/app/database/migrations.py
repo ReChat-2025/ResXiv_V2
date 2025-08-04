@@ -518,54 +518,6 @@ class MigrationManager:
 
         logger.info("↩️  Rolled back extra columns from diagnostics table")
 
-
-# Utility functions for direct use
-
-async def run_project_slug_fix():
-    """
-    Convenience function to run the project slug fix migration
-    
-    Usage:
-        from app.database.migrations import run_project_slug_fix
-        await run_project_slug_fix()
-    """
-    return await migration_manager.run_migration("001_fix_project_slug_uniqueness")
-
-
-async def check_migration_needed() -> bool:
-    """
-    Check if the project slug migration is needed
-    
-    Returns:
-        True if migration is needed, False otherwise
-    """
-    try:
-        if not db_manager._initialized:
-            await db_manager.initialize()
-        
-        async with db_manager.get_postgres_session() as session:
-            # Check if the old constraint exists
-            result = await session.execute(text("""
-                SELECT COUNT(*) FROM information_schema.table_constraints 
-                WHERE constraint_name = 'projects_slug_key' 
-                AND table_name = 'projects'
-            """))
-            old_constraint_exists = result.scalar() > 0
-            
-            # Check if the new index exists
-            result = await session.execute(text("""
-                SELECT COUNT(*) FROM pg_indexes 
-                WHERE indexname = 'ix_projects_slug_unique_active'
-            """))
-            new_index_exists = result.scalar() > 0
-            
-            # Migration is needed if old constraint exists or new index doesn't exist
-            return old_constraint_exists or not new_index_exists
-            
-    except Exception as e:
-        logger.error(f"Error checking migration status: {str(e)}")
-        return True  # Assume migration is needed if we can't check
-
     # ================================
     # PAPER EMBEDDINGS TABLE MIGRATION
     # ================================
@@ -579,73 +531,74 @@ async def check_migration_needed() -> bool:
         await session.execute(text("""
             CREATE TABLE IF NOT EXISTS paper_embeddings (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                paper_id UUID UNIQUE REFERENCES papers(id) ON DELETE CASCADE,
-                embedding vector(384), -- all-mini-lmv6 produces 384-dimensional embeddings
-                source_text TEXT NOT NULL, -- concatenated diagnostics text used for embedding
-                model_name TEXT DEFAULT 'all-mini-lmv6' NOT NULL,
-                model_version TEXT,
-                embedding_metadata JSONB, -- additional metadata about embedding generation
-                processing_status TEXT DEFAULT 'pending' CHECK (processing_status IN ('pending', 'processing', 'completed', 'failed')),
-                error_message TEXT, -- store error details if processing fails
-                created_at TIMESTAMPTZ DEFAULT now(),
-                updated_at TIMESTAMPTZ DEFAULT now(),
+                paper_id UUID NOT NULL REFERENCES papers(id) ON DELETE CASCADE,
+                embedding_model TEXT NOT NULL DEFAULT 'all-MiniLM-L6-v2',
+                title_embedding VECTOR(384),
+                abstract_embedding VECTOR(384),
+                combined_embedding VECTOR(384),
+                embedding_created_at TIMESTAMPTZ DEFAULT now(),
+                embedding_updated_at TIMESTAMPTZ DEFAULT now(),
                 
-                -- Constraints
-                CONSTRAINT valid_embedding_dimension CHECK (vector_dims(embedding) = 384),
-                CONSTRAINT source_text_not_empty CHECK (length(trim(source_text)) > 0)
+                CONSTRAINT unique_paper_model UNIQUE (paper_id, embedding_model)
             );
         """))
         
-        # Create indexes for performance
+        # Create indexes for efficient similarity search
         await session.execute(text("""
-            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_paper_id ON paper_embeddings(paper_id);
+            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_paper_id 
+            ON paper_embeddings(paper_id);
         """))
         
         await session.execute(text("""
-            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_status ON paper_embeddings(processing_status);
+            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_model 
+            ON paper_embeddings(embedding_model);
+        """))
+        
+        # Create vector similarity indexes (using HNSW for efficient similarity search)
+        await session.execute(text("""
+            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_title_cosine 
+            ON paper_embeddings USING hnsw (title_embedding vector_cosine_ops);
         """))
         
         await session.execute(text("""
-            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_model ON paper_embeddings(model_name);
+            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_abstract_cosine 
+            ON paper_embeddings USING hnsw (abstract_embedding vector_cosine_ops);
         """))
         
         await session.execute(text("""
-            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_created_at ON paper_embeddings(created_at);
+            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_combined_cosine 
+            ON paper_embeddings USING hnsw (combined_embedding vector_cosine_ops);
         """))
         
-        # Create vector similarity search index (for semantic search)
-        # Note: This requires the vector extension to be installed
+        # Create trigger for updating embedding_updated_at
         await session.execute(text("""
-            CREATE INDEX IF NOT EXISTS idx_paper_embeddings_vector 
-            ON paper_embeddings USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
-        """))
-        
-        # Create trigger for auto-updating updated_at timestamp
-        await session.execute(text("""
-            CREATE TRIGGER IF NOT EXISTS update_paper_embeddings_updated_at 
+            CREATE TRIGGER update_paper_embeddings_updated_at 
             BEFORE UPDATE ON paper_embeddings
             FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
         """))
         
-        logger.info("✅ Paper embeddings table created successfully with semantic search indexes")
+        logger.info("✅ Paper embeddings table created with vector indexes")
     
     async def _add_paper_embeddings_table_down(self, session: AsyncSession):
-        """Remove paper_embeddings table and related objects"""
+        """Drop paper_embeddings table"""
+        logger.info("Dropping paper_embeddings table...")
         
-        logger.info("Removing paper_embeddings table and related objects...")
-        
-        # Drop trigger first
+        # Drop trigger
         await session.execute(text("""
             DROP TRIGGER IF EXISTS update_paper_embeddings_updated_at ON paper_embeddings;
         """))
         
         # Drop indexes
         await session.execute(text("""
-            DROP INDEX IF EXISTS idx_paper_embeddings_vector;
+            DROP INDEX IF EXISTS idx_paper_embeddings_combined_cosine;
         """))
         
         await session.execute(text("""
-            DROP INDEX IF EXISTS idx_paper_embeddings_created_at;
+            DROP INDEX IF EXISTS idx_paper_embeddings_abstract_cosine;
+        """))
+        
+        await session.execute(text("""
+            DROP INDEX IF EXISTS idx_paper_embeddings_title_cosine;
         """))
         
         await session.execute(text("""
@@ -653,38 +606,40 @@ async def check_migration_needed() -> bool:
         """))
         
         await session.execute(text("""
-            DROP INDEX IF EXISTS idx_paper_embeddings_status;
-        """))
-        
-        await session.execute(text("""
             DROP INDEX IF EXISTS idx_paper_embeddings_paper_id;
         """))
         
-        # Drop the table
+        # Drop table
         await session.execute(text("""
             DROP TABLE IF EXISTS paper_embeddings;
         """))
         
-        logger.info("✅ Paper embeddings table and related objects removed successfully")
+        logger.info("📄 Paper embeddings table dropped")
+
+    # ================================  
+    # USER SAVED SEARCHES TABLE MIGRATION
+    # ================================
     
     async def _add_user_saved_searches_table_up(self, session: AsyncSession):
         """Add user_saved_searches table for search functionality"""
+        
         logger.info("Creating user_saved_searches table...")
         
+        # Create the user_saved_searches table
         await session.execute(text("""
             CREATE TABLE IF NOT EXISTS user_saved_searches (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+                user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                 name TEXT NOT NULL,
-                query TEXT NOT NULL,
-                filters JSONB,
-                notifications BOOLEAN DEFAULT FALSE,
-                last_run TIMESTAMPTZ,
-                result_count INTEGER,
+                search_query TEXT NOT NULL,
+                filters JSONB DEFAULT '{}'::jsonb,
+                is_private BOOLEAN DEFAULT TRUE,
+                search_count INTEGER DEFAULT 0,
+                last_used_at TIMESTAMPTZ,
                 created_at TIMESTAMPTZ DEFAULT now(),
                 updated_at TIMESTAMPTZ DEFAULT now(),
                 
-                CONSTRAINT user_saved_searches_name_unique UNIQUE (user_id, name)
+                CONSTRAINT unique_user_search_name UNIQUE (user_id, name)
             );
         """))
         
@@ -739,6 +694,53 @@ async def check_migration_needed() -> bool:
         
         logger.info("User saved searches table dropped successfully")
 
+
+# Utility functions for direct use
+
+async def run_project_slug_fix():
+    """
+    Convenience function to run the project slug fix migration
+    
+    Usage:
+        from app.database.migrations import run_project_slug_fix
+        await run_project_slug_fix()
+    """
+    return await migration_manager.run_migration("001_fix_project_slug_uniqueness")
+
+
+async def check_migration_needed() -> bool:
+    """
+    Check if the project slug migration is needed
+    
+    Returns:
+        True if migration is needed, False otherwise
+    """
+    try:
+        if not db_manager._initialized:
+            await db_manager.initialize()
+        
+        async with db_manager.get_postgres_session() as session:
+            # Check if the old constraint exists
+            result = await session.execute(text("""
+                SELECT COUNT(*) FROM information_schema.table_constraints 
+                WHERE constraint_name = 'projects_slug_key' 
+                AND table_name = 'projects'
+            """))
+            old_constraint_exists = result.scalar() > 0
+            
+            # Check if the new index exists
+            result = await session.execute(text("""
+                SELECT COUNT(*) FROM pg_indexes 
+                WHERE indexname = 'ix_projects_slug_unique_active'
+            """))
+            new_index_exists = result.scalar() > 0
+            
+            # Migration is needed if old constraint exists or new index doesn't exist
+            return old_constraint_exists or not new_index_exists
+            
+    except Exception as e:
+        logger.error(f"Error checking migration status: {str(e)}")
+        return True  # Assume migration is needed if we can't check
 
 # Global migration manager instance (must be at end after all methods are defined)
 migration_manager = MigrationManager() 

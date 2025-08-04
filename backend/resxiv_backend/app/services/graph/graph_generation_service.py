@@ -109,7 +109,7 @@ class GraphGenerationService:
             logger.error(f"Error generating project graph: {e}")
             raise ServiceError(
                 f"Failed to generate project graph: {str(e)}",
-                ErrorCodes.GENERATION_ERROR
+                ErrorCodes.CREATION_ERROR
             )
     
     async def _get_project_papers_with_embeddings(
@@ -126,12 +126,12 @@ class GraphGenerationService:
             List of papers with embeddings
         """
         try:
-            # Get papers from project
-            papers = await self.paper_repository.get_papers_by_project(project_id)
+            # Get papers from project (returns tuple of papers list and total count)
+            papers_list, total_count = await self.paper_repository.get_papers_by_project(project_id)
             
             papers_with_embeddings = []
             
-            for paper in papers:
+            for paper in papers_list:
                 # Check if paper has embeddings
                 embedding = await self.embedding_service.get_paper_embedding(paper.id)
                 
@@ -145,14 +145,14 @@ class GraphGenerationService:
                         "embedding": np.array(embedding),
                         "created_at": paper.created_at.isoformat() if paper.created_at else None,
                         "metadata": {
-                            "file_type": paper.file_type,
+                            "file_type": paper.mime_type,
                             "file_size": paper.file_size,
                             "doi": paper.doi,
                             "arxiv_id": paper.arxiv_id
                         }
                     })
             
-            logger.info(f"Found {len(papers_with_embeddings)} papers with embeddings for project {project_id}")
+            logger.info(f"Found {len(papers_with_embeddings)} papers with embeddings out of {len(papers_list)} total papers for project {project_id}")
             return papers_with_embeddings
             
         except Exception as e:
@@ -285,7 +285,7 @@ class GraphGenerationService:
             logger.error(f"Error creating graph structure: {e}")
             raise ServiceError(
                 f"Failed to create graph structure: {str(e)}",
-                ErrorCodes.GENERATION_ERROR
+                ErrorCodes.CREATION_ERROR
             )
     
     async def _calculate_graph_metrics(

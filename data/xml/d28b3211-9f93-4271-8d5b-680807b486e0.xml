@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Diabetic Retinopathy Detection using Ensemble Machine Learning</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Israa</forename><surname>Odeh</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">Department of Computer Science PSUT</orgName>
+								<address>
+									<settlement>Amman</settlement>
+									<country key="JO">Jordan</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mouhammd</forename><surname>Alkasassbeh</surname></persName>
+							<email>m.alkasassbeh@psut.edu.jo</email>
+							<affiliation key="aff1">
+								<orgName type="department">Department of Computer Science PSUT</orgName>
+								<address>
+									<settlement>Amman</settlement>
+									<country key="JO">Jordan</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mohammad</forename><surname>Alauthman</surname></persName>
+							<email>mohammad.alauthman@uop.edu.jo</email>
+							<affiliation key="aff2">
+								<orgName type="department">Department of Information Security</orgName>
+								<orgName type="institution">University of Petra Amman</orgName>
+								<address>
+									<country key="JO">Jordan</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Diabetic Retinopathy Detection using Ensemble Machine Learning</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">74A95710FD125EB2BE2819F5FB78E327</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2025-08-03T22:04+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Diabetic Retinopathy</term>
+					<term>Ensemble learning</term>
+					<term>Machine learning</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Diabetic Retinopathy (DR) is among the world's leading vision loss causes in diabetic patients. DR is a microvascular disease that affects the eye retina, which causes vessel blockage and therefore cuts the main source of nutrition for the retina tissues. Treatment for this visual disorder is most effective when it is detected in its earliest stages, as severe DR can result in irreversible blindness. Nonetheless, DR identification requires the expertise of Ophthalmologists which is often expensive and time-consuming. Therefore, automatic detection systems were introduced aiming to facilitate the identification process, making it available globally in a time and cost-efficient manner. However, due to the limited reliable datasets and medical records for this particular eye disease, the obtained predictions' accuracies were relatively unsatisfying for eye specialists to rely on them as diagnostic systems. Thus, we explored an ensemble-based learning strategy, merging a substantial selection of well-known classification algorithms in one sophisticated diagnostic model. The proposed framework achieved the highest accuracy rates among all other common classification algorithms in the area. 4 subdatasets were generated to contain the top 5 and top 10 features of the Messidor dataset, selected by InfoGainEval. and WrapperSubsetEval., accuracies of 70.7% and 75.1% were achieved on the InfoGainEval. top 5 and original dataset respectively. The results imply the impressive performance of the subdataset, which significantly conduces to a less complex classification process when compared to the original complete Messidor dataset.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>INTRODUCTION</head><p>Diabetic Retinopathy is a diabetes complication that damages the light-sensitive retina tissues and blood vessels due to high blood sugar rates, macular changes such as yellowish spots, aneurysms (an increase of the microvascular thickness or "ballooning" in the retina), and hemorrhage (blood escaping from blood vessels) are considered the most common implications of DR. Macular irregularities in diabetic patients were first detected in 1856 by Eduard Jaeger. However, those were not confirmed to be related to diabetes until 1872, when Jaeger first provided a histopathologic proof of "cystoid degeneration of the macula" in diabetic patients. Several studies were carried in the following years leading to the discovery of Proliferative Diabetic Retinopathy by Wilhelm Manz in 1876 <ref type="bibr" target="#b0">[1]</ref>.</p><p>As stated by Mayo Clinic <ref type="bibr" target="#b1">[2]</ref>, common symptoms of DR include spots in vision, blurred or fluctuated sight, color impairment, and in some severe cases, a complete vision loss in one or both eyes. In the long term, high blood sugar rates cause blockage in the microvessels of the retina, which are very important for nourishing the retina tissues, therefore, the eye attempts to grow new vessels to supply the retina with the needed nutrients and oxygen, however, these generated vessels are weak and likely to suffer blood leakage forming a hemorrhage in the retina. According to the severity of the detected symptoms, DR is graded into one of 3 stages; Mild, Moderate, and Proliferative DR (PDR).</p><p>In many cases, a fast clinical check and decision must be made for different reasons, such as a large number of patients in a specific facility, or an urgent and critical patient condition. Moreover, affordable treatment should be provided to all patients, however, in many developing countries, patients are not provided with adequate health care nor affordable treatment. Hence, many underprivileged patients are at a very high risk of losing their sight owing to the absence of reasonable healthcare. Consequently, various Artificial Intelligence algorithms were applied to produce efficient medical decision-making systems, such as in Expert Systems, Natural Language Processing (NLP) and other machine learning applications, leading to the first expert system specialized in medical practices called MYCIN, this rule-based prediction model was introduced in the early 1970s after almost 6 years of development at Stanford University, USA <ref type="bibr" target="#b2">[3]</ref>. Many other Artificial Intelligence applications were employed in various healthcare sectors, like Radiology, Screening, and Disease Diagnosis. Several hospitals including Mayo Clinic, USA, and the National Health Service, UK have developed their own Intelligent systems <ref type="bibr" target="#b3">[4,</ref><ref type="bibr" target="#b4">5]</ref>, as well as Google <ref type="bibr" target="#b5">[6]</ref> and IBM's <ref type="bibr" target="#b6">[7]</ref> contributions to healthcare technology advancements.</p><p>In this research, we have developed a modern automatic detection model for Diabetic Retinopathy, concentrating on utilizing the most efficient ensemble of machine learning algorithms in order to obtain a highly accurate diagnosis. Moreover, in the present ensemble-based framework, as elucidated in the rest of this document, we have also considered achieving excellent precision while preserving an efficient performance with minimal time and storage costs.</p><p>The remainder of this paper is organized as follows; section 2 presents a literature review and a discussion of previously reported work on Diabetic Retinopathy automatic detection. In section 3, a detailed description of the proposed diagnostic model is provided, followed by the experimental dataset and methods used in this study. The final section concludes and summarizes the work along with the authors' opinion on future work and directions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II.</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Related Work</head><p>Numerous studies have been carried out on the automated identification of the DR, its reliability, efficiency and maintainability. In 2006, Jelinek et al. <ref type="bibr" target="#b7">[8]</ref> proposed a DR detection system fully reliant on detecting red lesions in the retina using image processing and analysis. Followed by Abramoff et al. <ref type="bibr" target="#b8">[9]</ref> in 2010, and Antal and Hajdu et al. <ref type="bibr" target="#b9">[10]</ref> model in 2012 depending on the same primary lesion Jelinek used. However, the previously proposed systems haven't met the accuracy and sensitivity levels ophthalmologists required.</p><p>Further research was conducted throughout the following years. One of the ideas to improve the DR identification algorithms was to include more features that can be extracted from a retina funduscopy. For instance, image quality was proven to have a significant effect on the final prediction <ref type="bibr" target="#b10">[11]</ref>, retinal images with low resolution will probably increase the chance of developing FP and FN predictions.</p><p>Antal and Hajdu's <ref type="bibr" target="#b11">[12]</ref> proposed system merges several comparison components used in previous works; Image quality, Lesion-specific components, Multi-scale AM/FM based feature extraction, Pre-screening and Anatomical components (Macula and Optic Disk detection) in an ensemble-based decision-making system, this was done by training several well-known classifiers along with energy functions and fusion strategies for ensemble selection. Basically, any classifier that produces a higher overall accuracy is included in the system, otherwise excluded. The authors recommended backward ensemble search methodology using accuracy and sensitivity energy functions, which first considers all classifiers are part of the ensemble, then each classifier is tested to be excluded only if elimination causes accuracy to increase. Antal and Hajdu's ensembled system achieved an outstanding accuracy of 90%, Sensitivity of 90%, and 91% Specificity in both disease and no-disease settings.</p><p>Gargeya and Leng's <ref type="bibr" target="#b12">[13]</ref> proposed algorithm is mainly constructed of Deep convolutional neural networks (DCNNs), which consist of several filtering layers, each one produces the sum of both its outcome and the previous layer's results. In addition to sharp image preprocessing methodologies, putting great efforts on fundus image preprocessing enhanced the deep feature extraction methodologies used. Gargeya et al. depended on Sensitivity and Specificity measures to evaluate their system, in addition to the average Area Under the Receiver Operating Characteristic curve (AUROC). The system was tested to classify DR in 2 cases, the presence of the disease regardless of its stages against the healthy retinal state, as well as identifying the presence of the disease in very early stages with only few mild symptoms against its absence, as the results were visualized using a heatmap. On the MESSIDOR dataset, 93%, 87% and 0.94 of sensitivity, specificity and AUC were achieved by this algorithm for classifying no DR versus DR of any stage <ref type="bibr" target="#b13">[14]</ref>. The overall predictive results when tested on the MESSIDOR-2 public dataset achieved slightly similar to Antal et al. model's results. Furthermore, the authors believe that was a consequence of the algorithm being unfamiliar with the MESSIDOR dataset as it was trained on the EyePACS public dataset (EyePACS LLC, Berkeley, CA) <ref type="bibr" target="#b14">[15]</ref>.</p><p>Training the model once on specific dataset images was the common approach used among previous developments, however, Zhou et al. <ref type="bibr" target="#b15">[16]</ref> suggested using the concept of Multiple Instance Learning (MIL), dividing the training phase into two stages, single and multi-scale training, the first stage is to determine DR lesions for each image in one particular scale independently, and the latter to search for lesions in an image represented in multiple scales. The authors preprocessed images by normalizing, resizing and cropping them into a rectangular shape. Gaussian Smoothing Kernel was applied to adjust images' brightness, contrast, and color intensities. Images were resized to fit FOV with 384 pixel radius. Cropping was performed to ensure the elimination of bright borders of the image. In the single-scale learning, all images were scaled to r = 384-pixel. Suspicious patches were collected and tested individually to estimate their probability of being a DR lesion via the pre-trained AlexNet adapted in a CNN-based patch-level classifier. The estimations for each and all patches in the one image are fed into a global aggregation function, which determines the probability of the image (from which patches were collected) to represent a DR case using a developed DR map. In the second learning stage, the input image is taken in multiple scales (original size, r = 384 pixels, r = 256 pixels), patches are collected from all three scales simultaneously and fed into the CNN to estimate each patch's probability of being a DR lesion as in the first stage. DR maps are conducted for each image scale, maps are then averaged to produce an average probability of a positive DR prediction which ends in classifying the image into a DR stage. The authors have also finely-tuned the AlexNet classifier by replacing its last 1000-fully-connected layer with a 2-way FC layer and reinitializing its filter weights according to a gaussian distribution with std = 0.01. Stated modifications were applied due to the misselection of patches when employing default initialization of the pre-trained CNN. No dropout layer was used with the final softmax layer in the CNN. This model was evaluated on the public MESSIDOR dataset and reached an F1-score of 92.4%, a sensitivity of 99.5%, precision of 86.3%, and 0.925 AUC.</p><p>Training GoogLeNet and AlexNet CNNs for 2-ary, 3-ary, and 4-ary accurate DR grading was proposed by Lam et al. <ref type="bibr" target="#b16">[17]</ref>. These models addressed previous limitations of identifying early stages of the disease as reported in Gargeya and Leng's system. Various image preprocessing and data augmentation methods were employed, as well as training multi-class models for the purpose of improving the algorithm's sensitivity to early-stage DR in fundal images. The deep layered CNNs were performing efficiently using a combination of heterogeneous sized filters and low-dimensional embeddings, this certainly assesses the model to learn deeper features from the training datasets. Furthermore, data augmentation methodologies used; such as image padding, rolling, rotation and zooming, were most effective in detecting R1 stage images, which were previously determined as the most difficult to classify among the 4 DR stages. In addition to applying Contrast Limited Adaptive Histogram Equalization (CLAHE) filtering algorithm, which serves the issue of retinal screening brightness and resolution that affect the intensity values of the image pixels, and therefore makes it harder to identify features to be extracted from each image (see Fig. <ref type="figure" target="#fig_0">1</ref>). With CLAHE applied, the 3-ary classifier (None, Mild, and severe case classifier) sensitivity to identify R1/Mild cases has significantly increased from 0% as reported previously up to 29.7% when tested on the public MESSIDOR dataset. However, these models were unable to enhance the identification of multi-class DR as other previously developed systems have achieved greater sensitivity and specificity levels. Nevertheless, these experiments confirmed bright possibilities of more accurate levels for early DR detection with very subtle features, by improving image preprocessing for delicate feature extraction.</p><p>Sengupta et al. <ref type="bibr" target="#b18">[19]</ref> introduced architecture mainly aimed to achieve a robust classification for unprecedented and varying datasets. They trained their model using Kaggle/EYEPACS dataset, which contains 5 DR stages; healthy, mild, moderate, severe, and PDR. The dataset was divided into two groups; low and high disease grades, each containing grades 1, 2 and grades 3, 4, 5 respectively. The model includes image preprocessing and augmentation, however, slightly different than Lam et al. proposed model <ref type="bibr" target="#b16">[17]</ref>, the authors rescaled image pixels, set image mean to 0 and then normalized them. Moreover, the Hough transform, which is a feature extraction technique used in image processing and computer visualization, was used whenever an image notch was identified after conversion to grayscale. Histogram Equalization was applied to all images. This was followed by a modified inception v3, 256-neuron dense layer, and a softmax layer consecutively, with 2 output probabilities of the 2 classifiers. The proposed model was tested on the MESSIDOR dataset and outperformed several previous models in grading different DR stages. It has achieved 90.4% accuracy, 89.26% sensitivity, 91.94% specificity, and an AUC of 0.90.</p><p>Due to the lack of large ground-truth-labeled datasets available for retinal funduscopy, high complexity of traditional image analysis techniques when used for large data amounts, and the quite limited models' robustness to various databases, Zago et al. <ref type="bibr" target="#b19">[20]</ref> introduced a unique, state-of-the-art methodology for DR detection, constructed by patch-based DCNNs, this is to distinguish most challenging patches to be lesion or lesion-free patches, referred to as Red Lesions, which are classified after training the model to localize critical patches, each defined by a 65-pixel subsample. Patch localization was proven to speed-up image processing than specifically using classical image segmentation. The suggested approach was to choose only specific critical patches from each image using strides (image subsampling), instead of segmenting images and including all present patches; this, on 512 x 512-pixel images, reduces the number of patches obtained, which in turn states the number of corresponding predictions outputs from 1,300,720 to 52,428 when using  stride 5 (explained in Fig. <ref type="figure" target="#fig_1">2</ref>). In terms of time, the lesion-localization process accelerated the process from 20 minutes to only 48 seconds per image on GPU GeForce GTX 1050Ti. The proposed model achieved a sensitivity of 90%, specificity of 87%, and 0.944 AUC, implying great simplification possibilities for image processing techniques, which dramatically decreases the model's complexity as proved by the presented method.</p><p>The CLAHE image enhancement algorithm is one of the most effective methods for image analysis, it is used for improving image quality and increasing the visibility of deep and unclear features. In addition to employing HE or CLAHE once in the prediction system as done by Lam et al. <ref type="bibr" target="#b16">[17]</ref> and Sengupta et al. <ref type="bibr" target="#b18">[19]</ref>, Hemanth et al. <ref type="bibr" target="#b20">[21]</ref> proved upgraded results when applying both HE and CLAHE to the dataset images. Each image in the dataset was first resized to 150 x 255-pixel, converted to RGB format; and segregated into 3 images, Red, Green, and Blue. Afterward, HE is performed upon the 3 images, followed by CLAHE and edge sharpening to reduce the noise in the image. Finally the three images are combined to produce the final improved image. A typical 8-layer CNN was used for DR classification, consisting of an input, convolutional, ReLU, cross-channel normalization, max pooling, FC, softmax and classification layers ordered respectively. The authors also used a stride function to determine the step size within the max-pooling layer through the learning process, which also downsamples the data to avoid overfitting. This present model has reached a classification accuracy of 97%, along with 94% sensitivity and 98% specificity. This study has demonstrated a significant improvement in image quality for feature extraction, when images are processed with HE and CLAHE together.</p><p>Interestingly, Shankar et al. <ref type="bibr" target="#b21">[22]</ref> introduced an SDL-based classification model. The proposed framework consists of 3 main stages; an Input layer, a pair of Deep Convolutional Neural Networks (DCNN), and a Synergic Network (SN). A dual DCNN synergic network is designed to recognize what an image represents, providing a synergic signal that indicates whether the pair of input images belongs to the same expected input category, with a suggested solution in case an error signal occurred <ref type="bibr" target="#b22">[23]</ref>. Image preprocessing techniques followed were initially to convert the retinal image to RGB, then applying histogram-based segmentation to extract most informative parts of the images that indicate disease-related features. A pair of preprocessed images are input to the model concurrently, each is processed through one of the DCNNs for deep feature learning, the output for each image along with its synergic signal are forwarded to the SN. as the synergic network receives 2 feature vectors from the prior DCNN phase, it concatenates, and forwards them further to a learning layer, which ends in classifying the images as one of 4 predefined DR stages (normal, S-1, S-2, S-3). The introduced model has achieved excellent unprecedented results on the MESSIDOR dataset with 99.3% accuracy, 98% sensitivity, and 99% specificity.</p><p>Unlike previous combinations of image preprocessing techniques, Pour et al. <ref type="bibr" target="#b23">[24]</ref> implemented an image-augmentation-free method for analyzing funduscopy data. The authors only employed CLAHE to enhance image quality by increasing color contrast, this method is used to determine vessel or non-vessel lesions. To increase the model's accuracy in comparison to Zago et al. <ref type="bibr" target="#b19">[20]</ref>, the pre-trained CNNs family, EfficientNets, was chosen to be the most effective for this diagnostic model. Moreover, pre-trained CNNs were found to save time and improve accuracy. The authors suggested scaling up CNNs to achieve greater accuracy rates, which can be performed on three dimensions; CNN's width, depth and resolution; where width implies the number of channels in each convolutional layer, depth indicates the number of layers in the network, and the resolution is determined by the resolution of the image fed to the CNN. Pour et al. performed a full dimensional scaling to EfficientNet-B5, which uses 456x456 pixel images. All previous models in the family (B0-B4) use smaller images which results in a loss of vital information for the classification process. The authors used Tan and Le's <ref type="bibr" target="#b24">[25]</ref> recommended parameters for scaling the network; width =1.6 and depth = 2.2. This model was trained on a combination of datasets (MESSIDOR-2 and IDRiD) and tested on MESSIDOR, upon which it has achieved a sensitivity rate of 92% and 0.945 AUC.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. PROPOSED METHODOLOGY</head><p>Numerous approaches have been studied and tested in the last two decades, various image processing algorithms, classification techniques and methodologies have been used for the purpose of building a reliable automated diagnostic system for Diabetic Retinopathy. In this study, developed a state-of-the-art classification model using several ensemble learning techniques in order to attain an optimal classifier with higher precision and accuracy than previously built models. For this study, feature extraction methods and image analysis will not be processed, this classifying model will be trained on previously extracted features from the MESSIDOR public fundus dataset <ref type="bibr" target="#b26">[27]</ref>.</p><p>In this model, we introduce a promising solution for automated DR detection systems, as we will demonstrate the results of using several classification algorithms in an ensemble-based architecture. As briefed in Fig. <ref type="figure" target="#fig_2">3</ref>, specific features will be selected and grouped using feature selection algorithms, then fed into the ensemble framework. During which, the model will be trained using part of the chosen datasets. Several widely common classification algorithms will be employed to improve the system's prediction accuracy, such as Random Forest (RF) for robust and powerful learning, Neural Network (NN) to perform complex mathematical calculations for improved precision, and a Support Vector Machine (SVM) algorithm for generating predictions in an accurate, time-saving and storage efficient manner. In the final stage, the output of all algorithms will be merged by a Meta-classifier to produce the final prediction.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Experimental Dataset</head><p>The dataset from UCI (University of California Irvine) for Diabetic Retinopathy is used in this study <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b27">28]</ref>. Features of this dataset have been extracted from the publicly available MESSIDOR database of 1151 fundus images of patients <ref type="bibr" target="#b28">[29]</ref>. The model will typically go through two primary stages; training and evaluation stages. The MESSIDOR dataset will be divided to be used in both stages using the cross-validation technique. This dataset contains 1151 records of healthy (defined as 0) and multi-staged DR (defined as 1) cases, representing 540 healthy records and 611 diseased. The dataset is formed of 20 attributes.The features included were found to have a varying effect on the final prediction, therefore, feature histograms were prepared for visualization and to further assessment in the next stages of the model.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Feature Selection</head><p>In the proposed model, features are to be selected from the original dataset in the following approach: first 5 and 10 most effective features are selected to form 2 new subdatasets. The feature selection process can be performed in several ways such as Information Gain Attribute Evaluation and Wrapper Subset Evaluation which will be used in this model. Information Gain Attribute Evaluation; also known as entropy evaluation, is an attribute evaluation method which calculates the amount of information an attribute provides by giving it a value between 0 (no info.) to 1 (max info.). Most informative features are selected for further processing in the classification model while features with less valuable information are neglected. Wrapper Subset Evaluation; this feature selection method tests several subsets of features from the original dataset by a fast-learning yet powerful pre-defined algorithm, pointing out which subdataset performed better than the others, and accordingly it is selected as the most effective subdataset. This subdataset is considered to contain the most informative attributes of the original dataset. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Evaluation Metrics</head><p>The performance of the proposed model was measured using a set of well-known parameters such as accuracy, precision, and recall. The classifiers' performance was measured based on the confusion matrix as follows. The true-positive (TP) rate indicates the rate of the correct predictions of the diseased cases. False-positive (FP) rate indicates the proportion of mispredicted healthy cases. The true-negative (TN) rate is an indication of the total number of healthy cases that were correctly predicted as healthy, where the false-negative (FN) rate shows the total number of DR cases that were misclassified as healthy. The precision rate represents the ratio of the total correct predictions of the DR cases to the total count of healthy and diseased patients. The recall accuracy rate represents the attribution of the correct prediction rate of the presence of the disease to the total count of DR cases. Finally the accuracy rate takes all confusion matrix parameters into its calculation to measure the correctly classified DR/Non-DR instances. Precision, recall and accuracy formulas are shown below respectively <ref type="bibr" target="#b29">[30,</ref><ref type="bibr" target="#b30">31]</ref>.</p><formula xml:id="formula_0">Precision =<label>(1)</label></formula><p>𝑇𝑃 𝑇𝑃+𝐹𝑃</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Recall =</head><p>(2)</p><formula xml:id="formula_1">𝑇𝑃 𝑇𝑃+𝐹𝑁 Accuracy =<label>(3)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>𝑇𝑃+𝑇𝑁 𝑇𝑃+𝑇𝑁+𝐹𝑃+𝐹𝑁</head><p>The F-Measure metric was measured in this research paper, where its calculation depends on the following formula.</p><formula xml:id="formula_2">F-Measure = 2 x (<label>4</label></formula><formula xml:id="formula_3">)</formula><p>𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 𝑥 𝑅𝑒𝑐𝑎𝑙𝑙 𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛+𝑅𝑒𝑐𝑎𝑙𝑙</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Ensemble learning</head><p>Ensemble systems, also known as multiple-classifier systems, are obtained by combining the knowledge gained by multiple contributing models to form one final decision <ref type="bibr" target="#b31">[32]</ref>. In the last few years, ensembles have become more popular in use for decision-making systems, as a consequence of their great performance when run for prediction, classification, and regression problems. This approach of knowledge accumulation enhances the overall decision of the system as a whole, and each of the models individually as well. There are two main reasons to use an ensemble-based over a single-based model, Performance, and Robustness; an ensemble can make better predictions and achieve better performance than any single contributing model. In addition, an ensemble reduces the spread or dispersion of the predictions and model performance. In this model, 3 main classification algorithms were embedded in the ensemble, Random Forest, Neural Network, and Support Vector Machine.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Results and Discussion</head><p>The evaluation process can be divided into 3 stages. Firstly, the model along with single classifiers were evaluated to extract the best single classifier and the best performing subdataset, Neural Networks and InfoGain top 5.</p><p>Secondly, the best single classifier is compared to the proposed ensemble when evaluated on the Messidor dataset, the proposed ensemble overperformed the Neural Networks in this step. Finally, the present ensemble was tested on all 4 subdatasets, which reassured the importance of the InfoGainEval. top 5 features. Table <ref type="table" target="#tab_0">1</ref> shows the obtained accuracy for each of the contributing datasets in evaluating the proposed model, indicating as well the performance of the ensemble when based on a stacking architecture. In Table <ref type="table" target="#tab_1">2</ref>, a comparison is presented between the proposed ensemble and the best single classifier on the Messidor dataset in terms of accuracy, recall, precision, and AUC. In addition, Table <ref type="table" target="#tab_2">3</ref> extensively compares the performance of the selected sets of features, which implies the impressive capability of the InfoGainEval. top 5 features. Moreover, Figure <ref type="figure" target="#fig_3">4</ref> presents the accuracy rates achieved for the best performing subdataset by each contributing classifier against the proposed stacking ensemble. The outcomes of assembling multiple classification algorithms such as Random Forest, Neural Networks, and Support Vector Machine in a stacking framework implied improved final predictions. Furthermore, previous models were trained and tested after performing several image processing and enhancing algorithms on the original fundus images dataset for feature extraction, while in this model it was completely trained on MESSIDOR's previously-extracted features. Image processing and analysis were not carried out in this study, it was a real challenge to achieve high accuracy rates with a very limited number of features.    </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. CONCLUSION</head><p>This research points out promising technological advancements for the healthcare and medical sectors, especially in the early detection of many types of illnesses. Each and every disease is best treated when in its earliest stages, such as, and most importantly, Cancer, Diabetic Retinopathy, Cholesterol abnormalities, and many others. Moreover, automatic detection models are time and cost-efficient, which will serve various communities and regions, and can be run by any practitioner once they are familiar with the models processing and how decisions are displayed. In the present work, we introduce a new framework for Diabetic Retinopathy detection using Ensemble Machine Learning. In addition, in order to fill the gap of insufficient performance in the previous models, we have applied several feature engineering techniques as well as a substantial stack of classification algorithms, with a final Meta-Classifier, that is to ensure acquiring the highest accuracy while implementing a reliable and robust diagnostic model for different patients around the world. It is to be noted that the current results are initial indicators, other ensembles are being implemented presently to upgrade the overall performance of the model.</p><p>V.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 -</head><label>1</label><figDesc>Fig. 1 -Fundus image (a) before and (b) after applying CLAHE [18].</figDesc><graphic coords="3,52.11,625.15,238.50,96.00" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 -</head><label>2</label><figDesc>Fig. 2 -Subsampling strides technique for critical regions [20].</figDesc><graphic coords="3,308.61,55.08,233.25,97.50" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 3 -</head><label>3</label><figDesc>Fig. 3 -The layered model of the proposed DR detection framework.</figDesc><graphic coords="4,320.61,483.22,234.00,243.00" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 4 -</head><label>4</label><figDesc>Figure 4 -Classifiers' accuracy on the best performing subdataset InfoGain top 5.</figDesc><graphic coords="6,82.11,55.13,171.75,131.25" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 -</head><label>1</label><figDesc>Accuracy rates of single classifiers and the proposed ensemble. *mean(std)</figDesc><table><row><cell></cell><cell>SVM</cell><cell>NN</cell><cell>RF</cell><cell>Proposed</cell></row><row><cell>Original</cell><cell cols="2">0.697(0.041) 0.719(0.041)</cell><cell>0.686(0.032)</cell><cell>0.751(0.033)</cell></row><row><cell>dataset</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Wrapper</cell><cell cols="2">0.553(0.022) 0.575(0.042)</cell><cell>0.581(0.028)</cell><cell>0.588(0.044)</cell></row><row><cell>top 5</cell><cell></cell><cell></cell><cell></cell></row><row><cell>Wrapper</cell><cell cols="2">0.582(0.031) 0.618(0.025)</cell><cell>0.634(0.046)</cell><cell>0.645(0.044)</cell></row><row><cell>top 10</cell><cell></cell><cell></cell><cell></cell></row><row><cell>InfoGain</cell><cell cols="2">0.685(0.050) 0.696(0.053)</cell><cell>0.670(0.034)</cell><cell>0.707(0.031)</cell></row><row><cell>top 5</cell><cell></cell><cell></cell><cell></cell></row><row><cell>InfoGain</cell><cell cols="2">0.685(0.046) 0.674(0.045)</cell><cell>0.670(0.035)</cell><cell>0.701(0.031)</cell></row><row><cell>top 10</cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 -</head><label>2</label><figDesc>Best single classifier and the proposed ensemble performance evaluated on Messidor dataset.</figDesc><table><row><cell>Model</cell><cell>Accuracy</cell><cell>Recall</cell><cell>Precision</cell><cell>AUC</cell></row><row><cell>Best Single Classifier</cell><cell>0.719</cell><cell>0.704</cell><cell>0.774</cell><cell>0.816</cell></row><row><cell>Proposed Model</cell><cell>0.751</cell><cell>0.725</cell><cell>0.778</cell><cell>0.827</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 3 -</head><label>3</label><figDesc>Proposed model evaluation on selected features of Messidor dataset.</figDesc><table><row><cell>Subdataset</cell><cell>Accuracy</cell><cell>Recall</cell><cell>Precision</cell><cell>AUC</cell></row><row><cell>Wrapper top 5</cell><cell>0.588</cell><cell>0.512</cell><cell>0.635</cell><cell>0.619</cell></row><row><cell>Wrapper top 10</cell><cell>0.645</cell><cell>0.656</cell><cell>0.677</cell><cell>0.701</cell></row><row><cell>InfoGain top 5</cell><cell>0.707</cell><cell>0.709</cell><cell>0.763</cell><cell>0.782</cell></row><row><cell>InfoGain top 10</cell><cell>0.701</cell><cell>0.679</cell><cell>0.741</cell><cell>0.770</cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<author>
+			<persName><forename type="first">G</forename><surname>Kalantzis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Angelou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Poulakou-Rebelakou</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Diabetic retinopathy: an historical assessment</title>
+		<imprint>
+			<date type="published" when="2006-01">Jan. 2006</date>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="page" from="72" to="75" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">Diabetic retinopathy</title>
+		<ptr target="https://www.mayoclinic.org/diseases-conditions/diabetic-retinopathy/symptoms-causes/syc-20371611" />
+		<imprint>
+			<date type="published" when="2018-05-30">May 30, 2018. Jan. 03, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<title level="m" type="main">MYCIN: a Knowledge-based Computer Program Applied to Infectious Diseases</title>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">H</forename><surname>Shortliffe</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1977">1977</date>
+		</imprint>
+		<respStmt>
+			<orgName>Stanford University. Computer Science Dept. Heuristic Programming Project and</orgName>
+		</respStmt>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">At Mayo Clinic, AI engineers face an &apos;acid test&apos; -STAT</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Ross</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Brodwin</surname></persName>
+		</author>
+		<ptr target="https://www.statnews.com/2019/12/18/mayo-clinic-artificial-intelligence-acid-test/" />
+		<imprint>
+			<date type="published" when="2019-12-18">Dec. 18, 2019. Jan. 03, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title level="m" type="main">Artificial Intelligence: How to get it right</title>
+		<ptr target="https://www.nhsx.nhs.uk/ai-lab/explore-all-resources/understand-ai/artificial-intelligence-how-get-it-right/" />
+		<imprint>
+			<date type="published" when="2021-01-10">Jan. 10, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title level="m" type="main">How Google Plans To Use AI To Reinvent The $3 Trillion US Healthcare Industry</title>
+		<author>
+			<orgName type="collaboration">CB Insights</orgName>
+		</author>
+		<ptr target="https://www.cbinsights.com/research/report/google-strategy-healthcare/" />
+		<imprint>
+			<date type="published" when="2018-04-19">Apr. 19, 2018. Jan. 03, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title level="m" type="main">Four ways in which Watson is transforming the healthcare sector</title>
+		<ptr target="https://www.healthcareglobal.com/technology-and-ai-3/four-ways-which-watson-transforming-healthcare-sector" />
+		<imprint>
+			<date type="published" when="2021-03">Jan. 03, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">An automated microaneurysm detector as a tool for identification of diabetic retinopathy in rural optometric practice</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">J</forename><surname>Jelinek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">J</forename><surname>Cree</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Worsley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Luckie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Nixon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Clin. Exp. Optom</title>
+		<imprint>
+			<biblScope unit="volume">89</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="299" to="305" />
+			<date type="published" when="2006-09">Sep. 2006</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Automated Early Detection of Diabetic Retinopathy</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Abràmoff</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.ophtha.2010.03.046</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">117</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1147" to="1154" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">An ensemble-based system for microaneurysm detection and diabetic retinopathy grading</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Antal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Hajdu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Biomed. Eng</title>
+		<imprint>
+			<biblScope unit="volume">59</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1720" to="1726" />
+			<date type="published" when="2012-06">Jun. 2012</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Image quality classification for DR screening using deep learning</title>
+		<author>
+			<persName><forename type="first">Fengli</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jing</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Annan</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jun</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Cheng</forename><surname>Wan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jiang</forename><surname>Liu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Conf. Proc. IEEE Eng. Med. Biol. Soc</title>
+		<imprint>
+			<biblScope unit="volume">2017</biblScope>
+			<biblScope unit="page" from="664" to="667" />
+			<date type="published" when="2017-07">Jul. 2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">An ensemble-based system for automatic screening of diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Antal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Hajdu</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.knosys.2013.12.023</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Knowledge-Based Systems</title>
+		<imprint>
+			<biblScope unit="volume">60</biblScope>
+			<biblScope unit="page" from="20" to="27" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">EyePACS: an adaptable telemedicine system for diabetic retinopathy screening</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Cuadros</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bresnick</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Diabetes Sci. Technol</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="509" to="516" />
+			<date type="published" when="2009-05">May 2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Automated Identification of Diabetic Retinopathy Using Deep Learning</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Gargeya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Leng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">124</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="962" to="969" />
+			<date type="published" when="2017-07">Jul. 2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Data analysis</title>
+		<ptr target="https://www.eyepacs.com/data-analysis" />
+		<imprint>
+			<date type="published" when="2018-12-03">Dec. 03, 2018. Jan. 15, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Deep multiple instance learning for automatic detection of diabetic retinopathy in retinal images</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Xu</surname></persName>
+		</author>
+		<idno type="DOI">10.1049/iet-ipr.2017.0636</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IET Image Processing</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="563" to="571" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Automated Detection of Diabetic Retinopathy using Deep Learning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Lam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Yi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Lindsey</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">AMIA Jt Summits Transl Sci Proc</title>
+		<imprint>
+			<biblScope unit="volume">2017</biblScope>
+			<biblScope unit="page" from="147" to="155" />
+			<date type="published" when="2018-05">May 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Automatic Detection of Microaneurysms and Hemorrhages in Color Eye Fundus Images</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">B</forename><surname>Júnior</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Welfer</surname></persName>
+		</author>
+		<idno type="DOI">10.5121/ijcsit.2013.5502</idno>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Computer Science and Information Technology</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="21" to="37" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Cross-domain diabetic retinopathy detection using deep learning</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Sengupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Singh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zelek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Lakshminarayanan</surname></persName>
+		</author>
+		<idno type="DOI">10.1117/12.2529450</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Applications of Machine Learning</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Diabetic retinopathy detection using red lesion localization and convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">T</forename><surname>Zago</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">V</forename><surname>Andreão</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Dorizzi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">O</forename><surname>Teatini</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Salles</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Comput. Biol. Med</title>
+		<imprint>
+			<biblScope unit="volume">116</biblScope>
+			<biblScope unit="page">103537</biblScope>
+			<date type="published" when="2020-01">Jan. 2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">An enhanced diabetic retinopathy detection and classification approach using deep convolutional neural network</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">J</forename><surname>Hemanth</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">Jude</forename><surname>Hemanth</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Deperlioglu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Kose</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s00521-018-03974-0</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Neural Computing and Applications</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="page" from="707" to="721" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Automated detection and classification of fundus diabetic retinopathy images using synergic deep learning model</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Shankar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">R W</forename><surname>Sait</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Gupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Lakshmanaprabu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Khanna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">M</forename><surname>Pandey</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.patrec.2020.02.026</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Pattern Recognition Letters</title>
+		<imprint>
+			<biblScope unit="volume">133</biblScope>
+			<biblScope unit="page" from="210" to="216" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Medical image classification using synergic deep learning</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Xie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Xia</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.media.2019.02.010</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Medical Image Analysis</title>
+		<imprint>
+			<biblScope unit="volume">54</biblScope>
+			<biblScope unit="page" from="10" to="19" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<monogr>
+		<title level="m" type="main">EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Tan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><forename type="middle">V</forename><surname>Le</surname></persName>
+		</author>
+		<idno>arXiv [cs.LG]</idno>
+		<imprint>
+			<date type="published" when="2019-05-28">May 28, 2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Automatic detection of non-proliferative diabetic retinopathy in retinal fundus images using convolution neural network</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Saranya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Prabakaran</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s12652-020-02518-6</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Ambient Intelligence and Humanized Computing</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title level="m" type="main">Messidor</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Patry</surname></persName>
+		</author>
+		<ptr target="http://www.adcis.net/en/third-party/messidor/" />
+		<imprint>
+			<date type="published" when="2021-01-15">Jan. 15, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<monogr>
+		<title level="m" type="main">UCI machine learning repository: Diabetic retinopathy Debrecen data set data set</title>
+		<ptr target="https://archive.ics.uci.edu/ml/datasets/Diabetic+Retinopathy+Debrecen+Data+Set" />
+		<imprint>
+			<date type="published" when="2021-09">Jan. 09, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">FEEDBACK ON A PUBLICLY DISTRIBUTED IMAGE DATABASE: THE MESSIDOR DATABASE</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Decencière</surname></persName>
+		</author>
+		<idno type="DOI">10.5566/ias.1155</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Image Analysis &amp; Stereology</title>
+		<imprint>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page">231</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Ensemble learning</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Polikar</surname></persName>
+		</author>
+		<idno type="DOI">10.4249/scholarpedia.2776</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Scholarpedia</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">2776</biblScope>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Phishing detection based on machine learning and feature selection methods</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Almseidin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zuraiq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Al-Kasassbeh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Alnidami</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Interact. Mob. Technol</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="issue">12</biblScope>
+			<biblScope unit="page">171</biblScope>
+			<date type="published" when="2019-12">Dec. 2019. May 01, 2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">A new feature selection method to improve the document clustering using particle swarm optimization algorithm</title>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">M</forename><surname>Abualigah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">T</forename><surname>Khader</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">S</forename><surname>Hanandeh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Comput. Sci</title>
+		<imprint>
+			<biblScope unit="volume">25</biblScope>
+			<biblScope unit="page" from="456" to="466" />
+			<date type="published" when="2018-03">Mar. 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Ensemble Classification and Regression-Recent Developments, Applications and Future Directions [Review Article]</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">N</forename><surname>Suganthan</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/mci.2015.2471235</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Computational Intelligence Magazine</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="41" to="53" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

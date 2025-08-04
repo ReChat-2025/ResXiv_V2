@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"updated_at":{"$numberInt":"-1"}},"name":"updated_at_-1"},{"v":{"$numberInt":"2"},"key":{"unread_counts":{"$numberInt":"1"}},"name":"unread_counts_1"}],"uuid":"d43a7b16523a46e3909dcd43e73acbe2","collectionName":"conversation_metadata","type":"collection"}

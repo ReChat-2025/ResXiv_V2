@@ -1,0 +1,1500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author role="corresp">
+							<persName><forename type="first">Maitham</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+							<email>matham.yousif@qu.edu.iqm.g.alamran@ljmu.ac.uk</email>
+							<idno type="ORCID">0000-0002-2192-9551</idno>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">Biology Department</orgName>
+								<orgName type="department" key="dep2">College of Science</orgName>
+								<orgName type="institution">University of Al-Qadisiyah</orgName>
+								<address>
+									<settlement>Iraq</settlement>
+								</address>
+							</affiliation>
+							<affiliation key="aff1">
+								<orgName type="institution">Visiting Professor in Liverpool John Moors University</orgName>
+								<address>
+									<settlement>Liverpool</settlement>
+									<country key="GB">United Kingdom</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Fadhil</forename><forename type="middle">G</forename><surname>Al-Amran</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="department" key="dep1">Cardiovascular Department</orgName>
+								<orgName type="department" key="dep2">College of Medicine</orgName>
+								<orgName type="institution">Kufa University</orgName>
+								<address>
+									<country key="IQ">Iraq</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Salman</forename><surname>Rawaf</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="department">Professor of Public Health Director</orgName>
+								<orgName type="institution" key="instit1">WHO Collaboration Center</orgName>
+								<orgName type="institution" key="instit2">Imperial College</orgName>
+								<address>
+									<settlement>London</settlement>
+									<country key="GB">United Kingdom</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mohammad</forename><forename type="middle">Abdulla</forename><surname>Grmt</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="institution" key="instit1">Al-Sadder Teaching Hospital</orgName>
+								<orgName type="institution" key="instit2">Al-Najaf Health office</orgName>
+								<address>
+									<settlement>Najaf</settlement>
+									<country key="IQ">Iraq</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Maithm</forename><surname>Ghaly</surname></persName>
+						</author>
+						<title level="a" type="main">Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">527A718FD7851501B348F756733D0B6A</idno>
+					<note type="submission">Received 3/10/2022, Accepted 8/2/2023,</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2025-08-03T20:44+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>COVID-19</term>
+					<term>gastrointestinal symptoms</term>
+					<term>machine learning</term>
+					<term>predictive factors</term>
+					<term>post-COVID-19 care</term>
+					<term>long COVID</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>The COVID-19 pandemic, caused by the novel coronavirus SARS-CoV-2, has posed significant health challenges worldwide. While respiratory symptoms have been the primary focus, emerging evidence has highlighted the impact of COVID-19 on various organ systems, including the gastrointestinal (GI) tract. This study, based on data from 913 post-COVID-19 patients in Iraq collected during 2022 and 2023, investigates the prevalence and patterns of GI symptoms in individuals recovering from COVID-19 and leverages machine learning algorithms to identify predictive factors for these symptoms. The research findings reveal that a notable percentage of post-COVID-19 patients experience GI symptoms during their recovery phase. Diarrhea emerged as the most frequently reported symptom, followed by abdominal pain and nausea. Machine learning analysis uncovered significant predictive factors for GI symptoms, including age, gender, disease severity, comorbidities, and the duration of COVID-19 illness. These findings underscore the importance of monitoring and addressing GI symptoms in post-COVID-19 care, with machine learning offering valuable tools for early identification and personalized intervention. This study contributes to the understanding of the longterm consequences of COVID-19 on GI health and emphasizes the potential benefits of utilizing machine learning-driven analysis in predicting and managing these symptoms. Further research is warranted to delve into the mechanisms underlying GI symptoms in COVID-19 survivors and to develop targeted interventions for symptom management.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Introduction</head><p>The COVID-19 pandemic, caused by the novel coronavirus SARS-CoV-2, has brought about a multitude of health challenges and continues to be a subject of extensive research worldwide. Beyond its immediate respiratory manifestations, COVID-19 has been associated with a wide array of health issues that extend into the post-acute phase, affecting various organ systems <ref type="bibr" target="#b0">[1]</ref><ref type="bibr" target="#b1">[2]</ref><ref type="bibr" target="#b2">[3]</ref>. Among these, the cardiovascular system has garnered significant attention due to its susceptibility to infection and the potential for severe complications, including myocardial ischemia and atherosclerosis <ref type="bibr">[4]</ref><ref type="bibr">[5]</ref><ref type="bibr">[6]</ref>. Additionally, various medical conditions, such as cancer <ref type="bibr" target="#b3">[7]</ref><ref type="bibr" target="#b4">[8]</ref><ref type="bibr" target="#b5">[9]</ref>, preeclampsia <ref type="bibr" target="#b6">[10]</ref><ref type="bibr" target="#b7">[11]</ref><ref type="bibr" target="#b8">[12]</ref><ref type="bibr" target="#b9">[13]</ref>, and infectious diseases like urinary tract infections <ref type="bibr" target="#b10">[14]</ref><ref type="bibr" target="#b11">[15]</ref><ref type="bibr" target="#b12">[16]</ref><ref type="bibr" target="#b13">[17]</ref>, continue to be prevalent, further complicating the healthcare landscape. This introduction serves as a gateway to the exploration of the intricate relationship between COVID-19 and various health conditions, with a specific focus on the cardiovascular system, cancer, and infectious diseases. It also sets the stage for understanding the broader context of our research endeavors. The objective of this study is to investigate the effects of COVID-19 on cardiovascular health, cancer incidence, and the prevalence of infectious diseases in the context of the Iraqi population. To achieve this, we have leveraged a range of data sources, including clinical trials <ref type="bibr" target="#b14">[18]</ref><ref type="bibr" target="#b15">[19]</ref><ref type="bibr" target="#b16">[20]</ref><ref type="bibr" target="#b18">[21]</ref><ref type="bibr" target="#b19">[22]</ref>, longitudinal studies <ref type="bibr" target="#b20">[23]</ref><ref type="bibr" target="#b21">[24]</ref><ref type="bibr" target="#b22">[25]</ref>, and molecular investigations <ref type="bibr" target="#b23">[26]</ref><ref type="bibr" target="#b24">[27]</ref><ref type="bibr" target="#b25">[28]</ref><ref type="bibr" target="#b26">[29]</ref>. Our research encompasses a diverse array of medical conditions and seeks to shed light on the multifaceted consequences of COVID-19. As we embark on this exploration, we will draw upon a rich body of literature that delves into the pathophysiology and clinical outcomes of these health conditions <ref type="bibr" target="#b27">[30]</ref><ref type="bibr" target="#b28">[31]</ref><ref type="bibr" target="#b29">[32]</ref><ref type="bibr" target="#b30">[33]</ref>. In this context, we aim to provide a comprehensive overview of the impact of COVID-19 on cardiovascular health, cancer incidence, and infectious diseases. Our investigation spans several years, primarily focusing on data collected during 2021, 2022, and 2023, to offer a current and evolving understanding of these interrelated health domains. This research is underpinned by an array of scientific studies and clinical trials conducted within Iraq <ref type="bibr" target="#b31">[34]</ref><ref type="bibr" target="#b32">[35]</ref><ref type="bibr" target="#b33">[36]</ref>, ensuring the relevance and applicability of our findings to the local healthcare landscape. In the following sections, we will delve into the details of our research methodology, data sources, analytical techniques, and key findings. Through this comprehensive examination, we endeavor to contribute to the growing body of knowledge surrounding COVID-19's far-reaching impact on human health.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Materials and Methods</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Study Design:</head><p>Data Collection: We gathered medical data from a total of 913 patients who sought treatment at various hospitals in Iraq during the years 2022 and 2023. These patients had previously been diagnosed with COVID-19.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data Sources:</head><p>The data sources for this study included electronic health records, clinical trials, and longitudinal studies. We accessed deidentified patient records with the necessary ethical and legal approvals.</p><p>Study Duration: Data collection and analysis took place over a span of 12 months, starting in January 2022 and concluding in December 2023.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Data Preprocessing:</head><p>Data Cleaning: We conducted rigorous data cleaning procedures to ensure data accuracy and consistency. This involved identifying and rectifying missing values, outliers, and inconsistencies in the dataset.</p><p>Data Integration: We integrated data from diverse sources, including clinical trials, patient records, and laboratory reports, into a unified dataset for comprehensive analysis.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Feature Selection:</head><p>Feature Engineering: To identify relevant features for analysis, we employed feature engineering techniques, considering various patient demographics, comorbidities, and COVID-19-related variables.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Statistical Analysis:</head><p>Descriptive Statistics: Descriptive statistics were employed to provide an overview of the patient cohort, including mean age, gender distribution, and geographical locations within Iraq.</p><p>Inferential Statistics: Inferential statistical methods, such as t-tests and chi-square tests, were utilized to compare the prevalence of specific health conditions among COVID-19 patients and non-COVID-19 control groups.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Machine Learning Analysis:</head><p>Model Selection: We employed machine learning algorithms, including logistic regression, decision trees, and random forests, to predict the likelihood of developing certain health conditions post-COVID-19.</p><p>Feature Importance: Feature importance analysis was conducted to identify the most influential factors in predicting health outcomes.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Cross-Validation:</head><p>To ensure model robustness and minimize overfitting, we used k-fold crossvalidation techniques.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Hyperparameter</head><p>Tuning: Model hyperparameters were fine-tuned using grid search and randomized search methods to optimize predictive performance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Ethical Considerations:</head><p>Ethical approval for this study was obtained from the relevant institutional review boards and ethics committees, ensuring patient confidentiality and data protection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Software and Tools:</head><p>Software: Data preprocessing, statistical analysis, and machine learning were performed using Python programming language along with libraries such as Pandas, NumPy, Scikit-learn, and TensorFlow.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Limitations:</head><p>Study Limitations: It is important to acknowledge that this study has certain limitations, including potential selection bias in the patient population and the retrospective nature of the data.   </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Discussion</head><p>The COVID-19 pandemic has had a profound impact on public health worldwide, leading to a surge in research across various domains to understand the virus's implications and its aftermath. In this discussion, we delve into the findings of our study, focusing on the effects of COVID-19 on patients' health conditions, considering factors such as age, comorbidities, and specific complications post-infection. We also explore the predictive factors for these complications and draw on relevant research to provide context and support for our findings.</p><p>Our study revealed a significant prevalence of comorbidities among COVID-19 patients. Notably, hypertension, diabetes, and cardiovascular diseases were common comorbidities among the study participants (Table <ref type="table" target="#tab_1">2</ref>). This aligns with previous research highlighting the association between these conditions and increased susceptibility to severe COVID-19 outcomes, such as hospitalization and mortality <ref type="bibr" target="#b34">(37)</ref><ref type="bibr" target="#b35">(38)</ref><ref type="bibr" target="#b36">(39)</ref>. Post-COVID-19, a substantial proportion of patients experienced health complications, including respiratory, cardiac, neurological, hematological, and renal complications (Table <ref type="table" target="#tab_2">3</ref>). These findings corroborate existing literature on the diverse health impacts of COVID-19, which extend beyond the acute phase of the infection. The prevalence of these complications underscores the need for comprehensive post-COVID-19 care and monitoring to address the long-term health implications <ref type="bibr" target="#b37">(40)</ref><ref type="bibr" target="#b38">(41)</ref><ref type="bibr" target="#b39">(42)</ref><ref type="bibr" target="#b40">(43)</ref><ref type="bibr" target="#b41">(44)</ref>. Our study investigated predictive factors for specific complications, shedding light on the importance of various determinants. For instance, age emerged as a significant predictor for both respiratory and cardiac complications (Table <ref type="table" target="#tab_4">4</ref> and<ref type="table" target="#tab_5">Table 5</ref>). These findings align with existing research emphasizing age as a crucial factor in determining the severity and outcomes of COVID-19. Older individuals are more likely to experience severe disease and complications due to age-related changes in immunity and physiological functions <ref type="bibr" target="#b42">(45,</ref><ref type="bibr" target="#b43">46)</ref>. Hypertension and diabetes were also identified as significant predictors of respiratory complications (Table <ref type="table" target="#tab_4">4</ref>). These comorbidities have been consistently associated with increased susceptibility to severe COVID-19 and its complications, including respiratory issues <ref type="bibr" target="#b43">(46)</ref><ref type="bibr" target="#b44">(47)</ref><ref type="bibr" target="#b45">(48)</ref>. Table <ref type="table" target="#tab_6">6</ref> provides insight into the impact of age on the prevalence of post-COVID-19 health conditions. As expected, older age groups exhibited higher percentages of complications, particularly respiratory and cardiac issues. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Limitations and Future Directions</head><p>While this study provides valuable insights, it is not without limitations. The data is retrospective and reliant on medical records, potentially introducing biases. Additionally, the study's scope did not allow for in-depth exploration of the underlying mechanisms of post-COVID-19 complications. Future research should delve into the molecular and immunological aspects to better understand these health effects.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Conclusion</head><p>In conclusion, our study highlights the prevalence of comorbidities among COVID-19 patients and the significant burden of post-COVID-19 health complications, particularly among older individuals. Age, hypertension, and diabetes emerged as important predictors of complications. These findings underscore the necessity of tailored post-COVID-19 care, emphasizing early intervention and monitoring, especially for patients with comorbidities and advanced age.</p><p>The study contributes to the evolving body of knowledge on the long-term health effects of COVID-19 and provides valuable insights for healthcare professionals and policymakers in developing comprehensive strategies for post-COVID-19 care and support. Further research is warranted to unravel the mechanistic underpinnings of these complications and to refine predictive models for better risk stratification and management. </p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head></head><label></label><figDesc>These findings underscore the vulnerability of older individuals to severe post-COVID-19 complications. Effective interventions and monitoring strategies should consider age as a key determinant in care planning (49-51). Our study's findings align with and extend prior research on the health impacts of COVID-19 and the factors influencing these outcomes. It reaffirms the importance of comorbidities and age as significant determinants of post-COVID-19 complications. Furthermore, our study contributes to the growing body of literature on https://www.isohe.org/medical-advances-and-innovations-journal August 2023 | Volume 1 | Issue 3 the long-term consequences of COVID-19, emphasizing the need for comprehensive care and further research to understand the mechanisms underlying these health effects (52-54).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head></head><label></label><figDesc>Patterns in Post-COVID-19 Patients through Machine Learning Algorithms. Medical Advances and Innovations Journal. 2023;1(2):1-11. 4. Hadi NR, Yusif FG, Yousif M, Jaen KK. Both castration and goserelin acetate ameliorate myocardial ischemia reperfusion injury and apoptosis in male rats. International Scholarly Research Notices. 2014;2014. 5. Yousif NG, Altimimi AN, Al-amran FG, Lee JA, Al-Fadhel SM, Hussien SR, Hadi NR, Yousif MG, Alfawaz MA, Mohammed KG. Hematological changes among Corona virus-19 patients: a longitudinal study. Systematic Reviews in Pharmacy. 2020 May 1;11(5). 6. Hadi NR, Yousif NG, Abdulzahra MS, Mohammad BI, al-amran FG, Majeed</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 : Demographic Characteristics of Patients</head><label>1</label><figDesc></figDesc><table><row><cell cols="2">Characteristic</cell><cell></cell><cell></cell><cell></cell><cell>Mean (±SD) or N (%)</cell></row><row><cell cols="2">Age (years)</cell><cell></cell><cell></cell><cell></cell><cell>45.2 ± 12.4</cell></row><row><cell cols="3">Gender (Male/Female)</cell><cell></cell><cell></cell><cell>483 (52.8%)/430 (47.2%)</cell></row><row><cell cols="3">Location (Governorate)</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="2">-Baghdad</cell><cell></cell><cell></cell><cell></cell><cell>341 (37.3%)</cell></row><row><cell>-Basra</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>192 (21.0%)</cell></row><row><cell>-Erbil</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>137 (15.0%)</cell></row><row><cell>-Others</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>243 (26.6%)</cell></row><row><cell>Table</cell><cell>1</cell><cell>presents</cell><cell>the</cell><cell>demographic</cell><cell>distribution, and geographical distribution of</cell></row><row><cell cols="5">characteristics of the 913 patients included in</cell><cell>patients across different governorates in Iraq.</cell></row><row><cell cols="5">the study. It shows the mean age, gender</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 2 : Prevalence of Comorbidities Among COVID-19 Patients</head><label>2</label><figDesc></figDesc><table><row><cell>Comorbidity</cell><cell>COVID-19 Patients (N)</cell></row><row><cell>Hypertension</cell><cell>287 (31.4%)</cell></row><row><cell>Diabetes</cell><cell>184 (20.1%)</cell></row><row><cell>Cardiovascular Disease</cell><cell>98 (10.7%)</cell></row><row><cell>Respiratory Disease</cell><cell>76 (8.3%)</cell></row><row><cell>Kidney Disease</cell><cell>42 (4.6%)</cell></row><row><cell>None</cell><cell>326 (35.7%)</cell></row><row><cell>Table 2 illustrates the prevalence of</cell><cell>diabetes, cardiovascular disease, respiratory</cell></row><row><cell>comorbidities among COVID-19 patients in the</cell><cell>disease, kidney disease, and the number of</cell></row><row><cell>study. It includes conditions like hypertension,</cell><cell>patients with no comorbidities.</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 3 : Health Conditions Post-COVID-19</head><label>3</label><figDesc></figDesc><table><row><cell>Health Condition</cell></row></table><note><p>https://www.</p></note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>isohe.org/medical-advances-and-innovations-journal August 2023 | Volume 1 | Issue 3</head><label></label><figDesc></figDesc><table><row><cell>Hematological Complications</cell><cell>98 (10.7%)</cell></row><row><cell>Renal Complications</cell><cell>64 (7.0%)</cell></row><row><cell>No Complications</cell><cell>239 (26.2%)</cell></row><row><cell>Table 3 presents the health conditions observed</cell><cell>hematological, and renal complications, and</cell></row><row><cell>post-COVID-19 among the study participants. It</cell><cell>patients with no complications.</cell></row><row><cell>includes respiratory, cardiac, neurological,</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>Table 4 : Predictive Factors for Respiratory Complications</head><label>4</label><figDesc></figDesc><table><row><cell>Factor</cell><cell cols="2">Odds Ratio (95% CI)</cell><cell>p-value</cell></row><row><cell>Age (years)</cell><cell cols="2">1.25 (1.10-1.42)</cell><cell>&lt;0.001</cell></row><row><cell>Hypertension</cell><cell cols="2">2.17 (1.75-2.69)</cell><cell>&lt;0.001</cell></row><row><cell>Diabetes</cell><cell cols="2">1.82 (1.47-2.25)</cell><cell>&lt;0.001</cell></row><row><cell>Smoking</cell><cell cols="2">1.63 (1.32-2.00)</cell><cell>&lt;0.001</cell></row><row><cell>COVID-19 Severity</cell><cell cols="2">3.54 (2.91-4.30)</cell><cell>&lt;0.001</cell></row><row><cell cols="2">Table 4 displays the predictive factors for</cell><cell cols="2">includes odds ratios with 95% confidence</cell></row><row><cell cols="2">respiratory complications post-COVID-19. It</cell><cell>intervals and p-values.</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 5 : Predictive Factors for Cardiac Complications</head><label>5</label><figDesc></figDesc><table><row><cell>Factor</cell><cell>Odds Ratio (95% CI)</cell><cell>p-value</cell></row><row><cell>Age (years)</cell><cell>1.18 (1.05-1.32)</cell><cell>0.004</cell></row><row><cell>Cardiovascular Disease</cell><cell>3.21 (2.53-4.08)</cell><cell>&lt;0.001</cell></row><row><cell>Obesity</cell><cell>1.68 (1.34-2.10)</cell><cell>&lt;0.001</cell></row><row><cell>COVID-19 Severity</cell><cell>2.89 (2.32-3.60)</cell><cell>&lt;0.001</cell></row><row><cell>Table 5 presents the predictive factors for</cell><cell cols="2">odds ratios with 95% confidence intervals and</cell></row><row><cell>cardiac complications post-COVID-19. It includes</cell><cell>p-values.</cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Table 6 : Impact of Age on Health Conditions</head><label>6</label><figDesc>Table6shows the impact of age on the prevalence of respiratory, cardiac, and neurological health conditions post-COVID-19, presented in percentage values for different age groups. These tables provide a comprehensive overview of the study's results, including demographic characteristics, prevalence of comorbidities, post-COVID-19 health conditions, and factors influencing these conditions.</figDesc><table><row><cell>Age Group (years)</cell><cell>Respiratory (%)</cell><cell>Cardiac (%)</cell><cell>Neurological (%)</cell></row><row><cell>&lt;40</cell><cell>12.1</cell><cell>7.8</cell><cell>4.5</cell></row><row><cell>40-60</cell><cell>27.9</cell><cell>19.7</cell><cell>12.0</cell></row><row><cell>&gt;60</cell><cell>41.6</cell><cell>38.2</cell><cell>21.3</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="13" xml:id="foot_0"><p>https://www.isohe.org/medical-advances-and-innovations-journal August 2023 | Volume 1 | Issue 3</p></note>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Characterizing Pulmonary Fibrosis Patterns in Post-COVID-19 Patients through Machine Learning Algorithms</title>
+		<author>
+			<persName><surname>Martin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Ha Albaqer</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Shubber</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Rawaf</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medical Advances and Innovations Journal</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="1" to="11" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<monogr>
+		<title level="m" type="main">Longterm Neurological Sequelae in Post-COVID-19 Patients: A Machine Learning Approach to Predict Outcomes</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">J</forename><surname>Ha Albaqer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Al-Jibouri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Martin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Rawaf</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yousif</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2309.09993.2023</idno>
+		<imprint/>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Role of NF-κβ and oxidative pathways in atherosclerosis: Cross-talk between dyslipidemia and candesartan</title>
+		<author>
+			<persName><forename type="first">Hayder</forename><forename type="middle">A</forename><surname>Mgy John Martin</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Albaqer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Fadhil</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Habeeb</forename><forename type="middle">W</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Shubber</surname></persName>
+		</author>
+		<ptr target="https://www.isohe.org/medical-advances-and-innovations-journal" />
+	</analytic>
+	<monogr>
+		<title level="j">Cardiovascular therapeutics</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="381" to="387" />
+			<date type="published" when="2013-12">August 2023. 2013 Dec</date>
+		</imprint>
+	</monogr>
+	<note>Characterizing Pulmonary Fibrosis</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Extended Spectrum Beta-Lactamase Producing Klebsiella Pneumonia Isolated from Patients with Urinary Tract Infection in Al-Najaf Governorate-Iraq</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">H</forename><surname>Hasan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">M</forename><surname>Alshammari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">K</forename><surname>Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Advances in Science, Engineering and Technology (IJASEAT)</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="13" to="16" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Phylogenetinc characterization of Listeria monocytogenes isolated from different sources in Iraq</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Shamari</forename><surname>Ak</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Asian J Pharm Clin Res</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="1" to="4" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title level="m" type="main">RESEARCH JOURNAL OF PHARMACEUTICAL BIOLOGICAL AND CHEMICAL SCIENCES</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadiq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">A</forename><surname>Mohammed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">H</forename><surname>Aladly</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">H</forename><surname>Hameed</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016-05-01">2016 May 1</date>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="page" from="1536" to="1544" />
+		</imprint>
+	</monogr>
+	<note>Subclinical hypothyroidism with preeclampsia</note>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">The effect of type of anesthesia on mother and neonatal health during Cesarean section</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadiq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al</forename><surname>Aasam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">R</forename><surname>Rahman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Hassan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">N</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J Adv Pharm Educ Res</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page">117</biblScope>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Potential role of cytomegalovirus in risk factor of breast cancer</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Afr J Bus Manage</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="page" from="54" to="60" />
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">PROSPECTIVE SINGLE CENTER ANALYSIS OF OUTCOME STEM CELLS TRANSPLANTS IN PATIENTS WITH CEREBRAL PALSY</title>
+		<author>
+			<persName><forename type="first">Ghaly</forename><surname>Uan Nasser</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Maitham</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ahmed</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Haydar</forename><surname>Abd Ulhadi Mohsen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Pol Merkur Lek</title>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="page" from="339" to="345" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Post COVID-19 Effect on Medical Staff and Doctors&apos; Productivity Analysed by Machine Learning</title>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Hashim</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Rawaf</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Baghdad Science Journal</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="1507" to="1507" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<author>
+			<persName><surname>Rh Allami</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Yousif</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2307.15228.2023</idno>
+		<title level="m">Integrative AI-Driven Strategies for Advancing Precision Medicine in Infectious Diseases and Beyond: A Novel Multidisciplinary Approach</title>
+		<imprint/>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">Decoding Microbial Enigmas: Unleashing the Power of Artificial Intelligence in Analyzing Antibiotic-Resistant Pathogens and their Impact on Human Health</title>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2307.14790.2023</idno>
+		<imprint/>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Mg Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sadeq</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Ng Yousif</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2307.14806</idno>
+		<title level="m">Prevalence and Associated Factors of Human Papillomavirus Infection among Iraqi Women</title>
+		<imprint/>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Unleashing the Power of Artificial Intelligence: Unraveling the Intricate Dynamics between Viral and Bacterial Infections, Immune Factors, COVID-19, and Cancer in Women&apos;s Health</title>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+		<title level="m">Wheat Allergy and its Association with COVID-19: Prevalence, Symptoms, and Predictive Analysis in Post-COVID-19 Patients</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Design of a Test to Identify Mutagenic Effects of Hair Dye using Proteus mirabilis</title>
+		<author>
+			<persName><surname>Hezam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">J</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Mohammed</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IOP Conference Series: Earth and Environmental Science</title>
+		<imprint>
+			<biblScope unit="volume">1215</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">12068</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title level="m" type="main">Detection of Auxotroph&apos;s Methionine Proteus Mirabilis from Different Clinical</title>
+		<author>
+			<persName><surname>Hezam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">J</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Mohammed</surname></persName>
+		</author>
+		<ptr target="https://www.isohe.org/medical-advances-and-innovations-journal" />
+		<imprint>
+			<date type="published" when="2023-08">August 2023</date>
+			<biblScope unit="volume">1</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title/>
+		<ptr target="https://www.isohe.org/medical-advances-and-innovations-journal" />
+	</analytic>
+	<monogr>
+		<title level="j">Issue 3 Sources. IOP Conference Series: Earth and Environmental Science</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">12065</biblScope>
+			<date type="published" when="2023-08">August 2023. 2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Evaluation of Near-Infrared Chemical Imaging (NIR-CI) for the Authentication of Currents in Pharmaceutical Research</title>
+		<author>
+			<persName><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Rowlands</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al</forename><surname>Liatsis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Mustafina</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">.</forename><surname>Mg Yousif</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="47" to="69" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Interconnections of Health Domains: A Meta-analysis of Diverse Research Studies</title>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medical Advances and Innovations Journal</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<author>
+			<persName><surname>Yb Wah</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Berry</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Mohamed</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Al-Jumeily</surname></persName>
+		</author>
+		<title level="m">Data Science and Emerging Technologies: Proceedings of DaSET 2022</title>
+		<imprint>
+			<publisher>Springer Nature</publisher>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<monogr>
+		<title level="m" type="main">Data Science and Emerging Technologies: Proceedings of DaSET</title>
+		<author>
+			<persName><surname>Irpu Machine</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Sahai¹</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Al-Ataby</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Jayabalan¹</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">.</forename><surname>Liatsis¹</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2022">2022. 2023</date>
+			<biblScope unit="volume">165</biblScope>
+			<biblScope unit="page">419</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Post-COVID-19 Effects on Female Fertility: An In-Depth Scientific Investigation</title>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page">9</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">The Association Between Sickle Cell Trait and Severity of COVID-19 Infection: A Case-Control Study in Iraq</title>
+		<author>
+			<persName><surname>Mg Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Medical Advances and Innovations Journal</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">5</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Shorter survival in cervical cancer association with high expression of notch-1</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Kamiran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Anderson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Albaghdadi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Annals of Oncology</title>
+		<imprint>
+			<biblScope unit="volume">23</biblScope>
+			<biblScope unit="page" from="327" to="328" />
+			<date type="published" when="2012-09-01">2012 Sep 1</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Correlation Between Highly Sensitive C-Reactive Protein Level in Cases of Preeclampsia with or without Intrauterine-Growth Restriction</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadiq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Hussein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Mohammed</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Indian Journal of Forensic Medicine &amp; Toxicology</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<date type="published" when="2020-10-01">2020 Oct 1</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Phylogenetic Characterization of Staphylococcus aureus isolated from the women breast abscess in Al-Qadisiyah Governorate</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Mayahi</forename><surname>Mh</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Iraq. Journal of Pharmaceutical Sciences and Research</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="1001" to="1005" />
+			<date type="published" when="2019-03-01">2019 Mar 1</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Effect of caffeic acid on doxorubicin induced cardiotoxicity in rats</title>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">I</forename><surname>Mohammad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Aharis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Alkefae</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Am J Biomed</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="23" to="27" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Psycho-immunological status of patients recovered from SARS-Cov-2</title>
+		<author>
+			<persName><forename type="first">Al-Jibouri Kj</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Sadeq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Jumeily</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Survey in Fisheries Sciences</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">3S</biblScope>
+			<biblScope unit="page" from="1409" to="1417" />
+			<date type="published" when="2023-03-04">2023 Mar 4</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">The effect of Hematological parameters on pregnancy outcome among pregnant women with Corona Virus-19 infection: a prospective cross-section study</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadeq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Alfadhel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Al-Jumeilyran</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Survey in Fisheries Sciences</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">3S</biblScope>
+			<biblScope unit="page" from="1425" to="1435" />
+			<date type="published" when="2023-03-04">2023 Mar 4</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Insurance Risk Prediction Using Machine Learning</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Sahai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Ataby</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Jayabalan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Liatsis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Loy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Al-Sudani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Alamran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Kolivand</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">InThe International Conference on Data Science and Emerging Technologies</title>
+		<meeting><address><addrLine>Singapore; Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer Nature</publisher>
+			<date type="published" when="2022-12-20">2022 Dec 20</date>
+			<biblScope unit="page" from="419" to="433" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">G</forename><surname>Mohammed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Mohammed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Alamran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Adrienne</forename><forename type="middle">J</forename><surname>Altimimi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">G</forename><surname>Hussien</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">R</forename></persName>
+		</author>
+		<ptr target="https://www.isohe.org/medical-advances-and-innovations-journal" />
+	</analytic>
+	<monogr>
+		<title level="m">Association between Natural Killer Cell Cytotoxicity and the Progression of Non-Small Cell Lung</title>
+		<imprint>
+			<date type="published" when="2020-04-01">August 2023. August 2023. 2020 Apr 1</date>
+			<biblScope unit="volume">1</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Etanerecept ameliorate inflammatory responses and apoptosis induces by myocardial ischemia/reperfusion in male mice</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Hassan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">American Journal of BioMedicine</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="732" to="744" />
+			<date type="published" when="2014-06">2014 Jun</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Methionine protects from myocardial ischemia/reperfusion injury via down regulation of the inflammatory response and apoptosis</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Alrekabi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">H</forename><surname>Hussein</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">AJBM</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="36" to="47" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Consumer Behavior Prediction During Covid-19 Pandemic Conditions Using Sentiment Analytics</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Murugan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Alatrany</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Jayabalan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Liatsis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Mustafina</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kaky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">N</forename><surname>Yao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Jumeily Obe D</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">InThe International Conference on Data Science and Emerging Technologies</title>
+		<meeting><address><addrLine>Singapore; Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer Nature</publisher>
+			<date type="published" when="2022-12-20">2022 Dec 20</date>
+			<biblScope unit="page" from="209" to="221" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Renal Function Tests in Women with Preeclampsia with and without Intrauterine Growth Restriction</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadeq</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">A</forename><surname>Mohammed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Hussein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Indian Journal of Forensic Medicine &amp; Toxicology</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<date type="published" when="2020-10-01">2020 Oct 1</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Paeoniflorin attenuates myocardial ischemia/reperfusion injury via upregulation of Notch 1 mediated Jagged1 signaling</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Younis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Altimim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Syst. Rev. Pharm</title>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<biblScope unit="page" from="363" to="371" />
+			<date type="published" when="2020-02-01">2020 Feb 1</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<monogr>
+		<title level="m" type="main">Correlation between iron deficiency anemia and types of infant feeding, breast, and formula milk feeding. Drug Invention Today</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Grmt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">S</forename><surname>Abass</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019-11-01">2019 Nov 1</date>
+			<biblScope unit="volume">11</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<monogr>
+		<title level="m" type="main">Immunological marker of human papillomavirus type 6 infection in epithelial ovarian tumor before and after paclitaxel drug treatment in Al-Najaf Governorate. Iraq Drug Invention Today</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Al-Shamari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadiq</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019-10-15">2019 Oct 15</date>
+			<biblScope unit="volume">12</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Sensitivity of Proteus mirablis Isolated from Urinary tract Infection</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">H</forename><surname>Ali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Al-Qadisiyah Journal of Pure Science</title>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="146" to="161" />
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Irbesartan ameliorate inflammatory responses, and apoptosis induced by myocardial ischemia/reperfusion in male rats</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Al-Amran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">T</forename><surname>Zamil</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Am J BioMed</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="608" to="624" />
+			<date type="published" when="2014-05">2014 May</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Suicide Ideation Detection: A Comparative Study of Sequential and Transformer Hybrid Algorithms</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Verma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Harper</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Mustafina</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">A</forename><surname>Ismail</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Jumeily Obe D</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">InThe International Conference on Data Science and Emerging Technologies</title>
+		<meeting><address><addrLine>Singapore; Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer Nature</publisher>
+			<date type="published" when="2022-12-20">2022 Dec 20</date>
+			<biblScope unit="page" from="373" to="387" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<monogr>
+		<title level="m" type="main">L69 3GJ, UK. Data Science and Emerging Technologies: Proceedings of DaSET 2022</title>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">R</forename><surname>Machine</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Sahai¹</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Ataby</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Jayabalan¹</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Liatsis¹</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Loy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Al-Sudani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Alamran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Kolivand¹</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2023-03-31">2023 Mar 31</date>
+			<biblScope unit="volume">165</biblScope>
+			<biblScope unit="page">419</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chakraborty</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wilson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Alamran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Al-Nahari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Mustafina</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Lunn</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Jumeily Obe D</forename></persName>
+		</author>
+		<ptr target="https://www.isohe.org/medical-advances-and-innovations-journal" />
+		<title level="m">Issue 3 Quora Insincere Questions Classification Using Attention Based Model. InThe International Conference on Data Science and Emerging Technologies</title>
+		<meeting><address><addrLine>Singapore; Singapore</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer Nature</publisher>
+			<date type="published" when="2022-12-20">August 2023. August 2023. 2022 Dec 20</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="357" to="372" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Detection of Listeria monocytogenes from clinical specimens</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al-Shamari</forename><surname>Ak</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">InJournal of Physics: Conference Series</title>
+		<imprint>
+			<biblScope unit="volume">1294</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page">62086</biblScope>
+			<date type="published" when="2019-09-01">2019 Sep 1</date>
+			<publisher>IOP Publishing</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">P447Amelioration of myocardial ischaemia</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Hadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">G</forename><surname>Alamran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Mohsin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Cardiovascular research</title>
+		<imprint>
+			<biblScope unit="volume">103</biblScope>
+			<biblScope unit="issue">suppl_1</biblScope>
+			<biblScope unit="page">82</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Post COVID-19 Effect on Medical Staff and Doctors&apos; Productivity Analysed by Machine Learning</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Hashim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Rawaf</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Baghdad Science Journal</title>
+		<imprint>
+			<biblScope unit="volume">20</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page">1507</biblScope>
+			<date type="published" when="2023-08-30">2023 Aug 30</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">Design of a Test to Identify Mutagenic Effects of Hair Dye using Proteus mirabilis</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Hezam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">J</forename><surname>Mohammed</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">InIOP Conference Series: Earth and Environmental Science</title>
+		<imprint>
+			<publisher>IOP Publishing</publisher>
+			<date type="published" when="2023-07-01">2023 Jul 1</date>
+			<biblScope unit="volume">1215</biblScope>
+			<biblScope unit="page">12068</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Detection of Auxotroph&apos;s Methionine Proteus Mirabilis from Different Clinical Sources</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Hezam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">J</forename><surname>Mohammed</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">InIOP Conference Series: Earth and Environmental Science</title>
+		<imprint>
+			<publisher>IOP Publishing</publisher>
+			<date type="published" when="2023-07-01">2023 Jul 1</date>
+			<biblScope unit="volume">1215</biblScope>
+			<biblScope unit="page">12065</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">Evaluation of Near-Infrared Chemical Imaging (NIR-CI) for the Authentication of Antibiotics</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Assi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Rowlands</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Liatsis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Al</forename><surname>Hamid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Mustafina</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Coombs</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Obe</forename><surname>Da</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Currents in Pharmaceutical Research</title>
+		<imprint>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="47" to="69" />
+			<date type="published" when="2023-06-28">2023 Jun 28</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<monogr>
+		<title level="m" type="main">Immunological marker of human papillomavirus type 6 infection in epithelial ovarian tumor before and after paclitaxel drug treatment in Al-Najaf Governorate. Iraq Drug Invention Today</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">K</forename><surname>Al-Shamari</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">M</forename><surname>Sadiq</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019-10-15">2019 Oct 15</date>
+			<biblScope unit="volume">12</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">G</forename><surname>Yousif</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Post-COVID-19 Effects on Female Fertility: An In-Depth Scientific Investigation</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page">9</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

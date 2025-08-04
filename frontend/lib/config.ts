@@ -65,8 +65,8 @@ export const appConfig: AppConfig = {
 // Route configuration
 export const routes = {
   auth: {
-    login: "/Authentication/login",
-    signup: "/Authentication/signup"
+    login: "/login",
+    signup: "/signup"
   },
   projects: {
     main: "/Project/projects",

@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING</title>
+				<funder ref="#_CKpbkaR #_fq4xFRy">
+					<orgName type="full">National Research Foundation Singapore</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+				<date type="published" when="2021-07-25">25 Jul 2021</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Jay</forename><surname>Nandy</surname></persName>
+							<email>jaynandy@comp.nus.edu.sg</email>
+							<affiliation key="aff0">
+								<orgName type="department">School of Computing</orgName>
+								<orgName type="institution">National University</orgName>
+								<address>
+									<country key="SG">Singapore</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Wynne</forename><surname>Hsu</surname></persName>
+							<email>whsu@comp.nus.edu.sg</email>
+							<affiliation key="aff0">
+								<orgName type="department">School of Computing</orgName>
+								<orgName type="institution">National University</orgName>
+								<address>
+									<country key="SG">Singapore</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff1">
+								<orgName type="department">Institute of Data Science</orgName>
+								<orgName type="institution">National University of Singapore</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Mong</forename><forename type="middle">Li</forename><surname>Lee</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department">School of Computing</orgName>
+								<orgName type="institution">National University</orgName>
+								<address>
+									<country key="SG">Singapore</country>
+								</address>
+							</affiliation>
+							<affiliation key="aff1">
+								<orgName type="department">Institute of Data Science</orgName>
+								<orgName type="institution">National University of Singapore</orgName>
+							</affiliation>
+						</author>
+						<title level="a" type="main">DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2021-07-25">25 Jul 2021</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">2D81C3F6B330C0D52C639F3006F09ABA</idno>
+					<idno type="arXiv">arXiv:2107.11822v1[cs.CV]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2025-08-03T22:05+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Distributional Shift</term>
+					<term>Dirichlet Prior Network</term>
+					<term>Diabetic Retinopathy Screening</term>
+					<term>Out-of-distribution</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Deep learning-based models are developed to automatically detect if a retina image is 'referable' in diabetic retinopathy (DR) screening. However, their classification accuracy degrades as the input images distributionally shift from their training distribution. Further, even if the input is not a retina image, a standard DR classifier produces a high confident prediction that the image is 'referable'. Our paper presents a Dirichlet Prior Network-based framework to address this issue. It utilizes an out-of-distribution (OOD) detector model and a DR classification model to improve generalizability by identifying OOD images. Experiments on real-world datasets indicate that the proposed framework can eliminate the unknown non-retina images and identify the distributionally shifted retina images for human intervention.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">INTRODUCTION</head><p>Diabetic retinopathy (DR) is one of the leading causes of preventable blindness in the world. It affects diabetic patients within the first two decades of the disease <ref type="bibr" target="#b1">[1]</ref>. Vision loss due to diabetic retinopathy is irreversible. Several frameworks are proposed to automate the DR screening process <ref type="bibr" target="#b2">[2,</ref><ref type="bibr" target="#b3">3]</ref>. Recently, deep neural network (DNN) based models achieve clinically acceptable classification accuracy to detect referable DR at lower costs <ref type="bibr" target="#b4">[4,</ref><ref type="bibr" target="#b5">5]</ref>. However, these DNN models are sensitive to in-domain training distribution <ref type="bibr">[6,</ref><ref type="bibr" target="#b7">7,</ref><ref type="bibr" target="#b8">8,</ref><ref type="bibr" target="#b9">9,</ref><ref type="bibr" target="#b10">10,</ref><ref type="bibr" target="#b11">11]</ref>. Any minor distributional shift leads to over-confident predictions even if they are wrong, producing poor classification performance <ref type="bibr" target="#b12">[12,</ref><ref type="bibr" target="#b13">13]</ref>. Hence, predictive uncertainty estimation has emerged as a crucial research direction to inform about possible wrong predictions, thus instilling user's trust in deep learning systems <ref type="bibr" target="#b14">[14,</ref><ref type="bibr" target="#b15">15,</ref><ref type="bibr" target="#b16">16]</ref>.</p><p>Predictive uncertainty in a classification model can arise from three sources: model uncertainty, data uncertainty, and knowledge uncertainty <ref type="bibr" target="#b14">[14,</ref><ref type="bibr" target="#b12">12]</ref>. Model uncertainty captures the uncertainty in estimating the model parameters, conditioning on training data <ref type="bibr" target="#b14">[14]</ref>. Data uncertainty arises from the natural complexities of the underlying distribution, such as class overlap, label noise, and others <ref type="bibr" target="#b14">[14]</ref>. Knowledge (or distributional) uncertainty arises due to the distributional shifts between the training and test examples, i.e., the test data is out-of-distribution (OOD) <ref type="bibr" target="#b12">[12,</ref><ref type="bibr" target="#b17">17]</ref>. For real-world applications, the ability to detect OOD examples can allow manual intervention in an informed way. To build an automated DR screening system, we typically train a deep learning model using a set of pre-collected retina images <ref type="bibr" target="#b4">[4]</ref>. We apply standard preprocessing techniques (e.g., image normalization and data augmentation) to improve their generalization for unknown test images obtained from the same distribution as the training images. However, these techniques do not generalize a model for the test images that are distributionally different from those pre-collected training images. Figure <ref type="figure" target="#fig_0">1</ref> illustrates two retina images, obtained from two different distributions. Hence, a DR classification model may produce incorrect predictions with high confidence for unknown OOD images obtained from different distributions.</p><p>Recent works have made significant progress to detect distributional uncertainty for unknown OOD test images <ref type="bibr" target="#b17">[17,</ref><ref type="bibr" target="#b15">15,</ref><ref type="bibr" target="#b13">13,</ref><ref type="bibr" target="#b18">18]</ref>. However, these models often fail to detect the OOD examples as the out-distribution and in-distribution become "alike". For example, both in-domain and OOD examples are retinal images, as shown in Figure <ref type="figure" target="#fig_0">1</ref>. It leads to degrading the performance of these OOD detection models.</p><p>In this paper, we focus on the DR screening application. We aim to quantify the distributional shift in an input retina image while maintaining the high classification performance. Our framework utilizes the state-of-the-art Dirichlet prior network (DPN) <ref type="bibr" target="#b19">[19,</ref><ref type="bibr" target="#b18">18]</ref>. We train an OOD detector separately from the DR classification model. We use retina images as in-domain and natural images as OOD training set for our DR classifier. It also improves their classification performance compared to the baseline CNN model. However, it cannot distinguish the out-of-distribution retina images. Hence, we train a separate OOD detector. Here we use both in-domain retina images and OOD images comprising a natural dataset and a few retina images obtained from a different distribution.</p><p>Experimental results on multiple real-world datasets demonstrate that our proposed framework effectively detects the OOD retina and non-retina OOD images. We discard the non-retina images and forward the OOD retina images to the human graders for verification. Hence, it leads to a greater acceptance of deep learning models for DR screening tasks.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">DIRICHLET PRIOR NETWORK</head><p>A Dirichlet Prior Network (DPN) trains a standard neural network with a different loss function to represent their predictions as Dirichlet distributions over the probability simplex <ref type="bibr" target="#b19">[19,</ref><ref type="bibr" target="#b18">18]</ref>. It attempts to produce a sharp Dirichlet at one corner of the simplex when it confidently predicts an in-domain example (see Figure <ref type="figure" target="#fig_2">2</ref>  A Dirichlet distribution is parameterized with a vector of concentration parameters α = {α 1 , • • • , α K }, as follows:</p><formula xml:id="formula_0">Dir(µ|α) = Γ(α0) K k=1 Γ(α k ) K k=1 µ α k -1 k , α k &gt; 0,<label>(1)</label></formula><p>where α 0 = K k=1 α k is the precision of the distribution. A higher precision value leads to a sharper uni-modal Dirichlet distribution. Consequently, a lower precision produces a flatter uni-modal distribution. However, as we further uniformly decrease the concentration parameters to lower than 1, we obtain a sharp multi-modal distribution with equal probability density at each corner of the simplex (Figure <ref type="figure" target="#fig_2">2(c)</ref>). Hence, for a K-class classification problem, we need to produce K positive values for each class to obtain the K-dimensional Dirichlet distribution.</p><p>A deep neural network (DNN) can be viewed as a DPN whose pre-softmax (logit) output corresponding to the class k for an input x is z k (x). Then its concentration parameters α k is given by: α k = e z k (x) . The expected posterior for class label ω k is given as:</p><formula xml:id="formula_1">p(y = ω k |x; θ) = α k α0 = e z k (x)</formula><p>K k=1 e z k (x) ; where θ denotes the DNN parameters.</p><p>A DPN measures the distributional uncertainty using the mutual information (MI) <ref type="bibr" target="#b19">[19]</ref>, as follows:</p><formula xml:id="formula_2">K k=1 α k α0 ψ(α k + 1) -ψ(α0 + 1) -ln α k α0<label>(2)</label></formula><p>where ψ(.) is digamma function. α k is the concentration parameters for class k. α 0 = K k=1 α k is the precision of the output Dirichlet distributions. For a known in-domain image, a DPN produces a lower MI score to indicate low distributional uncertainty. Consequently, it produces a higher MI score for an OOD image.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">PROPOSED FRAMEWORK</head><p>Our proposed DPN-based framework for diabetic retinopathy screening utilizes a DR classifier and an OOD detector. We train the OOD detector separately from the classifier. Fig. <ref type="figure" target="#fig_3">3</ref> presents an overview of our proposed framework. Given an input image, we pass it to both the OOD detector and the DR classifier. These two networks produce two different Dirichlet distributions. We use Eq. 2 to compute the MI scores. We denote the scores as s d and s c respectively for the Dirichlet distributions from the OOD detector and DR classifier. The DR classifier produces lower s c scores for retina images and higher scores for unknown, non-retina images. We select a threshold, τ c , and discard the images with s c &gt; τ c as they are unlikely to be a retina image. For the OOD detector, we choose another threshold, τ d . If s d &lt; τ d , we accept the input sample is an in-domain retina image. Hence, if s d &lt; τ d and s c &lt; τ c , we consider the input image is obtained from known in-domain distribution. Hence, we can trust the classification prediction without further manual intervention. Consequently, if s d &gt; τ d and s c &lt; τ c , the input is an OOD retina image, and requires human intervention. precision of the output Dirichlet distributions using the standard cross-entropy loss along with an additional regularization term <ref type="bibr" target="#b18">[18]</ref>. For in-domain training examples {x, y}, the loss function is given as follows:</p><formula xml:id="formula_3">Lin(θ; λin) = -log p(y|x, θ) - λin K K c=1 sigmoid(zc(x)) (3)</formula><p>For OOD training examples, the loss function is given as:</p><formula xml:id="formula_4">Lout(θ; λout) = Hce(U; p(y|x, θ)) - λout K K c=1 sigmoid(zc(x))<label>(4)</label></formula><p>where H ce denotes the standard cross-entropy loss. U is the uniform distribution over the class labels.</p><p>Our DR classifier is trained in a multi-task fashion with the overall loss as: min θ L in (θ; λ in ) + γL out (θ; λ out ); where, γ &gt; 0 balances between the in-domain examples and OOD examples. λ in and λ out respectively are userdefined hyper-parameters to control the sharpness of the output Dirichlet distributions for in-domain and OOD examples.</p><p>The choice of λ in &gt; 0 produces larger concentration values for in-domain retina images, leading to sharp uni-modal Dirichlet distributions (Figure <ref type="figure" target="#fig_2">2a</ref> and Figure <ref type="figure" target="#fig_2">2b</ref>). Consequently, λ out &lt; 0 enforces the network to produce multimodal Dirichlet distributions for OOD examples to indicate their high distributional uncertainty (Figure <ref type="figure" target="#fig_2">2c</ref>). OOD Detector. We train the OOD detector using the original in-domain retina images D in , and two OOD datasets, i.e., a natural image dataset, D n and a small set of retina images, D r , obtained from a different source from D in . We train the OOD detector in a multi-task fashion as follows:</p><formula xml:id="formula_5">min θ L in (θ; λ in ) + γ n L n (θ; λ n ) + γ r L r (θ; λ r ).</formula><p>Here, L in (θ; λ in ) is corresponding to the in-domain retina training examples, as defined in Equation 3. L n (θ; λ n ) and L r (θ; λ r ) are loss functions for D n and D r respectively, similar to Equation 4. γ n , γ r &gt; 0 balance between the loss values for in-domain and different OOD training examples to learn the network parameters θ, λ in , λ n and λ r respectively control the spread of probability mass for the output Dirichlet distributions for the in-domain and the two OOD datasets. We choose λ in &gt; 0 to produce sharp uni-modal Dirichlet distributions for in-domain examples, and λ n , λ n &lt; 0 to produce multi-modal Dirichlet with uniformly densities at each corner of the simplex for the OOD examples.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">PERFORMANCE STUDY</head><p>We evaluate the effectiveness of our framework for the referable DR screening task using a wide range of datasets:</p><p>• Kaggle <ref type="bibr" target="#b21">[21]</ref>. This is a public dataset with 35,126 retina images <ref type="bibr" target="#b22">[22]</ref>. • ImageNet-Small. This is a subset of 25, 000 natural images, randomly selected from ImageNet dataset to train our OOD detector <ref type="bibr" target="#b24">[24]</ref>.</p><p>• Non-retina datasets. We also use STL10 <ref type="bibr" target="#b25">[25]</ref>, LSUN <ref type="bibr" target="#b26">[26]</ref>, Texture <ref type="bibr" target="#b27">[27]</ref> for our evaluations.</p><p>Setup. We use VGG-19 <ref type="bibr" target="#b28">[28]</ref> for both DR classifier and OOD detector. We compare the proposed framework with a VGG-19 classifier, denoted as Baseline. The Baseline is trained with cross-entropy loss using the SiDRP-Train dataset. We train the DR classifier using the in-domain SiDRP-Train and ImageNet-Small as the OOD training set. We set the hyperparameters as γ = 0.1, λ in = 0.1 and λ out = -1.0. For the OOD detector, we use the in-domain SiDRP-Train and both ImageNet-Small and Kaggle-1200 as OOD training sets. The hyper-parameters of our OOD detector are set as γ = 0.5, λ in = 0.5, λ r = -0.2 and λ n = -1.0. We select the hyperparameters using validation during training. <ref type="foot" target="#foot_0">1</ref>We initialize the model parameters using the pre-trained weights for Imagenet classification task <ref type="bibr" target="#b24">[24]</ref> as it improves the generalizability of the models <ref type="bibr" target="#b29">[29]</ref>. We re-size the input images to 256×256 and normalized them using a 5×5 median filter to reduce the inconsistency between in-domain training and test images. Classification Results under Distributional Shift. We first present the performance of our DR Classifier on different test sets. Table <ref type="table" target="#tab_1">1</ref> shows the AUROC scores for the referable DR screening task. We see that both Baseline and DR Classifier achieve 92.9% AUROC scores on the in-domain SiDRPtest set. In contrast, the performances of both classifiers drop for other DR test sets, confirming the distributional shifts of these datasets from the original training set. Nevertheless, our proposed DR Classifier leans to produce richer feature representations by incorporating ImageNet-Small for training in an unsupervised fashion. Hence, it outperforms the Baseline model for these other DR test sets. OOD detection performance. Next, we present the OOD detection performance for unknown natural image datasets and retina datasets obtained from different sources. For each image, we compute s d from the OOD Detector (Equation <ref type="formula" target="#formula_2">2</ref>). We cannot define MI scores for Baseline <ref type="bibr" target="#b19">[19,</ref><ref type="bibr" target="#b20">20]</ref>. Hence, we use entropy as their uncertainty score <ref type="bibr" target="#b15">[15]</ref>. We report the percentage of images detected as OOD from the various datasets as we select different thresholds, τ d . We obtain these thresholds by dropping 5%, 7%, and 10% of the in-domain SiDRP-Test images with the top-most uncertainty scores. Table <ref type="table" target="#tab_3">2</ref>(a) shows the results for non-retina images. We can see that the Baseline is unable to distinguish the nonretina images from in-domain retina images. In contrast, our OOD detector successfully distinguishes almost all non-retina images even at a 5% threshold.</p><p>Table <ref type="table" target="#tab_3">2</ref>(b) presents the results for OOD retina images. By incorporating only 1200 images from Kaggle-Train for training, our OOD detector distinguishes most of the retina images under distributional shift in Kaggle-Test as OOD. For Messidor and Mayuri datasets, our OOD detector significantly outperforms the Baseline by 20% on average.</p><p>Performance after discarding OOD images. The objective of our proposed framework is to detect the unknown OOD retina images to improve the trustworthiness of the referable DR screening. Hence, the overall classification performance should improve after discarding the OOD images. In our experiment for OOD detection, we obtain the uncertainty thresholds, τ d by discarding 5%, 7%, and 10% of the in-domain SiDRP-Test images with top-most uncertainty scores. For the remaining images, we get the predictions from the DR classifier. Figure <ref type="figure" target="#fig_5">4</ref> shows the AUROC scores for referable DR as we increase the threshold to discard the required percentage of OOD images. We see that the performances of both classifiers improve, with our DR classifier outperforming the Baseline.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">CONCLUSION</head><p>The ability to distinguish unknown OOD images is crucial in real-world applications such as referable DR screening. It allows us to notify about potential misclassifications to take appropriate actions in an informed way. We proposed a DPN-based referable DR screening framework that utilizes an OOD detector and a DR classifier to identify OOD images. Experimental results on multiple real-world datasets demonstrate that incorporating a separate OOD detector can    distinguish the OOD images, leading to decrease misclassification error.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 :</head><label>1</label><figDesc>Fig. 1: Illustration of the retina images from different sources.</figDesc><graphic coords="1,461.83,305.28,74.64,69.74" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head></head><label></label><figDesc>(a)). For in-domain examples tending to misclassification, it should appear as a sharp distribution in the middle of the simplex, as shown in Figure 2(b). For an OOD example, a DPN attempts to produce a sharp multimodal Dirichlet, spread uniformly at each corner of the simplex to indicate their high distributional uncertainty (see Figure 2(c)) [18, 20]. We observe that the probability densities for Dirichlet distribution in Figure 2(c) are more scattered over the simplex compared to that in Figures 2(a) and 2(b).</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 2 :</head><label>2</label><figDesc>Fig. 2: Desired output of a DPN classifier.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 3 :</head><label>3</label><figDesc>Fig. 3: Overview of our proposed framework.</figDesc><graphic coords="2,315.21,566.88,243.78,75.22" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 4 :</head><label>4</label><figDesc>Fig. 4: AUROC scores after discarding OOD retina images.</figDesc><graphic coords="4,338.47,532.09,195.02,90.01" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head></head><label></label><figDesc>We split the dataset into training and test set. The training set consists of 26, 408 images with 5, 129 referable DR images. We select a small subset of 1, 200 images from this to train the OOD detector model, denoted as Kaggle-1200. The test set, Kaggle-Test, has 6, 898 images with 1, 354 referable cases.• Messidor<ref type="bibr" target="#b23">[23]</ref>. This publicly available dataset has 1200 retina images, with 501 referable DR images.</figDesc><table><row><cell>• Mayuri. It is a private dataset with 1, 520 retina images</cell></row><row><cell>with 213 referable DR images.</cell></row><row><cell>• SiDRP. It is a private dataset consisting of retina im-</cell></row><row><cell>ages from the Singapore National Diabetic Retinopathy</cell></row><row><cell>Screening Program between 2010-2013. Our training</cell></row><row><cell>set, SiDRP-Train, has 89, 413 images with 5, 844 refer-</cell></row><row><cell>able DR images, while SiDRP-Test has 2, 239 images</cell></row><row><cell>with 1, 442 referable cases.</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 1 :</head><label>1</label><figDesc>AUROC scores of RDR screening models.</figDesc><table><row><cell></cell><cell cols="2">Baseline DR classifier</cell></row><row><cell>Kaggle-Test</cell><cell>81.8</cell><cell>83.7</cell></row><row><cell>Messidor</cell><cell>88.3</cell><cell>91.0</cell></row><row><cell>Mayuri</cell><cell>85.6</cell><cell>87.7</cell></row><row><cell>SiDRP-Test</cell><cell>92.9</cell><cell>92.9</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>Table 2 :</head><label>2</label><figDesc>Percentage of OOD images detected.</figDesc><table /></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>Code modified from https://github.com/jayjaynandy/maximizerepresentation-gap.</p></note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><p>Acknowledgement. This research is supported by the <rs type="funder">National Research Foundation Singapore</rs> under its <rs type="programName">AI Singapore Programme</rs> (<rs type="grantNumber">AISG-GC-2019-001</rs>, <rs type="grantNumber">AISG-RP-2018-008</rs>).</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funding" xml:id="_CKpbkaR">
+					<idno type="grant-number">AISG-GC-2019-001</idno>
+					<orgName type="program" subtype="full">AI Singapore Programme</orgName>
+				</org>
+				<org type="funding" xml:id="_fq4xFRy">
+					<idno type="grant-number">AISG-RP-2018-008</idno>
+				</org>
+			</listOrg>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<title/>
+		<author>
+			<persName><surname>References</surname></persName>
+		</author>
+		<imprint/>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Diabetic retinopathy: global prevalence, major risk factors, screening practices and public health challenges: a review</title>
+		<author>
+			<persName><surname>Ting</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">Y</forename><surname>Cheung</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Wong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Clinical &amp; experimental ophthalmology</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">An incremental feature extraction framework for referable diabetic retinopathy detection</title>
+		<author>
+			<persName><forename type="first">Jay</forename><surname>Nandy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wynne</forename><surname>Hsu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mong</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lee</forename></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Deriving probabilistic svm kernels from flexible statistical mixture models and its application to retinal images classification</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Bourouis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zaguia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Bouguila</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Alroobaea</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes</title>
+		<author>
+			<persName><forename type="first">Daniel</forename><surname>Shu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wei</forename><surname>Ting</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">JAMA</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">An ensemble deep learning based approach for red lesion detection fundus images</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Ji Orlando</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Prokofyeva</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">B</forename><surname>Del Fresno</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Blaschko</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Computer methods and programs in biomedicine</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Intriguing properties of neural networks</title>
+		<author>
+			<persName><forename type="first">Christian</forename><surname>Szegedy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICLR</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Explaining and harnessing adversarial examples</title>
+		<author>
+			<persName><forename type="first">Ian</forename><surname>Goodfellow</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jonathon</forename><surname>Shlens</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Christian</forename><surname>Szegedy</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICLR</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Approximate manifold defense against multiple adversarial perturbations</title>
+		<author>
+			<persName><forename type="first">Jay</forename><surname>Nandy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wynne</forename><surname>Hsu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mong-Li</forename><surname>Lee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IJCNN</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Benchmarking neural network robustness to common corruptions and perturbations</title>
+		<author>
+			<persName><forename type="first">Dan</forename><surname>Hendrycks</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Thomas</forename><surname>Dietterich</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICLR</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<monogr>
+		<title level="m" type="main">Improving robustness against common corruptions by covariate shift adaptation</title>
+		<author>
+			<persName><forename type="first">Steffen</forename><surname>Schneider</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Evgenia</forename><surname>Rusak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Luisa</forename><surname>Eck</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Oliver</forename><surname>Bringmann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wieland</forename><surname>Brendel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Matthias</forename><surname>Bethge</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<publisher>NeurIPS</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Adversarially trained models with test-time covariate shift adaptation</title>
+		<author>
+			<persName><forename type="first">Jay</forename><surname>Nandy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sudipan</forename><surname>Saha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wynne</forename><surname>Hsu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mong</forename><surname>Li Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiao</forename><forename type="middle">Xiang</forename><surname>Zhu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">arXiv</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<title level="m" type="main">Dataset shift in machine learning</title>
+		<author>
+			<persName><forename type="first">Masashi</forename><surname>Jq Candela</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anton</forename><surname>Sugiyama</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Neil</forename><forename type="middle">D</forename><surname>Schwaighofer</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Lawrence</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+			<publisher>The MIT Press</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Deep anomaly detection with outlier exposure</title>
+		<author>
+			<persName><forename type="first">Dan</forename><surname>Hendrycks</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mantas</forename><surname>Mazeika</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Thomas</forename><surname>Dietterich</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICLR</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Uncertainty in deep learning</title>
+		<author>
+			<persName><forename type="first">Yarin</forename><surname>Gal</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+		<respStmt>
+			<orgName>University of Cambridge</orgName>
+		</respStmt>
+	</monogr>
+	<note>Ph.D. thesis</note>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Simple and scalable predictive uncertainty estimation using deep ensembles</title>
+		<author>
+			<persName><surname>Lakshminarayanan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Pritzel</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Blundell</surname></persName>
+		</author>
+		<editor>NeurIPS</editor>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title level="m" type="main">Building trust in deep learning system towards automated disease detection</title>
+		<author>
+			<persName><forename type="first">Zhan</forename><surname>Wei Lim</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mong</forename><surname>Li Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wynne</forename><surname>Hsu</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note>in IAAI-19</note>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">A baseline for detecting misclassified and out-of-distribution examples in neural networks</title>
+		<author>
+			<persName><forename type="first">Dan</forename><surname>Hendrycks</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kevin</forename><surname>Gimpel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICLR</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<title level="m" type="main">Towards maximizing the representation gap between in-domain &amp; out-of-distribution examples</title>
+		<author>
+			<persName><forename type="first">Jay</forename><surname>Nandy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wynne</forename><surname>Hsu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mong</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lee</forename></persName>
+		</author>
+		<editor>NeurIPS</editor>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title level="m" type="main">Reverse kldivergence training of prior networks: Improved uncertainty and adversarial robustness</title>
+		<author>
+			<persName><forename type="first">Andrey</forename><surname>Malinin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mark</forename><surname>Gales</surname></persName>
+		</author>
+		<editor>NeurIPS</editor>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<author>
+			<persName><forename type="first">Jay</forename><surname>Nandy</surname></persName>
+		</author>
+		<title level="m">Robustness and Uncertainty Estimation for Deep Neural Networks</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+		<respStmt>
+			<orgName>National University of Singapore</orgName>
+		</respStmt>
+	</monogr>
+	<note>Ph.D. thesis</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<monogr>
+		<title level="m" type="main">Kaggle diabetic retinopathy detection</title>
+		<author>
+			<persName><forename type="first">Eyepacs</forename><surname>Kaggle</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Eyepacs: an adaptable telemedicine system for diabetic retinopathy screening</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Cuadros</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Bresnick</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of diabetes science and technology</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Feedback on a publicly distributed database: the messidor database</title>
+		<author>
+			<persName><surname>Decencière</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Image Analysis &amp; Stereology</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">ImageNet: A Large-Scale Hierarchical Image Database</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Deng</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">CVPR</title>
+		<imprint>
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">An analysis of single-layer networks in unsupervised feature learning</title>
+		<author>
+			<persName><forename type="first">Adam</forename><surname>Coates</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrew</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Honglak</forename><surname>Lee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">AISTATS</title>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">LSUN: Construction of a large-scale image dataset using deep learning with humans in the loop</title>
+		<author>
+			<persName><surname>Yu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">arXiv</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Describing textures in the wild</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Cimpoi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">CVPR</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Very deep convolutional networks for large-scale image recognition</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Simonyan</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Zisserman</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">ICLR</title>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Using pre-training can improve model robustness and uncertainty</title>
+		<author>
+			<persName><forename type="first">Dan</forename><surname>Hendrycks</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kimin</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mantas</forename><surname>Mazeika</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICML</title>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

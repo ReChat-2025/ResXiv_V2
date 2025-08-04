@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Saket</forename><forename type="middle">S</forename><surname>Chaturvedi</surname></persName>
+							<email>saketschaturvedi@gmail.com</email>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="department" key="dep2">Priyadarshini Institute of Engineering &amp; Technology</orgName>
+								<address>
+									<settlement>Nagpur</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Kajol</forename><surname>Gupta</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="department" key="dep2">Priyadarshini Institute of Engineering &amp; Technology</orgName>
+								<address>
+									<settlement>Nagpur</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Vaishali</forename><surname>Ninawe</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="department" key="dep2">Priyadarshini Institute of Engineering &amp; Technology</orgName>
+								<address>
+									<settlement>Nagpur</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Prakash</forename><forename type="middle">S</forename><surname>Prasad</surname></persName>
+							<email>prakashsprasad@gmail.com</email>
+							<affiliation key="aff0">
+								<orgName type="department" key="dep1">Department of Computer Science &amp; Engineering</orgName>
+								<orgName type="department" key="dep2">Priyadarshini Institute of Engineering &amp; Technology</orgName>
+								<address>
+									<settlement>Nagpur</settlement>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">6B05787C6047ED7C8B505517483643D1</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2025-08-03T22:04+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Deep Learning</term>
+					<term>Diabetic Retinopathy</term>
+					<term>DenseNet network</term>
+					<term>Fundus Photography</term>
+					<term>Computeraided diagnosis</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Diabetic Retinopathy is a global health problem, influences 100 million individuals worldwide, and in the next few decades, these incidences are expected to reach epidemic proportions. Diabetic Retinopathy is a subtle eye disease that can cause sudden, irreversible vision loss. The early-stage Diabetic Retinopathy diagnosis can be challenging for human experts, considering the visual complexity of fundus photography retinal images. However, Early Stage detection of Diabetic Retinopathy can significantly alter the severe vision loss problem. The competence of computer-aided detection systems to accurately detect the Diabetic Retinopathy had popularized them among researchers. In this study, we have utilized a pre-trained DenseNet121 network with several modifications and trained on APTOS 2019 dataset. The proposed method outperformed other stateof-the-art networks in early-stage detection and achieved 96.51% accuracy in severity grading of Diabetic Retinopathy for multi-label classification and achieved 94.44% accuracy for single-class classification method. Moreover, the precision, recall, f1-score, and quadratic weighted kappa for our network was reported as 86%, 87%, 86%, and 91.96%, respectively. Our proposed architecture is simultaneously very simple, accurate, and efficient concerning computational time and space.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">INTRODUCTION</head><p>The incidence of vision loss due to Diabetic Retinopathy is on the rise, and in the next few decades, these incidences are expected to reach epidemic proportions globally. Since 1980, the cases of diabetes prevalence have quadrupled <ref type="bibr" target="#b0">[1]</ref>, <ref type="bibr" target="#b1">[2]</ref>. The visual impairment and blindness estimates for Diabetic Retinopathy increased by 64% and 27% between 1990 and 2010, respectively <ref type="bibr" target="#b2">[3]</ref>. In 2017, 425 million people worldwide were reported with diabetes, and this number is estimated to increase to 642 million by 2040 <ref type="bibr" target="#b3">[4]</ref>. It is estimated that nearly every patient with type-1 diabetes and 60% of patients with type-2 diabetes would develop Diabetic Retinopathy in the first 20 years of diabetes <ref type="bibr" target="#b4">[5]</ref>, <ref type="bibr" target="#b5">[6]</ref>.</p><p>Diabetic Retinopathy (DR) is the most mundane and subtle microvascular complication of diabetes, resulting in a sudden loss of vision. Diabetic Retinopathy often remains undetected until it progresses to an advanced vision-threatening stage as this complicated problem can only be noticed when the tiny blood vessels in the retina begin to damage. This tiny blood vessel causes the blood flow, and fluid present in the retina results in forming features. After the disease starts growing to the next level, oxygen enters in between the retina and clouding vision because of the generation of new blood vessels. In the case of diabetic patients, it is essential to conduct regular screening to track the growth of DR <ref type="bibr" target="#b6">[7]</ref> among four severity levels: Normal, Mild, Moderate, Severe, and Proliferative Diabetic Retinopathy. The most dangerous stage of Diabetic Retinopathy is the proliferative DR in which the likelihood of blood leaking is at a peak, causing permanent vision loss. The current state of Diabetic Retinopathy screening in the real world is based on the assessment of color fundus photography (see Figure <ref type="figure" target="#fig_0">1</ref>), which is induced by an Ophthalmologist. The fundus photography leaves a large proportion of patients undiagnosed and therefore receiving medical help too late, owing to low adherence and access to retina screening visits <ref type="bibr" target="#b7">[8]</ref>. In-person expert examinations are impractical and unsustainable, given the pandemic size of the diabetic population <ref type="bibr" target="#b8">[9]</ref>- <ref type="bibr" target="#b10">[11]</ref>. However, it is time-consuming and resource-demanding to grade the images manually. Notwithstanding, early detection and prevention of DR progression are essential to mitigate the rising threat of DR.</p><p>The presence of an automated or computer-aided system can make it very easy for a specialist to observe the retina of diabetic patients clearly <ref type="bibr" target="#b11">[12]</ref>. Artificial intelligence (AI) may offer a solution to this conundrum. Deep Learning (DL), and correctly, Deep Convolutional Neural Networks (DCNNs) <ref type="bibr" target="#b12">[13]</ref>, can be used for an end-to-end assessment of raw medical images to produce a target outcome prediction. The diagnostic use of DCCN algorithms is already spreading in various healthcare areas <ref type="bibr" target="#b13">[14]</ref>, <ref type="bibr" target="#b14">[15]</ref>, such as radiology, dermatology <ref type="bibr" target="#b15">[16]</ref>, and pathology <ref type="bibr" target="#b16">[17]</ref>. In ophthalmology, ground-breaking work has recently been conducted on the automation of DR grading <ref type="bibr" target="#b17">[18]</ref>- <ref type="bibr" target="#b19">[20]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">RELATED WORKS</head><p>The computer-aided detection systems capability to accurately detect the grades of Diabetic Retinopathy had made them popular among researchers. In the last ten years, numerous research work focusing on the development of Computer-Aided systems to automatically detect Diabetic Retinopathy using traditional machine learning algorithms were recorded. Quellec et al. <ref type="bibr" target="#b20">[21]</ref> used a traditional KNN algorithm with optimal filters on two classes to achieve an AUC of 0.927. Also, Sinthanayothin et al. <ref type="bibr" target="#b21">[22]</ref> proposed an automated Diabetic Retinopathy detection system on morphological features using the KNN algorithm and obtained sensitivity and specificity of 80.21% and 70.66%, respectively. Further, In the paper <ref type="bibr" target="#b22">[23]</ref>, three classes of Diabetic Retinopathy were classified using Neural Network. They classified mild, moderate, and severe stages of Diabetic Retinopathy with an accuracy of 82.6%, 82.6%, and 88.3%, respectively. Larsen et al. <ref type="bibr" target="#b23">[24]</ref> demonstrated an automatic diagnosis of Diabetic Retinopathy in fundus photographs with a visibility threshold. They reported an accuracy of 90.1% for true cases detection and 81.3% for the detection of the false case. Agurto et al. <ref type="bibr" target="#b24">[25]</ref> utilized multi-scale Amplitude Modulation and Frequency Modulation based decomposition to distinguish between Diabetic Retinopathy and normal retina images. In <ref type="bibr" target="#b25">[26]</ref>, the authors reported an area under ROC of 0.98 for Texture features and accuracy of 99.17% for two-class classification by using Wavelet transform with SVM.</p><p>Jelinek et al. <ref type="bibr" target="#b26">[27]</ref> proposed an automated Diabetic Retinopathy detection by combining the works of Spencer <ref type="bibr" target="#b27">[28]</ref> and Cree <ref type="bibr" target="#b26">[27]</ref> system, which achieved a sensitivity of 85% and specificity of 90%. Abràmo et al. <ref type="bibr" target="#b28">[29]</ref> developed the Eye-Check algorithm for automated Diabetic Retinopathy detection. They detected abnormal lesions with an AUC of 0.839. Dupas et al. <ref type="bibr" target="#b29">[30]</ref> developed a Computer-Aided Detection system with a KNN classifier to detect Diabetic Retinopathy with a sensitivity of 83.9% and specificity of 72.7%. Acharya et al. <ref type="bibr" target="#b30">[31]</ref> classified five classes using SVM classifier on the bi-spectral invariant features to achieve sensitivity, specificity, and accuracy of 82%, 86%, and 85.9%, respectively. They also worked utilizing four features and achieved a classification accuracy of 85%, sensitivity of 82%, and specificity of 86%. Roychowdhury et al. <ref type="bibr" target="#b31">[32]</ref> proposed a two-step classification approach. In the first step, the false positives were removed. Later, GMM, KNN, and SVM were utilized for the classification task. They reported a sensitivity of 100%, a specificity of 53.16%, and AUC of 0.904.</p><p>Deep learning algorithms have become popular in the last few years. Kaggle <ref type="bibr" target="#b32">[33]</ref> has launched several competitions focusing on automated grading of Diabetic Retinopathy detection. Pratt et al. <ref type="bibr" target="#b33">[34]</ref> introduced a CNN based method, which even surpassed human experts in the classification of advanced stage Diabetic Retinopathy. Kori et al. <ref type="bibr" target="#b34">[35]</ref> utilized an ensemble of ResNet and Densely connected networks to detect advanced stages of Diabetic Retinopathy and macular enema. Torrey et al. <ref type="bibr" target="#b35">[36]</ref> developed a more interpretable CNN model to detect a lesion in the retinal fundus images. In a similar study <ref type="bibr" target="#b36">[37]</ref>, further advancement in the automated Diabetic Retinopathy methods was done along with RAM. Yang et al. <ref type="bibr" target="#b37">[38]</ref> employed an unbalanced weight map methodology to emphasize lesion detection with an AUC of 0.95. In <ref type="bibr" target="#b38">[39]</ref>, VGG-16 and Inception-4 networks were utilized for effective Diabetic Retinopathy classification.</p><p>Previous studies had mostly focused on the binary classification of Diabetic Retinopathy, which restricted the scope of Diabetic Retinopathy Detection studies. The purpose of this work was to predict the severity level of Diabetic Retinopathy fundus photography images among five classes-No DR, Mild DR, Moderate DR, Severe DR, and Proliferative DR. In this study, we have used DenseNet121 pretrained architecture followed by Pooling, Dropout, and SoftMax layers. Our network trained on APTOS2019 Kaggle's dataset, outperformed other state-of-the-art networks in early-stage detection, and achieved 96.51% accuracy in severity grading of Diabetic Retinopathy detection for multi-label classification and achieved 94.44% accuracy of simple single-class classification. Moreover, we have evaluated the performance of our network in terms of precision, recall, f1-score, weighted kappa, and confusion matrix.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">METHODS</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Dataset</head><p>In this work, we have used APTOS 2019 dataset <ref type="bibr" target="#b39">[40]</ref>, the most recent publicly available Kaggle dataset from the APTOS Blindness Detection competition on Kaggle for Diabetic Retinopathy Detection. The APTOS 2019 dataset contains 3662 fundus photography images which are categorized into five grades (0, 1, 2, 3, 4) according to the severity of DR which are named sequentially as Normal, Mild, moderate non-proliferative DR, severe non-proliferative DR, and proliferative DR. The sample images of Diabetic Retinopathy types from APTOS Dataset are represented in Figure <ref type="figure" target="#fig_1">2</ref>. The dataset contains 1805 No DR images, 370 Mild DR images, 999 Moderate images, 193 Severe images, 295 Proliferative images with different resolutions, as shown in Table <ref type="table" target="#tab_0">1</ref>. We split the dataset of 3662 images with 3112 images in the training set and 550 images in the validation set.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">Data Preprocessing</head><p>The preprocessing steps in the study were kept minimal to maintain better generalization of the image conditions. We performed a basic preprocessing step using the built-in preprocessing function of Keras, ImageDataGenerator <ref type="bibr" target="#b40">[41]</ref>. The ImageDataGenerator was set to perform a random zoom of 0.15, horizontal, and vertical flip for all the images in the dataset. The fundus photography images of the dataset have a random resolution. We down-scalded the images to 224 × 224 pixels resolution to match with the DenseNet121 input image dimension.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3">Network Architecture</head><p>The Dense Convolutional Network is a network architecture where each layer is directly connected to every other layer, in a feed-forward fashion. For each layer, the feature maps of all other layers are treated as separate inputs, whereas its feature maps are passed on as inputs to all subsequent layers <ref type="bibr" target="#b41">[42]</ref>. The advantages of DenseNets to alleviate the vanishing gradient problem, strengthen feature propagation, encourage feature reuse, and substantially reduce the number of parameters, have the edge over other Deep Convolutional Networks. DenseNets obtain significant improvements over the state-of-the-art on most of them while requiring less memory and computation to achieve high performance <ref type="bibr" target="#b42">[43]</ref>.</p><p>Table <ref type="table" target="#tab_2">2</ref>. illustrates the network architecture of our proposed severity grading Diabetic Retinopathy detection method. The input layer of the network is 224 x 224 pixels resolution. We have extended the architecture of DenseNet121 by the addition of GlobalAveragePooling2D having 1024 neurons, Dropout of 0.5 to reduce overfitting, and SoftMax layer having five classes.</p><p>Sigmoid <ref type="bibr" target="#b43">[44]</ref> was used in all convolutional layers as the activation function for nonlinearity. All the Max-Pooling layers used have the same kernel size of 3 x 3. The final extracted local features were flattened before passing through fully connected layers. This architecture is fine-tuned on 3112 sample images for 15 epochs with a learning rate of 0.00005 and Adam optimizer for the faster optimization of the network.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Layer</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.4.">Training</head><p>We have performed the training of our proposed network with the single-label classification method and multi-label classification method for the grading of Diabetic Retinopathy among five severity levels. In the multi-label classification, the prediction is not made on a single label; the target is set to a multi-label problem; i.e., if the target is a class 4, then it encompasses all the classes before it. The hyperparameters settings were kept constant for both single-label and multi-label classification method. Our proposed network has more than 7 million total parameters, which were randomly initialized. The network was trained with Adam optimization function <ref type="bibr" target="#b44">[45]</ref> for a fixed schedule over 15 epochs. We tested several learning rates but found 0.00005 to be the best learning rate for the study. The summary of the settings of our training hyperparameters is given in Table <ref type="table" target="#tab_4">3</ref>.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Hyperparameters</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.">EXPERIMENTAL RESULTS</head><p>The calculations were performed on Kaggle kernel having 4 CPU cores with 17 GB RAM and 2 CPU cores with 14GB RAM <ref type="bibr" target="#b32">[33]</ref>. The model evaluation was performed for both the single-label method and multi-label method used in this study by evaluating the accuracy, precision, recall, f1-score, quadratic weighted kappa indices, and confusion matrix. Also, loss and accuracy curves were plotted to keep track of the performance of the model concerning the number of epochs.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Performance Evaluation on Severity Grading</head><p>The validation set, which contains 550 fundus photography images, was used for model evaluation. The model was evaluated on the macro average, the weighted average for precision, recall, f1-score to know the performance of the model using the single-label classification method of the study. The macro average and the weighted average for precision, recall, and f1-score were evaluated for five classes. The macro average of 0.75, 0.67, 0.70, and the weighted average of 0.86, 0.87, 0.86 were recorded for precision, recall, and f1-score, respectively. Our model shows the best precision, recall, and f1-score value for No DR, i.e., 0.97, 0.98, 0.98, respectively. The Diabetic Retinopathy Classification system evaluation of Macro Average and Weighted Average for precision, recall, and f1score are represented in Table <ref type="table" target="#tab_5">4</ref>. The quadratic weighted kappa, the recommended state-of-the-art performance metric for multiclass Diabetic Retinopathy, is also adopted as the performance metric of our severity grading prediction. The quadratic weighted kappa allows disagreements to be weighted differently and is especially useful when codes are ordered. The Quadratic Weighted Kappa indices for a multi-label classification method was evaluated over validation data and reported to be 91.96%. The curve of Quadratic Weighted Kappa with the number of epochs is visualized in Figure <ref type="figure" target="#fig_2">3</ref>. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Confusion Matrix</head><p>A confusion matrix describes the performance of a classification model over a validation set by comparing the true labels with the predicted labels. The confusion matrix of our model was evaluated for the single-label classification method for five classes, which is shown in Table <ref type="table" target="#tab_7">5</ref>. Each element of the confusion matrix shows the comparison between the true label and predicted label for each image in the validation set. Our model showed the best result for No DR by making a correct prediction for 281 images out of 286 images. Whereas, the correct predicted images for Mild DR, Moderate DR, Severe DR, and Proliferative DR were 24, 141, 6, and 23 images out of 50, 129, 24, and 41 images, respectively. The detailed Confusion Matrix results are explained in Table <ref type="table" target="#tab_7">5</ref>.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>True</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.3">Loss and Accuracy Analysis</head><p>We computed the loss and accuracy curves to keep track of the performance of our model for both the single-label and multi-label methods used in the study. Figure <ref type="figure">4</ref> shows the training, validation loss of the model for the single-label method, and multi-label method. The training loss and validation loss for the single-label method were found to be 0.1008 and 0.1435, respectively. Whereas the training loss and validation loss for the multi-label method were found to be 0.0682 and 0.1061, respectively. Figure <ref type="figure">5</ref> shows the training, validation accuracy of the model for the single-label method and multi-label method of diabetes Retinopathy classification. The training accuracy and validation accuracy for the single-label method was found to be 95.98% and 94.44%, respectively. Whereas the training accuracy and validation accuracy for the multi-label method was found to be 97.54% and 96.40%, respectively. In our study, It is evident that the training and validation curve was best reported for the multi-label method as compared to the single-label method. The comparison of the current study with other related previous work with the number of classes four and five were included in the study, which is represented in Table <ref type="table" target="#tab_8">6</ref>. The accuracies and recall for the previously reported studies vary between approximately 37 percent to 94 percent and 30 percent to 90 percent, respectively. Our methods for multi-class Diabetic Retinopathy Classification has performed better than previously proposed computer-aided diagnosis systems in terms of both accuracy and recall. We have achieved 96.51% accuracy in severity grading of Diabetic Retinopathy detection for multi-label classification and achieved 94.44% accuracy of simple single-class classification. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.">CONCLUSION</head><p>In this paper, we have presented a DenseNet121 model for early-stage detection of five severity grades for Diabetic Retinopathy. We performed several modifications in the pre-trained DenseNet121 network and employed preprocessing to improve the performance of the network. Our network was trained on APTOS 2019 dataset, which outperformed other state-of-the-art networks in early-stage detection. The best accuracy of 96.51% was reported with the multi-label classification method in comparison of 94.44% accuracy of the single-label classification method. Also, the precision, recall, f1score, and quadratic weighted kappa for our network was reported as 86%, 87%, 86%, and 91.96%, respectively. In our work, we have found that without heavy data preprocessing and data augmentation, well-tuned hyperparameters for the network can be effectively used to perform training on training data. Even without data-augmentation, the proposed method has achieved a better performance than previously reported computer-aided Diabetic Retinopathy detection systems. The experimental results have demonstrated the effectiveness of our proposed method to be good enough to be employed in clinical applications for Diabetic Retinopathy Detection.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 .</head><label>1</label><figDesc>Figure 1. The fundus photography images from APTOS2019 Kaggle's dataset at each of the Normal, Mild, Moderate, Severe, and Proliferative Diabetic Retinopathy severity levels.</figDesc><graphic coords="2,72.05,106.88,451.12,115.05" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 .</head><label>2</label><figDesc>Figure 2. The sample fundus photography images from APTOS Dataset for Diabetic Retinopathy severity levels : (a) No DR, (b) Mild DR, (c) Moderate DR, (d) Severe DR, (e) Proliferative DR</figDesc><graphic coords="4,138.40,137.77,336.49,351.10" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 .</head><label>3</label><figDesc>Figure 3. The Quadratic Weighted Kappa curve with respect to the number of epochs for a multilabel classification method. The Quadratic Weighted Kappa was determined as 91.96% evaluated on the 550 sample images of the validation data.</figDesc><graphic coords="7,177.05,168.65,241.20,155.85" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Figure 4 .Figure 5 .</head><label>45</label><figDesc>Figure 4. The Training Loss vs Validation Loss Curves was evaluated over the training set and validation set (a) Single-Label Method (b) Multi-Label Method</figDesc><graphic coords="8,72.00,424.36,456.75,177.19" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 .</head><label>1</label><figDesc>Grade distribution of the Diabetic Retinopathy images from APTOS 2019 dataset.</figDesc><table><row><cell>DR Grade</cell><cell>Grade Name</cell><cell>Total Images</cell></row><row><cell>0</cell><cell>No DR</cell><cell>1805</cell></row><row><cell>1</cell><cell>Mild DR</cell><cell>370</cell></row><row><cell>2</cell><cell>Moderate DR</cell><cell>999</cell></row><row><cell>3</cell><cell>Severe DR</cell><cell>193</cell></row><row><cell>4</cell><cell>Proliferative DR</cell><cell>295</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 2 .</head><label>2</label><figDesc>The proposed network architecture of the severity grading Diabetic Retinopathy detection model.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>Table 3 .</head><label>3</label><figDesc>The summary of the settings of our training hyperparameters.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_5"><head>Table 4 .</head><label>4</label><figDesc>Diabetic Retinopathy Classification system evaluation of Macro Average and Weighted Average for precision, recall, and f1-Score evaluated over 550 sample images of validation data using single-label classification method.</figDesc><table><row><cell>Classes</cell><cell>Precision</cell><cell>Recall</cell><cell>F1-support</cell></row><row><cell>No DR</cell><cell>0.97</cell><cell>0.98</cell><cell>0.98</cell></row><row><cell>Mild DR</cell><cell>0.71</cell><cell>0.48</cell><cell>0.57</cell></row><row><cell>Moderate DR</cell><cell>0.74</cell><cell>0.95</cell><cell>0.83</cell></row><row><cell>Severe DR</cell><cell>0.75</cell><cell>0.25</cell><cell>0.38</cell></row><row><cell>Proliferative DR</cell><cell>0.82</cell><cell>0.56</cell><cell>0.67</cell></row><row><cell>Macro Average</cell><cell>0.75</cell><cell>0.67</cell><cell>0.70</cell></row><row><cell>Weighted Average</cell><cell>0.86</cell><cell>0.87</cell><cell>0.86</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6"><head>Label / Predicted Label No DR Mild DR Moderate DR Severe DR Proliferative DR</head><label></label><figDesc></figDesc><table><row><cell>No DR</cell><cell>281</cell><cell>4</cell><cell>1</cell><cell>0</cell><cell>0</cell></row><row><cell>Mild DR</cell><cell>6</cell><cell>24</cell><cell>19</cell><cell>0</cell><cell>1</cell></row><row><cell>Moderate DR</cell><cell>2</cell><cell>3</cell><cell>141</cell><cell>2</cell><cell>1</cell></row><row><cell>Severe DR</cell><cell>0</cell><cell>0</cell><cell>15</cell><cell>6</cell><cell>3</cell></row><row><cell>Proliferative DR</cell><cell>0</cell><cell>3</cell><cell>15</cell><cell>0</cell><cell>23</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_7"><head>Table 5 .</head><label>5</label><figDesc>Confusion Matrix: The diagonal elements which represent the number of points for which predicted label matches true label, while non-diagonal elements are those that are wrongly classified by the classifier.</figDesc><table /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_8"><head>Table 6 .</head><label>6</label><figDesc>The comparison of the current study with other related previous work with number of classes four and five. The current study achieved 96.51% accuracy in severity grading of Diabetic Retinopathy detection for multi-label classification and achieved 94.44% accuracy, recall 87% for simple single-label classification method.</figDesc><table><row><cell>Author</cell><cell>Year</cell><cell>Classifier</cell><cell>No. of</cell><cell>Accuracy</cell><cell>Recall</cell></row><row><cell></cell><cell></cell><cell></cell><cell>Classes</cell><cell></cell><cell></cell></row><row><cell>[46]</cell><cell>2008</cell><cell>NN</cell><cell>4</cell><cell>84%</cell><cell>90%</cell></row><row><cell>[26]</cell><cell>2011</cell><cell>SVM</cell><cell>5</cell><cell>82%</cell><cell>82.50%</cell></row><row><cell>[34]</cell><cell>2016</cell><cell>CNN</cell><cell>5</cell><cell>75%</cell><cell>30%</cell></row><row><cell>[47]</cell><cell>2016</cell><cell>CNN</cell><cell>5</cell><cell>94%</cell><cell>76.6%</cell></row><row><cell>[48]</cell><cell>2016</cell><cell>GoogleNet</cell><cell>5</cell><cell>45%</cell><cell>-</cell></row><row><cell>[49]</cell><cell>2018</cell><cell>GoogleNet and AlexNet</cell><cell>4</cell><cell>57.2%</cell><cell>-</cell></row><row><cell></cell><cell></cell><cell>AlexNet</cell><cell></cell><cell>37.43%</cell><cell>-</cell></row><row><cell>[50]</cell><cell>2018</cell><cell>VGG16</cell><cell>5</cell><cell>50.03%</cell><cell>-</cell></row><row><cell></cell><cell></cell><cell>InceptionNet V3</cell><cell></cell><cell>63.23%</cell><cell>-</cell></row><row><cell>[35]</cell><cell>2018</cell><cell>Ensemble of CNN</cell><cell>4</cell><cell>83.9%</cell><cell>-</cell></row><row><cell>Current</cell><cell>2020</cell><cell>DenseNet121 (Single label)</cell><cell>5</cell><cell>94.44%</cell><cell>87%</cell></row><row><cell>Study</cell><cell></cell><cell>DenseNet121 (Multi label)</cell><cell></cell><cell>96.51%</cell><cell>-</cell></row></table></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title/>
+	</analytic>
+	<monogr>
+		<title level="j">World Health Organization -Global Report on Diabetes</title>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Global estimates of diabetes prevalence for 2013 and projections for 2035</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Guariguata</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">R</forename><surname>Whiting</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Hambleton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Beagley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Linnenkamp</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">E</forename><surname>Shaw</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.diabres.2013.11.002</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Diabetes Res. Clin. Pract</title>
+		<imprint>
+			<biblScope unit="volume">103</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="137" to="149" />
+			<date type="published" when="2014-02">Feb. 2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Global Estimates on the Number of People Blind or Visually Impaired by Diabetic Retinopathy: A Meta-analysis From 1990 to 2010</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">L</forename><surname>Leasher</surname></persName>
+		</author>
+		<idno type="DOI">10.2337/dc15-2171</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Diabetes Care</title>
+		<imprint>
+			<biblScope unit="volume">39</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="1643" to="1649" />
+			<date type="published" when="2016-09">Sep. 2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<ptr target="https://diabetesatlas.org/en/" />
+		<title level="m">International Diabetes Federation Diabetes Atlas</title>
+		<imprint>
+			<date type="published" when="2016">2016. 2016</date>
+		</imprint>
+	</monogr>
+	<note>IDF Diabetes Atlas 9th edition. Eight Edition</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Retinopathy in diabetes</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">M</forename><surname>Tarr</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Kaul</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Wolanska</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">M</forename><surname>Kohner</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Chibber</surname></persName>
+		</author>
+		<idno type="DOI">10.2337/diacare.27.2007.s84</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Adv. Exp. Med. Biol</title>
+		<imprint>
+			<biblScope unit="volume">771</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="88" to="106" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Diabetic Retinopathy</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">A</forename><surname>Antonetti</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Klein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">W</forename><surname>Gardner</surname></persName>
+		</author>
+		<idno type="DOI">10.1056/NEJMra1005073</idno>
+	</analytic>
+	<monogr>
+		<title level="j">N. Engl. J. Med</title>
+		<imprint>
+			<biblScope unit="volume">366</biblScope>
+			<biblScope unit="issue">13</biblScope>
+			<biblScope unit="page" from="1227" to="1239" />
+			<date type="published" when="2012-03">Mar. 2012</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Neural network technique for diabetic retinopathy detection</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Kaur</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chatterjee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Singh</surname></persName>
+		</author>
+		<idno type="DOI">10.35940/ijeat.E7835.088619</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Eng. Adv. Technol</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="440" to="445" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Non-adherence to eye care in people with diabetes</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">P</forename><surname>Murchison</surname></persName>
+		</author>
+		<idno type="DOI">10.1136/bmjdrc-2016-000333</idno>
+	</analytic>
+	<monogr>
+		<title level="j">BMJ Open Diabetes Res. Care</title>
+		<imprint>
+			<biblScope unit="volume">5</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<date type="published" when="2017-07">Jul. 2017</date>
+		</imprint>
+	</monogr>
+	<note>p. e000333</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Severity of diabetic retinopathy and health-related quality of life: The Los Angeles Latino eye study</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Mazhar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Varma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Choudhury</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Mckean-Cowdin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">J</forename><surname>Shtir</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">P</forename><surname>Azen</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.ophtha.2010.08.003</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">118</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="649" to="655" />
+			<date type="published" when="2011-04">Apr. 2011</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Vision-related functional burden of diabetic retinopathy across severity levels in the United States</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">R</forename><surname>Willis</surname></persName>
+		</author>
+		<idno type="DOI">10.1001/jamaophthalmol.2017.2553</idno>
+	</analytic>
+	<monogr>
+		<title level="j">JAMA Ophthalmol</title>
+		<imprint>
+			<biblScope unit="volume">135</biblScope>
+			<biblScope unit="issue">9</biblScope>
+			<biblScope unit="page" from="926" to="932" />
+			<date type="published" when="2017-09">Sep. 2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title/>
+	</analytic>
+	<monogr>
+		<title level="j">National Diabetes Statistics Report</title>
+		<imprint>
+			<biblScope unit="page" from="2009" to="2012" />
+			<date type="published" when="2014">2014. 2014</date>
+			<publisher>American Diabetes Association</publisher>
+		</imprint>
+	</monogr>
+	<note>Natl. Diabetes Stat. Rep.</note>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">A brief review of the detection of diabetic retinopathy in human eyes using pre-processing &amp; segmentation techniques</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Kumaran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">M</forename><surname>Patil</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Recent Technology and Engineering</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="310" to="320" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">ImageNet classification with deep convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Krizhevsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Sutskever</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">E</forename><surname>Hinton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 25th International Conference on Neural Information Processing Systems</title>
+		<meeting>the 25th International Conference on Neural Information Processing Systems</meeting>
+		<imprint>
+			<publisher>Curran Associates Inc</publisher>
+			<date type="published" when="2012">2012</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="1097" to="1105" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">First FDA Approval For Clinical Cloud-Based Deep Learning In Healthcare</title>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Marr</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Forbes</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Artificial intelligence in healthcare</title>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">H</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">L</forename><surname>Beam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">S</forename><surname>Kohane</surname></persName>
+		</author>
+		<idno type="DOI">10.1038/s41551-018-0305-z</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Nature Biomedical Engineering</title>
+		<imprint>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="issue">10</biblScope>
+			<biblScope unit="page" from="719" to="731" />
+			<date type="published" when="2018-10">Oct-2018</date>
+			<publisher>Nature Publishing Group</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Skin Lesion Analyser: An Efficient Seven-Way Multi-Class Skin Cancer Classification Using MobileNet</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Chaturvedi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Gupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">S</forename><surname>Prasad</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019-07">Jul. 2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Machine Learning Methods for Histopathological Image Analysis</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Komura</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Ishikawa</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.csbj.2018.01.001</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Computational and Structural Biotechnology Journal</title>
+		<imprint>
+			<biblScope unit="volume">16</biblScope>
+			<biblScope unit="page" from="34" to="42" />
+			<date type="published" when="2018-01">Jan-2018</date>
+			<publisher>Elsevier B.V</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Gulshan</surname></persName>
+		</author>
+		<idno type="DOI">10.1001/jama.2016.17216</idno>
+	</analytic>
+	<monogr>
+		<title level="j">JAMA -J. Am. Med. Assoc</title>
+		<imprint>
+			<biblScope unit="volume">316</biblScope>
+			<biblScope unit="issue">22</biblScope>
+			<biblScope unit="page" from="2402" to="2410" />
+			<date type="published" when="2016-12">Dec. 2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">S W</forename><surname>Ting</surname></persName>
+		</author>
+		<idno type="DOI">10.1001/jama.2017.18152</idno>
+	</analytic>
+	<monogr>
+		<title level="j">JAMA -J. Am. Med. Assoc</title>
+		<imprint>
+			<biblScope unit="volume">318</biblScope>
+			<biblScope unit="issue">22</biblScope>
+			<biblScope unit="page" from="2211" to="2223" />
+			<date type="published" when="2017-12">Dec. 2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title level="m" type="main">Advances in Computer-Aided Diagnosis of Diabetic Retinopathy</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Chaturvedi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Gupta</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Ninawe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">S</forename><surname>Prasad</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019-09">Sep. 2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Optimal Filter Framework for Automated, Instantaneous Detection of Lesions in Retinal Images</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Quellec</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">R</forename><surname>Russell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Abràmoff</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TMI.2010.2089383</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Med. Imaging</title>
+		<imprint>
+			<biblScope unit="volume">30</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="523" to="533" />
+			<date type="published" when="2011-02">Feb. 2011</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Automated screening system for diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Sinthanayothin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Kongbunkiat</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Phoojaruenchanachai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Singalavanija</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ISPA.2003.1296409</idno>
+	</analytic>
+	<monogr>
+		<title level="m">3rd International Symposium on Image and Signal Processing and Analysis</title>
+		<imprint>
+			<date type="published" when="2003">2003</date>
+			<biblScope unit="volume">2</biblScope>
+			<biblScope unit="page" from="915" to="920" />
+		</imprint>
+	</monogr>
+	<note>ISPA 2003. Proceedings of the</note>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Computer classification of nonproliferative diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">C</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">T</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Klein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">M</forename><surname>Kingsley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Warn</surname></persName>
+		</author>
+		<idno type="DOI">10.1001/archopht.123.6.759</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Arch. Ophthalmol</title>
+		<imprint>
+			<biblScope unit="volume">123</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="759" to="764" />
+			<date type="published" when="1960-06">1960. Jun. 2005</date>
+			<pubPlace>Chicago, Ill</pubPlace>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Automated Detection of Diabetic Retinopathy in a Fundus Photographic Screening Population</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Larsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Godt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Grunkin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Lund-Andersen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Larsen</surname></persName>
+		</author>
+		<idno type="DOI">10.1167/iovs.02-0417</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Investig. Opthalmology Vis. Sci</title>
+		<imprint>
+			<biblScope unit="volume">44</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page">767</biblScope>
+			<date type="published" when="2003-02">Feb. 2003</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Multiscale AM-FM Methods for Diabetic Retinopathy Lesion Detection</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Agurto</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/TMI.2009.2037146</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Trans. Med. Imaging</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="502" to="512" />
+			<date type="published" when="2010-02">Feb. 2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Decision support system for diabetic retinopathy using discrete wavelet transform</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">K</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Ur</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Kp</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Sv</surname></persName>
+		</author>
+		<idno type="DOI">10.1177/0954411912470240</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Proc. Inst. Mech. Eng. Part H J. Eng. Med</title>
+		<imprint>
+			<biblScope unit="volume">227</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="251" to="261" />
+			<date type="published" when="2013-03">Mar. 2013</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">An automated microaneurysm detector as a tool for identification of diabetic retinopathy in rural optometric practice</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">J</forename><surname>Jelinek</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">J</forename><surname>Cree</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Worsley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Luckie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Nixon</surname></persName>
+		</author>
+		<idno type="DOI">10.1111/j.1444-0938.2006.00071.x</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Clin. Exp. Optom</title>
+		<imprint>
+			<biblScope unit="volume">89</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="299" to="305" />
+			<date type="published" when="2006-09">Sep. 2006</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">An image-processing strategy for the segmentation and quantification of microaneurysms in fluorescein angiograms of the ocular fundus</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Spencer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">A</forename><surname>Olson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">C</forename><surname>Mchardy</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">F</forename><surname>Sharp</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">V</forename><surname>Forrester</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Comput. Biomed. Res</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="284" to="302" />
+			<date type="published" when="1996-08">Aug. 1996</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Automated Early Detection of Diabetic Retinopathy</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">D</forename><surname>Abràmoff</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.ophtha.2010.03.046</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Ophthalmology</title>
+		<imprint>
+			<biblScope unit="volume">117</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1147" to="1154" />
+			<date type="published" when="2010-06">Jun. 2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Evaluation of automated fundus photograph analysis algorithms for detecting microaneurysms, haemorrhages and exudates, and of a computer-assisted diagnostic system for grading diabetic retinopathy</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Dupas</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.diabet.2010.01.002</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Diabetes Metab</title>
+		<imprint>
+			<biblScope unit="volume">36</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="213" to="220" />
+			<date type="published" when="2010-06">Jun. 2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Application of higher order spectra for the identification of diabetes retinopathy stages</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Acharya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">K</forename><surname>Chua</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">Y K</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Chee</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Med. Syst</title>
+		<imprint>
+			<biblScope unit="volume">32</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="481" to="488" />
+			<date type="published" when="2008-12">Dec. 2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">DREAM: Diabetic Retinopathy Analysis Using Machine Learning</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Roychowdhury</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">D</forename><surname>Koozekanani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">K</forename><surname>Parhi</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/JBHI.2013.2294635</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE J. Biomed. Heal. Informatics</title>
+		<imprint>
+			<biblScope unit="volume">18</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="1717" to="1728" />
+			<date type="published" when="2014-09">Sep. 2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<monogr>
+		<title level="m" type="main">Kaggle: Your Home for Data Science</title>
+		<ptr target="https://www.kaggle.com/" />
+		<imprint>
+			<date type="published" when="2019-03">Mar-2019</date>
+			<biblScope unit="page">31</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Convolutional Neural Networks for Diabetic Retinopathy</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Pratt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Coenen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">M</forename><surname>Broadbent</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">P</forename><surname>Harding</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zheng</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/J.PROCS.2016.07.014</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Procedia Comput. Sci</title>
+		<imprint>
+			<biblScope unit="volume">90</biblScope>
+			<biblScope unit="page" from="200" to="205" />
+			<date type="published" when="2016-01">Jan. 2016</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<monogr>
+		<title level="m" type="main">Ensemble of Convolutional Neural Networks for Automatic Grading of Diabetic Retinopathy and Macular Edema</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kori</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Chennamsetty</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S K P</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Alex</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018-09">Sep. 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<monogr>
+		<author>
+			<persName><forename type="first">L</forename><surname>Torrey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Torrey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shavlik</surname></persName>
+		</author>
+		<title level="m">Transfer Learning</title>
+		<imprint/>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<monogr>
+		<title level="m" type="main">Diabetic Retinopathy Detection via Deep Convolutional Networks for Discriminative Localization and Visual Explanation</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Yang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017-03">Mar. 2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<monogr>
+		<title level="m" type="main">Lesion detection and Grading of Diabetic Retinopathy via Two-stages Deep Convolutional Neural Networks</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Fan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zhang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017-05">May 2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Automatic diabetic retinopathy classification</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Bravo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">A</forename><surname>Arbeláez</surname></persName>
+		</author>
+		<idno type="DOI">10.1117/12.2285939</idno>
+	</analytic>
+	<monogr>
+		<title level="m">13th International Conference on Medical Information Processing and Analysis</title>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="volume">10572</biblScope>
+			<biblScope unit="page">39</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<monogr>
+		<title level="m" type="main">APTOS 2019 Blindness Detection</title>
+		<ptr target="https://www.kaggle.com/c/aptos2019-blindness-detection/data" />
+		<imprint>
+			<date type="published" when="2019">2019. 18-Mar-2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<monogr>
+		<title level="m" type="main">Image Preprocessing -Keras Documentation</title>
+		<ptr target="https://keras.io/preprocessing/image/" />
+		<imprint>
+			<date type="published" when="2019-03">2019. Mar-2019</date>
+			<biblScope unit="page">31</biblScope>
+		</imprint>
+	</monogr>
+	<note>Keras</note>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Optimize Transfer Learning for Lung Diseases in Bronchoscopy Using a New Concept: Sequential Fine-Tuning</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Tan</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/JTEHM.2018.2865787</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE J. Transl. Eng. Heal. Med</title>
+		<imprint>
+			<biblScope unit="volume">6</biblScope>
+			<date type="published" when="2018-08">Aug. 2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Densely connected convolutional networks</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Van Der Maaten</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">Q</forename><surname>Weinberger</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/CVPR.2017.243</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings -30th IEEE Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>-30th IEEE Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2017">2017. 2017</date>
+			<biblScope unit="page" from="2261" to="2269" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<title level="m" type="main">Activation Functions: Comparison of trends in Practice and Research for Deep Learning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Nwankpa</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><surname>Ijomah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Gachagan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Marshall</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<monogr>
+		<title level="m" type="main">Adam: A Method for Stochastic Optimization</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">P</forename><surname>Kingma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ba</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2014-12">Dec. 2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<analytic>
+		<title level="a" type="main">Identification of different stages of diabetic retinopathy using retinal optical images</title>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">L</forename><surname>Yun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">U</forename><surname>Rajendra Acharya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">V</forename><surname>Venkatesh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Chee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><forename type="middle">C</forename><surname>Min</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">Y K</forename><surname>Ng</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.ins.2007.07.020</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Inf. Sci. (Ny)</title>
+		<imprint>
+			<biblScope unit="volume">178</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="106" to="121" />
+			<date type="published" when="2008-01">Jan. 2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">Classifying diabetic retinopathy using deep learning architecture</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Sajana</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Sai Krishna</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Dinakar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Rajdeep</surname></persName>
+		</author>
+		<idno type="DOI">10.35940/ijitee.F1261.0486S419</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Innov. Technol. Explor. Eng</title>
+		<imprint>
+			<biblScope unit="volume">8</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="1273" to="1277" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">Automated detection of diabetic retinopathy using GLCM</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Sathiya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Gayathri</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Int. J. Appl. Eng. Res</title>
+		<imprint>
+			<biblScope unit="volume">9</biblScope>
+			<biblScope unit="issue">22</biblScope>
+			<biblScope unit="page" from="7019" to="7027" />
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">Automated Detection of Diabetic Retinopathy using Deep Learning</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Lam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Yi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Lindsey</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">AMIA Jt. Summits Transl. Sci. proceedings. AMIA Jt. Summits Transl. Sci</title>
+		<imprint>
+			<biblScope unit="volume">2017</biblScope>
+			<biblScope unit="page" from="147" to="155" />
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<analytic>
+		<title level="a" type="main">Diabetic retinopathy stage classification using convolutional neural networks</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">B</forename><surname>Chen</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/IRI.2018.00074</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings -2018 IEEE 19th International Conference on Information Reuse and Integration for Data Science</title>
+		<meeting>-2018 IEEE 19th International Conference on Information Reuse and Integration for Data Science</meeting>
+		<imprint>
+			<date type="published" when="2018">2018. 2018</date>
+			<biblScope unit="page" from="465" to="471" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

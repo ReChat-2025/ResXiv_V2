@@ -18,13 +18,21 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
-COPY requirements_production.txt .
+COPY requirements_demo.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements_production.txt
+RUN pip install --no-cache-dir -r requirements_demo.txt
+
+# Install additional packages for Railway
+RUN pip install --no-cache-dir gunicorn
 
 # Copy the application code
 COPY . .
+
+# Copy data exports for migration
+COPY ../../database_export.sql ./database_export.sql
+COPY ../../mongodb_dump ./mongodb_dump
+COPY ../../migrate_data.py ./migrate_data.py
 
 # Create necessary directories
 RUN mkdir -p uploads static downloads
@@ -38,4 +46,4 @@ RUN useradd --create-home --shell /bin/bash app \
 USER app
 
 # Command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} 

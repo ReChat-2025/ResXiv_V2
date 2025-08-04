@@ -9,7 +9,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8001
+      - NEXT_PUBLIC_API_URL=http://35.154.171.72:8000
+      - NODE_ENV=production
     depends_on:
       - backend
     networks:
@@ -18,21 +19,33 @@ services:
   # Backend Service
   backend:
     build:
-      context: ./backend
+      context: ./backend/resxiv_backend
       dockerfile: Dockerfile
     ports:
-      - "8001:8001"
+      - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://resxiv_user:resxiv_password@postgres:5432/resxiv_v2
-      - MONGODB_URL=mongodb://mongodb:27017/resxiv_v2
-      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=production
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=resxiv_v2
+      - POSTGRES_USER=resxiv_user
+      - POSTGRES_PASSWORD=resxiv_password
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_DB=resxiv_v2
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - HOST=0.0.0.0
+      - PORT=8000
     depends_on:
       - postgres
       - mongodb
       - redis
     volumes:
-      - ./backend/repositories:/app/repositories
-      - ./backend/uploads:/app/uploads
+      - ./backend/resxiv_backend/uploads:/app/uploads
+      - ./backend/resxiv_backend/downloads:/app/downloads
+      - ./backend/resxiv_backend/static:/app/static
     networks:
       - resxiv-network
 
@@ -46,9 +59,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - resxiv-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resxiv_user -d resxiv_v2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # MongoDB Database
   mongodb:
@@ -58,9 +76,14 @@ services:
     volumes:
       - mongodb_data:/data/db
     ports:
-      - "27017:27017"
+      - "27018:27017"
     networks:
       - resxiv-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/resxiv_v2 --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   # Redis Cache
   redis:
@@ -68,9 +91,14 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "6379:6379"
+      - "6380:6379"
     networks:
       - resxiv-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
 volumes:
   postgres_data:

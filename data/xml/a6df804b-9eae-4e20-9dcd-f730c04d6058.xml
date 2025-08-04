@@ -1,0 +1,1254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">FGA: Fourier-Guided Attention Network for Crowd Count Estimation</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+				<date type="published" when="2024-07-08">8 Jul 2024</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Yashwardhan</forename><surname>Chaudhuri</surname></persName>
+							<email>yashwardhan20417@iiitd.ac.in</email>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Jeddah</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Ankit</forename><surname>Kumar</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Jeddah</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Arun</forename><forename type="middle">Balaji</forename><surname>Buduru</surname></persName>
+							<email>arunb@iiitd.ac.in</email>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Jeddah</orgName>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Adel</forename><surname>Alshamrani</surname></persName>
+							<email>asalshamrani@uj.edu.sa</email>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Jeddah</orgName>
+							</affiliation>
+						</author>
+						<title level="a" type="main">FGA: Fourier-Guided Attention Network for Crowd Count Estimation</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2024-07-08">8 Jul 2024</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">DED02C46BA558A587822C1C6A47133A3</idno>
+					<idno type="arXiv">arXiv:2407.06110v1[cs.CV]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2025-08-03T20:43+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Crowd Count Estimation</term>
+					<term>Fast Fourier Transformation</term>
+					<term>Attention</term>
+					<term>Channel Attention</term>
+					<term>Spatial Attention</term>
+					<term>CNN</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Crowd counting is gaining societal relevance, particularly in domains of Urban Planning, Crowd Management, and Public Safety. This paper introduces Fourier-guided attention (FGA), a novel attention mechanism for crowd count estimation designed to address the inefficient full-scale global pattern capture in existing works on convolutionbased attention networks. FGA efficiently captures multi-scale information, including full-scale global patterns, by utilizing Fast-Fourier Transformations (FFT) along with spatial attention for global features and convolutions with channel-wise attention for semi-global and local features. The architecture of FGA involves a dual-path approach: (1) a path for processing full-scale global features through FFT, allowing for efficient extraction of information in the frequency domain, and (2) a path for processing remaining feature maps for semi-global and local features using traditional convolutions and channelwise attention. This dual-path architecture enables FGA to seamlessly integrate frequency and spatial information, enhancing its ability to capture diverse crowd patterns. We apply FGA in the last layers of two popular crowd-counting works, CSRNet and CANNet, to evaluate the module's performance on benchmark datasets such as ShanghaiTech-A, ShanghaiTech-B, UCF-CC-50, and JHU++ crowd. The experiments demonstrate a notable improvement across all datasets based on Mean-Squared-Error (MSE) and Mean-Absolute-Error (MAE) metrics, showing comparable performance to recent state-of-the-art methods. Additionally, we illustrate the interpretability using qualitative analysis, leveraging Grad-CAM heatmaps, to show the effectiveness of FGA in capturing crowd patterns.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. Introduction</head><p>Crowd count estimation (or crowd counting) involves estimating the number of individuals in a particular crowd scene. Its utility in public safety, crowd management, urban planning, and healthcare makes it relevant in computer vision. Crowd counting becomes challenging in large crowd scenes where problems such as large foreground-background imbalances, occlusions, and perspective distortion arise frequently. Density-based crowd-counting methods <ref type="bibr" target="#b0">[1]</ref> [2] [3] <ref type="bibr" target="#b3">[4]</ref> is widely accepted as a solution to this problem. It involves predicting crowd density maps (Figure <ref type="figure" target="#fig_0">1</ref>), where the sum of pixel values in a density map gives the number of people in it. Crowd counting has progressed significantly since the introduction of deep learning, with works such as MCNN <ref type="bibr" target="#b2">[3]</ref>, CSRNet <ref type="bibr" target="#b3">[4]</ref>, OURS-CAN <ref type="bibr" target="#b4">[5]</ref>, ASPDNet <ref type="bibr" target="#b1">[2]</ref> being widely accepted as a possible solution.</p><p>Most density map-based solutions employ a CNN <ref type="bibr" target="#b5">[6]</ref>based approach to regress crowd counts. The following methods are promising but remain constrained by the convolutional kernel's receptive field, leading to inefficient capture of global or long-range patterns in models. A global receptive field in crowd counting allows the network to capture information from a wider context, ensuring that it considers the overall layout of the crowd and accounts for variations in crowd density distribution. Many attention-based works such as MAN <ref type="bibr" target="#b6">[7]</ref>, DMCNet <ref type="bibr" target="#b7">[8]</ref>, JANet <ref type="bibr" target="#b8">[9]</ref>, DA2Net <ref type="bibr" target="#b9">[10]</ref> have gained popularity because of their ability to understand large-scale dependencies through attention networks. BBA-net <ref type="bibr" target="#b10">[11]</ref>, proposes an attention-based network designed to capture the finegrained details in spatial locations. RFSNet <ref type="bibr" target="#b11">[12]</ref> introduces a patch-wise recurrent self-attention network for spatiotemporal crowd counting in video. Although these CNN methods perform exceptionally well, they only utilize convolutions capable of processing information in a local neighbourhood, ignoring the large-scale pixel-to-pixel context; thus, using convolutional layers alone can prove inefficient for understanding full-scale global patterns. To solve this problem, we suggest a novel neural architecture named the Fourier-Guided Attention (FGA) module, drawing inspiration from the Fast Fourier Convolution (FFC) <ref type="bibr" target="#b12">[13]</ref> and <ref type="bibr" target="#b0">[1]</ref>. This module is designed for longrange context-aware crowd counting, seamlessly combining FFC, spatial attention, and channel attention into a single unit. FFC operates in the spatial and frequency domains, allowing FGA to process information in both local and global receptive fields. At the same time, different attention mechanisms focus on amplifying the fine-grained features from different parts of the input sequence to capture relevant information. The proposed framework can be integrated into existing crowd-counting methods to attend to full-scale global features.</p><p>To conclude, our contributions are mainly threefold:</p><p>• A novel dual-path architecture utilizing FFC and Attention mechanisms incorporating local and global context into a single pluggable unit for existing works. • Two simple FGA integrated architectures with comparable performances to the state-of-the-art methods in crowd counting. • A thorough qualitative and quantitative evaluation of our proposed approach with four public benchmark datasets: Shanghai-Tech Part A, Shanghai-Tech Part B, JHU++ crowd, and UCF-CC-50, along with an extensive ablation study to understand the contribution of each part in the FGA module.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. Related Work</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Density Based estimation</head><p>Most recent crowd-counting methods employ a variation of CNN to predict density maps from crowd images. The density maps represent the spatial distribution of people in the image, with brighter regions depicting higher crowd density. Numerous approaches have been proposed to mitigate the impact of scale variations, such as MCNN <ref type="bibr" target="#b2">[3]</ref>, which employs a multi-column architecture with different kernel sizes to capture scale variation across a crowd scene effectively. CSRNet <ref type="bibr" target="#b3">[4]</ref> and CANNET <ref type="bibr" target="#b4">[5]</ref> use single-column with a dilated convolution layer. certain encoder-decoder methods like MRCNet <ref type="bibr" target="#b13">[14]</ref>, <ref type="bibr" target="#b14">[15]</ref> incorporate contextual and detailed local information by integrating high-and low-level features through several lateral connections. The point-based framework <ref type="bibr" target="#b15">[16]</ref> utilizes one-to-one matching with doted annotation, while <ref type="bibr" target="#b16">[17]</ref> makes patch-level feature selection. Some methods <ref type="bibr" target="#b17">[18]</ref> [19] <ref type="bibr" target="#b19">[20]</ref> reduce the Gaussian noise during annotation and density map generation to give better predictions. In GauNet <ref type="bibr" target="#b20">[21]</ref>, the convolution filter is replaced by locally connected Gaussian kernels. The work proposes a low-rank approximation accompanied by translation invariance to implement Gaussian convolution for density estimation.</p><p>Although efficient in capturing local features of crowd scenes, the methods are inefficient in capturing largescale pixel-by-pixel information. Attention-based models are introduced to address the mentioned issue.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Attention based methods</head><p>Attention mechanisms <ref type="bibr" target="#b21">[22]</ref> [23] have proven to be highly efficient in addressing various computer vision challenges. Spatial attention focuses on learning a weighting map that emphasizes specific spatial coordinates within the feature map and channel attention is responsible for learning a weighting map that highlights important feature channels within the feature map. Notable works such as <ref type="bibr" target="#b0">[1]</ref> [24] [25] <ref type="bibr" target="#b25">[26]</ref> [2] integrate the spatial and channel attention. SCAR <ref type="bibr" target="#b0">[1]</ref> Uses novel spatial and channel attention and attempts to extract more discriminative features among different channels, which helps the model identify heads in an image</p><p>The RANet <ref type="bibr" target="#b26">[27]</ref> advocates the self-attention mechanism by accounting for both short and longrange interdependence of pixels and implementing it using local self-attention (LSA) and global self-attention (GSA) along with a relational module. <ref type="bibr" target="#b27">[28]</ref> propose a Scale-Aware Attention Network(SANet) for local and global features <ref type="bibr" target="#b28">[29]</ref> Introduce conditional random fields (CRFs) to aggregate multi-scale features within the encoder-decoder network. It incorporates a non-local attention mechanism implemented as inter-and intra-layer attentions to expand the receptive field, capturing longrange dependencies to overcome huge scale variations. <ref type="bibr" target="#b23">[24]</ref> purpose an attention-scaling network ASNet and DSNet to learn auto-scaling for density estimation. In <ref type="bibr" target="#b1">[2]</ref>, spatial and channel attention along with the spatial pyramidal pooling and deformation convolution for object counting. ADCrowdNet, proposed by <ref type="bibr" target="#b29">[30]</ref>, employs an attention map generator to identify regions of interest and estimate congestion levels for improved density map estimation in crowd counting. Although these works have good performance and attending to large-scale patterns, are unable to capture purely global features due to the limited kernel size of convolutions. To this end, we propose FGA Module, a simple plug-in module for existing CNN-based works that can capture full-scale global information using the frequency domain for understanding global patterns in a crowd.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. Method A. Model</head><p>Our work introduces the FGA module for extracting full-scale global, semi-global and local patterns as shown in figure <ref type="figure" target="#fig_1">2</ref>. Given input features X ∈ R H×W ×C , where H × W represents the spatial resolution and C represents the number of channels, separating factor α in determines the fraction of the input feature map X ∈ R H×W ×C used for global feature extraction X g . The remaining features are used for the local extraction X l . The parameter for separating factor ranges, denoted as α in , is within the interval [0, 1]. X l passes through two separate 3x3 convolutional layers to produce f l→l and f l→g , used for processing local and semi-global context. X g is processed independently in a 3x3 convolutional layer and a spectral block to produce f g→l and f g→g , used for processing semi-global and global feature extraction. The spectral block utilizes <ref type="bibr" target="#b30">[31]</ref> to update a signal value in the spectral domain, thereby influencing the entire feature map. We introduce semiglobal information into the two extraction blocks by adding f l→g to f g→g and f g→l to f l→l , as shown in the equation.</p><formula xml:id="formula_0">X g ∈ R H×W×(αin)C<label>(1)</label></formula><formula xml:id="formula_1">X l ∈ R H×W×(1-αin)C<label>(2)</label></formula><formula xml:id="formula_2">Y 1 = f g→l + f l→l (<label>3</label></formula><formula xml:id="formula_3">)</formula><formula xml:id="formula_4">Y 2 = f l→g + f g→g (4)</formula><p>We pass Y 1 and Y 2 through the batch-normalization ReLU combination. Finally, Y 1 and Y 2 are passed through Channel, spatial attention <ref type="bibr" target="#b0">[1]</ref> respectively. The spatial attention amplifies the global features for each feature map in Y 2 to get Y g , whereas the channel attention amplifies relevant information across channels in</p><formula xml:id="formula_5">Y 1 to get Y l . The final output Y is combined set {Y g , Y l }.</formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Spectral Block</head><p>The spectral block employs the Cooley-Tukey algorithm <ref type="bibr" target="#b31">[32]</ref> for efficient Fast Fourier Transform (FFT) of input feature maps. The spectral block converts original spatial features into the frequency domain, also known as the spectral domain. Subsequently, the spectral data is globally updated within the frequency domain and transformed back into the spatial domain. Applying the 2-D FFT to the input X, the complex frequency domain X[u, v] is represented as</p><formula xml:id="formula_6">X g [u, v] = M -1 n=0 N -1 m=0 x[m, n] • e -j2π( un M + vm N )<label>(5)</label></formula><p>where: X[u, v] is the complex coefficient at frequency index (u, v) in the frequency domain. x[m, n] is the pixel value at spatial position (m, n) in the image. M is the height of the image. N is the width of the image. u and v are the frequency indices ranging from 0 to M -1 and 0 to N -1, respectively. We vertically stack the imaginary parts and real parts as independent features to simplify the computation of FFT-processed features. If c is the number of channels in X, we obtain a tensor Y with twice the number of channels is given as;</p><formula xml:id="formula_7">Y [c, u, v] = X r [u, v] if c &lt; C (Real part) X i [u, v] if C ≤ c &lt; 2C (Imaginary part) (6)</formula><p>The resultant tensor is treated as completely computable, following practices <ref type="bibr" target="#b32">[33]</ref> applying Batch Normalization (BN), Rectified Linear Unit (ReLU) and Convolution operation in the frequency domain to extract relation between different pixels, Which gives the tensor Z as</p><formula xml:id="formula_8">Z[c, u, v] = ReLU(BN(Conv(Y [c, u, v])))<label>(7)</label></formula><p>In the final step, the results of tensor Z are transformed back into complex numbers by splitting them along the auxiliary dimension, separating the real and the imaginary parts. The inverse 2-D FFT operation applied on tensor Z to produce an output tensor with real values is given as follows.</p><formula xml:id="formula_9">X out [m, n] = 1 M N M -1 u=0 N -1 v=0 e j2π( un M + vm N ) • (Z r [u, v] + jZ i [u, v])<label>(8)</label></formula><p>This equation calculates the inverse 2-D IFFT by summing the contributions from both the real and imaginary parts for each pixel (n, m). The result X out [m, n] represents the spatial domain representation of the image after applying the inverse transform. We further utilize spatial and channel attention to enhance local and global features.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Attention Blocks</head><p>We adopt attention mechanisms <ref type="bibr">[23] [22]</ref> [1] to enhance the features; spatial attention allows the model to focus on specific regions of crowd variation across a particular feature map, whereas channel attention is related to overall crowd characteristics across channels. For Spatial Attention, we transform the input feature maps, X ∈ R C×H×W , into three feature spaces S 1 , S 2 , and S 3 by using 1 × 1 convolutional layers. The corresponding weight matrix of features is given as S 1 (X) = W S1 (x), S 2 (X) = W S2 (x), S 3 (X) = W S3 (x). The Transpose operations are then performed on S 1 (X), which gives S t 1 (X), and multiplied with S 2 (X) to obtain an S m,n . Then, by applying softmax operation, gives ab attention mapS a for pixel value (m,n) of the shape HW × HW . is given as: </p><p>The value S m,n a represents how much the m th pixel influences the n th pixel in the feature map. Finally, S mn a is multiplied with S 3 (X) and reshaped the output as ∈ R C×H×W . The final spatial attention with learnable parameter λ and initial feature map F n is given as follows:</p><formula xml:id="formula_11">S f inal n = λ HW m=1 (S mn a • S 3 (X)) + F n (<label>10</label></formula><formula xml:id="formula_12">)</formula><p>Similarly for channel attention an input feature map F ∈ R C×H×W is given as</p><formula xml:id="formula_13">C m,n a = exp(C m,n ) H×W m=1 exp(C m,n )<label>(11)</label></formula><p>where C mn a denotes the influence of the m-th channel on the n-th channel. The final feature map, C final , with a size of C × H × W , is computed as:</p><formula xml:id="formula_14">C f inal n = µ HW m=1 C mn a • C 3 (X) + C n (<label>12</label></formula><formula xml:id="formula_15">)</formula><p>where µ is a learnable parameter, and C n is the initial feature map.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Loss Function</head><p>We adopt the Euclidean distance to measure the pixelwise difference between estimated density maps and their corresponding ground truth as in previous works <ref type="bibr">[4] [3]</ref>. This approach allows the network to focus on individual pixels and effectively learn the density distribution of the crowd. Thus, the regression loss is given as. </p><formula xml:id="formula_16">L(Θ) = 1 2N N i=1 (D(I i ; Θ) -GT(I i )) 2<label>(13)</label></formula></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. Experiments</head><p>Implementation Details: We integrate three layers of FGA module to baseline method CSRNet <ref type="bibr" target="#b3">[4]</ref> and CANNet <ref type="bibr" target="#b4">[5]</ref> just after VGG-16 feature extractor and train the network end-to-end. We use the Adam optimizer <ref type="bibr" target="#b33">[34]</ref> with a learning rate of 1e-5. Momentum is between 0.93 and 0.99 for oscillation damping and a weight decay rate 0.001. The training comprises 100 epochs to optimize performance and improve generalization. Evaluation Metrics: We use the mean absolute error (MAE) and root mean square error (MSE) as evaluation metrics for crowd density estimates. It is defined as</p><formula xml:id="formula_17">MAE = 1 N n i=1 |y i -ŷi | and MSE is = 1 N n i=1 (y i -ŷi ) 2 .</formula><p>where N is the number of the test images, y i and ŷi are the ground truth and estimated counts of the i th image, respectively. Ground Truth Generation: We employ geometryadaptive kernels to handle highly congested scenes in line with the density map generation method described in <ref type="bibr" target="#b2">[3]</ref>. By applying a normalized Gaussian kernel to blur each head annotation, we generate ground truth that considers the spatial distribution of all images in each dataset. The geometry-adaptive kernel is defined as follows:</p><formula xml:id="formula_18">F (x) = N i=1 δ(x -x i ) × G σi (x)<label>(14)</label></formula><p>where σ i = βd i for each targeted object x i in the ground truth δ, with d i representing the average distance of k nearest neighbors. The density map is generated by convolving δ(x -x i ) with a Gaussian kernel having a parameter σ i (standard deviation), where x denotes the pixel position in the image. In our experiments, we adhere to the configuration in <ref type="bibr" target="#b2">[3]</ref> with β = 0.3 and k = 3. In sparse crowds, we adapt the Gaussian kernel to the average head size to blur all annotations.</p><p>A. ShanghaiTech Dataset:-   <ref type="bibr" target="#b3">[4]</ref> and CANNet <ref type="bibr" target="#b4">[5]</ref> over ShanghaiTech Datasets </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. UCF-CC-50 Dataset:-</head><p>The UCF-CC-50 <ref type="bibr" target="#b38">[39]</ref> dataset consists of 50 highresolution images, meticulously annotated to provide accurate head counts. It serves as a benchmark for crowdcounting algorithms, encompassing diverse environments and presenting challenges in varying crowd densities. The application of the FGA module shows an improvement in the performance of the CSRNet <ref type="bibr" target="#b3">[4]</ref> and CANNet <ref type="bibr" target="#b4">[5]</ref> baselines, as shown in Table <ref type="table" target="#tab_3">II</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. JHU++ crowd Dataset:-</head><p>We also evaluate our Proposed Approach on the JHU++ crowd dataset <ref type="bibr" target="#b39">[40]</ref>, which has 4,372 images with Models MSE MAE Bayesian+ <ref type="bibr" target="#b34">[35]</ref> 308.2 229.3 P2PNet <ref type="bibr" target="#b15">[16]</ref> 256.1 172.7 GAUNet <ref type="bibr" target="#b20">[21]</ref> 256.5 186.3 NASCount <ref type="bibr" target="#b35">[36]</ref> 297.3 208.4 DMCount <ref type="bibr" target="#b18">[19]</ref> 291.5 211.0 BBANet <ref type="bibr" target="#b10">[11]</ref> 316.9 230.5 ASNet <ref type="bibr" target="#b23">[24]</ref> 251.6 174.8 DA2Net <ref type="bibr" target="#b9">[10]</ref> 237.0 167.0 CANNet <ref type="bibr" target="#b4">[5]</ref> 243   </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Grad-CAM analysis on crowds having different degrees of dispersion in an image</head><p>We explore gradient activation maps using Grad-CAM <ref type="bibr" target="#b40">[41]</ref> as shown in Figure <ref type="figure" target="#fig_5">6</ref> to understand and break down the impact of the FGA module on CSRNet <ref type="bibr" target="#b3">[4]</ref> and CANNet <ref type="bibr" target="#b4">[5]</ref> when presented with crowds having low, moderate and high amounts of dispersion. We find that the FGA module sharpens the area of activation in all cases with noticeable improvement in high and moderate levels of dispersion, showing the efficacy of the FGA module in existing crowd estimation networks and validating utility of FGA modules.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Ablations:-</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Effectiveness of Attention:</head><p>-To verify the impact of the individual parts of the attention module, we perform a series of experiments on the ShanghiTech-B dataset. Our analysis investigates the contributions of Fast Fourier Convolutions(FFC), spatial attention (SA) and Channel Attention(CA) to our architecture. We comprehend and assess the relative importance of these two components within the overall framework. Table <ref type="table" target="#tab_1">IV</ref> shows that the combined effect of FFC, Channel attention, and Spatial attention reduces the MSE and MAE metrics, whereas partial implementation partially degrades the baseline performance. We also see that Individual use of FFC is not efficient in the context of crowd counting. TABLE IV: Ablation study over CSRNet <ref type="bibr" target="#b3">[4]</ref> and CANNet <ref type="bibr" target="#b4">[5]</ref> with varying internal configuration F. Counting on varying crowd densities:-We analyse counting samples with different crowd densities in the FGA + CANNet and FGA + CSRNet configurations, as shown in Figure <ref type="figure" target="#fig_4">5</ref>. On closer inspection, we found that our model performs exceptionally well in low-density, moderate-density, and high-density crowds. We see a minor decrease in performance in high-density crowds. This needs further analysis to explain why Fourierguided attention slightly decreases in high crowd densities and has been left as a future work in this domain.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. Conclusion</head><p>In this paper, we propose Fourier-guided attention using attention-assisted convolutions in the frequency domain and real domain for crowd count estimation, which leverages the effective combination of full-scale global and local feature extraction in a single unit. It could be integrated into CNN-based crowd count estimation methods to improve performance. Experiments conducted across four benchmark datasets with two baseline models demonstrate that it can significantly improve the baselines. To check individual robustness and relative performance to state-of-the-art methods, we perform a benchmark analysis and a qualitative analysis along with an ablation study of individual components of the model.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 :</head><label>1</label><figDesc>Fig. 1: Left: Image of a crowd scene as input to the neural network. Right: Density map of The crowd scene. Brighter spots are noticed in the top right corner of the density map where crowd density is higher and becomes less visible towards the left where there Is less crowd density.</figDesc><graphic coords="1,311.98,194.00,251.07,107.12" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 :</head><label>2</label><figDesc>Fig. 2: FGA Module: The module has two feature extraction sections, as shown in the above figure. Left: The local feature extraction takes a fraction of the input feature maps for local processing. Right: The global feature extraction takes another fraction as input from feature maps for global processing. The spectral block captures full-scale global features. ##: Refer to Figure 3 for more details. #: refer to Figure 4 for more details on attention blocks.</figDesc><graphic coords="2,74.67,50.54,462.65,214.24" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 3 :</head><label>3</label><figDesc>Fig. 3: Spectral Block: The image above explains the functioning of the spectral block. Conv-BN-ReLU: refers to convolution, batch normalization, ReLU combination. Real-FFT2d: refers to the fast-Fourier transformation of real features. Inv-FFT2d: Refers to Fourier domain to real domain transformation. Conv 1x1 : refers to 1x1 size convolutions.</figDesc><graphic coords="3,387.30,50.54,100.43,143.73" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 4 :</head><label>4</label><figDesc>Fig. 4: Attention Blocks: The image above shows spatial attention used in the global extraction block in Figure 2. and the channel attention block in the local feature extraction block. R: Resize T: Transpose</figDesc><graphic coords="4,362.19,50.54,150.64,153.68" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 5 :</head><label>5</label><figDesc>Fig. 5: Counting samples from varying crowd distributions in ShanghaiTech-B combination: Each output density map is shown right adjacent to the input image when given to two different models with FGA module.</figDesc><graphic coords="5,133.79,50.79,169.65,189.88" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 6 :</head><label>6</label><figDesc>Fig. 6: Gradient activation maps of final layer for different models with and without FGA module: a), b) and c) are three sample images with different degrees of crowd dispersion, representing high, moderate, and low levels of crowd dispersion, respectively. Each sample image is analysed using gradient activation maps to understand area of activation around a head. I), II), III), IV) represents the performance of FGA + CSRNet, CSRNet, FGA + CANNet and CANNet on the same sample image when provided as input. Each gradient activation map has its reference image fused with activations below.</figDesc><graphic coords="6,151.78,293.94,411.26,115.63" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>TABLE I</head><label>I</label><figDesc></figDesc><table><row><cell>: Evaluations on ShanghaiTech Datasets</cell></row><row><cell>ShanghaiTech [3] dataset is a popular benchmark for</cell></row><row><cell>evaluating crowd-counting algorithms due to its crowd</cell></row><row><cell>variations. The ShanghaiTech dataset, crucial for crowd-</cell></row><row><cell>counting research, comprises 1,198 high-resolution images</cell></row><row><cell>from the ShanghaiTech University campus. Part A has</cell></row><row><cell>482 images; Part B has 716, totalling around 330,000</cell></row><row><cell>annotated individuals. The FGA module improves both</cell></row><row><cell>CSRNet</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_3"><head>TABLE II :</head><label>II</label><figDesc>Evaluations on UCF-CC-50 Dataset a total of 1.51 million annotations of varying crowd orientations. Table III. The FGA module can significantly reduce the baseline MSE and MAE metrics, with CANNet [5] improving by 22.8 and 7.9 points, respectively. CSRNet [4] improved by 25.5 and 16.7 points on MSE and MAE metrics.</figDesc><table><row><cell>Models</cell><cell>MSE</cell><cell>MAE</cell></row><row><cell>DMCNet [8]</cell><cell>246.9</cell><cell>69.6</cell></row><row><cell>GAUNet [21]</cell><cell>245.1</cell><cell>58.2</cell></row><row><cell>DMCount [19]</cell><cell>261.4</cell><cell>66.0</cell></row><row><cell>MAN [7]</cell><cell>209.9</cell><cell>53.4</cell></row><row><cell>DA2Net</cell><cell>204.3</cell><cell>111.7</cell></row><row><cell>CANNet [5]</cell><cell>278.4</cell><cell>63.2</cell></row><row><cell>CSRNet [4]</cell><cell>309.2</cell><cell>85.9</cell></row><row><cell>CANNet + FGA</cell><cell>255.6</cell><cell>55.3</cell></row><row><cell>CSRNet + FGA</cell><cell>283.7</cell><cell>69.2</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>TABLE III :</head><label>III</label><figDesc>Evaluations on JHU++ Dataset</figDesc><table /></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Scar: Spatial-/channelwise attention regression networks for crowd counting</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Yuan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neurocomputing</title>
+		<imprint>
+			<biblScope unit="volume">363</biblScope>
+			<biblScope unit="page" from="1" to="8" />
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Counting from sky: A large-scale data set for remote sensing object counting and a benchmark method</title>
+		<author>
+			<persName><forename type="first">G</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Geoscience and Remote Sensing</title>
+		<imprint>
+			<biblScope unit="volume">59</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="3642" to="3655" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Singleimage crowd counting via multi-column convolutional neural network</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Ma</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2016">2016</date>
+			<biblScope unit="page" from="589" to="597" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Csrnet: Dilated convolutional neural networks for understanding the highly congested scenes</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="1091" to="1100" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Context-aware crowd counting</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Salzmann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Fua</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE/CVF conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="5099" to="5108" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Convolutional networks for images, speech, and time series</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Lecun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Bengio</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">The handbook of brain theory and neural networks</title>
+		<imprint>
+			<date type="published" when="1995">1995. 1995</date>
+			<biblScope unit="volume">3361</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Boosting crowd counting via multifaceted attention</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Ji</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Hong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE/CVF Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page">637</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Dynamic mixture of counter network for location-agnostic crowd counting</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Cai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision</title>
+		<meeting>the IEEE/CVF Winter Conference on Applications of Computer Vision</meeting>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="167" to="177" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Jointly attention network for crowd counting</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>He</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Xia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Yin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Neurocomputing</title>
+		<imprint>
+			<biblScope unit="volume">487</biblScope>
+			<biblScope unit="page" from="157" to="171" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Da 2 net: a dual attention-aware network for robust crowd counting</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zhai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Pan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Zou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Gao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Multimedia Systems</title>
+		<imprint>
+			<biblScope unit="volume">29</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="3027" to="3040" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Bba-net: A bi-branch attention network for crowd counting</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Hou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Jia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Xie</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICASSP 2020-2020 IEEE International Conference on Acoustics, Speech and Signal Processing</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="4072" to="4076" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Recurrent fine-grained self-attention network for video crowd counting</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Chen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Fast fourier convolution</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Chi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Mu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="4479" to="4488" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<title level="m" type="main">Mrcnet: Crowd counting and density map estimation in aerial and ground imagery</title>
+		<author>
+			<persName><forename type="first">R</forename><surname>Bahmanyar</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Vig</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Reinartz</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1909.12743</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Crowd counting and density estimation by trellis encoder-decoder networks</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Doermann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Shao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE/CVF conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="6133" to="6142" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">Rethinking counting and localization in crowds: A purely point-based framework</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Tai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Huang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF International Conference on Computer Vision</title>
+		<meeting>the IEEE/CVF International Conference on Computer Vision</meeting>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="3365" to="3374" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">To choose or to fuse? scale selection for crowd counting</title>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Tai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ma</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the AAAI conference on artificial intelligence</title>
+		<meeting>the AAAI conference on artificial intelligence</meeting>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="volume">35</biblScope>
+			<biblScope unit="page" from="2576" to="2583" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Modeling noisy annotations for crowd counting</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Wan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Chan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="3386" to="3396" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">Distribution matching for crowd counting</title>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Samaras</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">H</forename><surname>Nguyen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Advances in neural information processing systems</title>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="1595" to="1607" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">Learning to count in the crowd from limited labeled data</title>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">A</forename><surname>Sindagi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Yasarla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">S</forename><surname>Babu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">V</forename><surname>Babu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">M</forename><surname>Patel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Computer Vision-ECCV 2020: 16th European Conference</title>
+		<meeting><address><addrLine>Glasgow, UK</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2020">August 23-28, 2020. 2020</date>
+			<biblScope unit="page" from="212" to="229" />
+		</imprint>
+	</monogr>
+	<note>Proceedings, Part XI 16</note>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">Rethinking spatial invariance of convolutional networks for object counting</title>
+		<author>
+			<persName><forename type="first">Z.-Q</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Dai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Song</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">G</forename><surname>Hauptmann</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition</title>
+		<meeting>the IEEE/CVF Conference on Computer Vision and Pattern Recognition</meeting>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="page">648</biblScope>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Cbam: Convolutional block attention module</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Woo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Park</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J.-Y</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><forename type="middle">S</forename><surname>Kweon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the European conference on computer vision (ECCV)</title>
+		<meeting>the European conference on computer vision (ECCV)</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="3" to="19" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">Squeeze-and-excitation networks</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Shen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Sun</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+			<biblScope unit="page" from="7132" to="7141" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Attention scaling for crowd counting</title>
+		<author>
+			<persName><forename type="first">X</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Xu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Lv</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Zhou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Pang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE/CVF conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2020">2020</date>
+			<biblScope unit="page" from="4706" to="4715" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">Dadnet: Dilated-attention-deformable convnet for crowd counting</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Guo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Li</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z.-J</forename><surname>Zha</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Wang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 27th ACM international conference on multimedia</title>
+		<meeting>the 27th ACM international conference on multimedia</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1823" to="1832" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<monogr>
+		<title level="m" type="main">Multiscale attention network for crowd counting</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">R</forename><surname>Varior</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Shuai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Tighe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Modolo</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1901.06026</idno>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Relational attention network for crowd counting</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Xiao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Shao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF international conference on computer vision</title>
+		<meeting>the IEEE/CVF international conference on computer vision</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="6788" to="6797" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<monogr>
+		<title level="m" type="main">Crowd counting using scale-aware attention networks</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hosseinzadeh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Chanda</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Wang</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2019">2019. 2019</date>
+			<publisher>IEEE</publisher>
+			<biblScope unit="page" from="1280" to="1288" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Attentional neural fields for crowd counting</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Yue</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Shen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Zhen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Shao</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF international conference on computer vision</title>
+		<meeting>the IEEE/CVF international conference on computer vision</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="5714" to="5723" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Adcrowdnet: An attention-injective deformable convolutional network for crowd understanding</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Long</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Zou</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Niu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Pan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Wu</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE/CVF conference on computer vision and pattern recognition</title>
+		<meeting>the IEEE/CVF conference on computer vision and pattern recognition</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="3225" to="3234" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<monogr>
+		<title level="m" type="main">An introduction to harmonic analysis</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Katznelson</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2004">2004</date>
+			<publisher>Cambridge University Press</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">An algorithm for the machine calculation of complex fourier series</title>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">W</forename><surname>Cooley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">W</forename><surname>Tukey</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Mathematics of computation</title>
+		<imprint>
+			<biblScope unit="volume">19</biblScope>
+			<biblScope unit="issue">90</biblScope>
+			<biblScope unit="page" from="297" to="301" />
+			<date type="published" when="1965">1965</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Fast nonlocal neural networks with spectral residual learning</title>
+		<author>
+			<persName><forename type="first">L</forename><surname>Chi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Tian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Mu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Xie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q</forename><surname>Tian</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 27th ACM International Conference on Multimedia</title>
+		<meeting>the 27th ACM International Conference on Multimedia</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="2142" to="2151" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<monogr>
+		<title level="m" type="main">Adam: A method for stochastic optimization</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">P</forename><surname>Kingma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Ba</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Bayesian loss for crowd count estimation with point supervision</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Ma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Hong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Gong</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE International Conference on Computer Vision</title>
+		<meeting>the IEEE International Conference on Computer Vision</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="6142" to="6151" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Nas-count: Counting-by-density with neural architecture search</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Jiang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Han</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Cao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Doermann</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Computer Vision-ECCV 2020: 16th European Conference</title>
+		<meeting><address><addrLine>Glasgow, UK</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer</publisher>
+			<date type="published" when="2020">August 23-28, 2020. 2020</date>
+			<biblScope unit="page" from="747" to="766" />
+		</imprint>
+	</monogr>
+	<note>Proceedings, Part XXII 16</note>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Densitytoken: Weaklysupervised crowd counting with density classification</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Li</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Explicit invariant feature induced cross-domain crowd counting</title>
+		<author>
+			<persName><forename type="first">Y</forename><surname>Cai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Guan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Lu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>He</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the AAAI Conference on Artificial Intelligence</title>
+		<meeting>the AAAI Conference on Artificial Intelligence</meeting>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="page" from="259" to="267" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">Multisource multi-scale counting in extremely dense crowd images</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Idrees</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Saleemi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Seibert</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Shah</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2013 IEEE Conference on Computer Vision and Pattern Recognition</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+			<biblScope unit="page" from="2547" to="2554" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Pushing the frontiers of unconstrained crowd counting: New dataset and benchmark method</title>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">A</forename><surname>Sindagi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Yasarla</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><forename type="middle">M</forename><surname>Patel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the IEEE International Conference on Computer Vision</title>
+		<meeting>the IEEE International Conference on Computer Vision</meeting>
+		<imprint>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="1221" to="1231" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Grad-cam: Visual explanations from deep networks via gradient-based localization</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">R</forename><surname>Selvaraju</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Cogswell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Das</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Vedantam</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Parikh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Batra</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings</title>
+		<meeting>null</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+			<biblScope unit="page" from="618" to="626" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

@@ -59,8 +59,8 @@ export interface ValidationMessages {
 export const authConfig = {
   // Routes configuration
   routes: {
-    login: "/Authentication/login",
-    signup: "/Authentication/signup",
+    login: "/login",
+    signup: "/signup",
     forgotPassword: "/forgot-password",
     resetPassword: "/auth/reset-password",
     verifyEmail: "/auth/verify-email",
@@ -102,8 +102,8 @@ export const authConfig = {
     links: [
       {
         text: "Don't have an account?",
-        linkText: "Sign up here",
-        href: "/Authentication/signup"
+        linkText: "Sign up",
+        href: "/signup"
       }
     ],
     fields: [
@@ -160,8 +160,8 @@ export const authConfig = {
     links: [
       {
         text: "Already have an account?",
-        linkText: "Sign in here",
-        href: "/Authentication/login"
+        linkText: "Sign in",
+        href: "/login"
       }
     ],
     fields: [

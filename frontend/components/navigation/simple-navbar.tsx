@@ -136,7 +136,7 @@ export function SimpleNavbar({
                 <DropdownMenuItem onClick={() => {
                   localStorage.removeItem('accessToken');
                   localStorage.removeItem('refreshToken');
-                  window.location.href = '/Authentication/login';
+                  window.location.href = '/login';
                 }}>
                   Sign out
                 </DropdownMenuItem>

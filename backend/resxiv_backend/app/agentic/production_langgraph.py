@@ -580,46 +580,29 @@ Examples:
                                                 run_diagnostics=True
                                             )
                                             success_msg = f"arXiv paper {arxiv_id}"
+                                            
+                                            if create_res.get("success"):
+                                                added_count += 1
+                                                logger.info(f"Successfully added {success_msg} to project")
+                                                # Increment tool call count
+                                                state["tool_calls_count"] = state.get("tool_calls_count", 0) + 1
+                                            else:
+                                                logger.warning(f"Failed to add {success_msg}: {create_res.get('error', 'Unknown error')}")
                                         else:
-                                            # Non-arXiv paper - create from metadata
-                                            logger.info(f"Creating paper from metadata: {title}")
-                                            from app.services.paper.paper_crud_service import PaperCrudService
-                                            from app.models.paper import PaperCreate
+                                            # Skip non-arXiv papers (no metadata-only entries)
+                                            logger.info(f"Skipping non-arXiv paper (metadata-only): {title}")
+                                            continue
                                             
-                                            paper_crud = PaperCrudService(paper_session)
-                                            
-                                            # Create PaperCreate object from metadata
-                                            paper_create = PaperCreate(
-                                                title=title or "Unknown Title",
-                                                abstract=abstract,
-                                                authors=authors,
-                                                doi=doi,
-                                                arxiv_id=arxiv_id,  # None for non-arXiv papers
-                                                url=url
-                                            )
-                                            
-                                            create_res = await paper_crud.create_paper(
-                                                project_id=uuid.UUID(project_id),
-                                                paper_data=paper_create,
-                                                created_by=uuid.UUID(user_id)
-                                            )
-                                            success_msg = f"metadata paper '{title}'"
-                                        
-                                        if create_res.get("success"):
-                                            added_count += 1
-                                            logger.info(f"Successfully added {success_msg} to project")
-                                            # Increment tool call count
-                                            state["tool_calls_count"] = state.get("tool_calls_count", 0) + 1
-                                        else:
-                                            logger.warning(f"Failed to add {success_msg}: {create_res.get('error', 'Unknown error')}")
                                     except Exception as download_err:
                                         logger.error(f"Error adding paper '{title}': {str(download_err)}")
                                         continue
 
                             if added_count:
-                                response_text += f"\n\n✅ Added {added_count} papers to your project."
+                                response_text += f"\n\n✅ Added {added_count} arXiv papers to your project (with full PDF download and processing)."
                             else:
-                                logger.warning(f"No papers were successfully added to project. Processed {len(research_results.get('papers', []))} papers.")
+                                total_papers = len(research_results.get('papers', []))
+                                response_text += f"\n\n📄 Found {total_papers} papers, but none were from arXiv. Only arXiv papers can be downloaded and processed. Try searching specifically for arXiv papers in your field."
+                                logger.warning(f"No arXiv papers found to add to project. Found {total_papers} non-arXiv papers.")
                         except Exception as save_err:
                             logger.warning(f"Failed to add papers to project: {save_err}")
                     else:

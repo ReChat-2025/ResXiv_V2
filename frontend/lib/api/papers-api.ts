@@ -325,6 +325,20 @@ class PapersApiClient {
       method: 'GET',
     });
   }
+
+  /**
+   * Import paper from URL or DOI
+   */
+  async importPaper(source: string): Promise<any> {
+    const endpoint = `/api/v1/papers/import`;
+    return this.makeRequest<any>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify({ source }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 }
 
 // Export singleton instance

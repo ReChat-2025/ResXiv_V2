@@ -5,6 +5,7 @@ Focused on AI-powered semantic embeddings and semantic search operations.
 
 import json
 import logging
+import uuid
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
 import asyncio
@@ -321,6 +322,74 @@ class PaperEmbeddingService:
             raise ServiceError(
                 f"Similar papers search failed: {str(e)}",
                 ErrorCodes.SEARCH_ERROR
+            )
+    
+    @handle_service_errors("get paper embedding")
+    async def get_paper_embedding(self, paper_id) -> Optional[List[float]]:
+        """
+        Get embedding vector for a paper.
+        
+        Args:
+            paper_id: Paper UUID (can be string or UUID object)
+            
+        Returns:
+            Embedding vector as list of floats, or None if not found
+        """
+        try:
+            # Handle both string and UUID object inputs
+            if isinstance(paper_id, str):
+                paper_uuid = uuid.UUID(paper_id)
+            elif hasattr(paper_id, 'hex'):  # UUID-like object
+                paper_uuid = uuid.UUID(str(paper_id))
+            else:
+                paper_uuid = paper_id  # Assume it's already a proper UUID
+            
+            # Get embedding data from repository
+            embedding_data = await self.repository.get_embedding_by_paper_id(paper_uuid)
+            
+            if not embedding_data or not embedding_data.get("embedding"):
+                return None
+            
+            # Parse the embedding vector from string format if necessary
+            embedding = embedding_data["embedding"]
+            
+            # Handle different embedding formats
+            if isinstance(embedding, str):
+                # Parse string representation of list: "[1.0, 2.0, 3.0]"
+                try:
+                    # Remove any whitespace and parse as JSON
+                    embedding_str = embedding.strip()
+                    if embedding_str.startswith('[') and embedding_str.endswith(']'):
+                        embedding = json.loads(embedding_str)
+                    else:
+                        logger.error(f"Invalid embedding format for paper {paper_id}: {embedding_str[:100]}...")
+                        return None
+                except (json.JSONDecodeError, ValueError) as e:
+                    logger.error(f"Failed to parse embedding for paper {paper_id}: {str(e)}")
+                    return None
+            elif hasattr(embedding, 'tolist'):
+                # Convert numpy array to list
+                embedding = embedding.tolist()
+            
+            # Ensure we have a list of numbers
+            if not isinstance(embedding, list) or not all(isinstance(x, (int, float)) for x in embedding):
+                logger.error(f"Embedding is not a list of numbers for paper {paper_id}")
+                return None
+            
+            return embedding
+            
+        except (ValueError, TypeError) as e:
+            # Invalid UUID format
+            logger.error(f"Invalid paper ID format {paper_id}: {str(e)}")
+            raise ServiceError(
+                "Invalid paper ID format",
+                ErrorCodes.VALIDATION_ERROR
+            )
+        except Exception as e:
+            logger.error(f"Error getting paper embedding {paper_id}: {str(e)}")
+            raise ServiceError(
+                f"Failed to get paper embedding: {str(e)}",
+                ErrorCodes.PROCESSING_ERROR
             )
     
     @handle_service_errors("get embedding status")

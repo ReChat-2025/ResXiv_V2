@@ -482,6 +482,7 @@ const GraphVisualization: React.FC<GraphVisualizationProps> = ({ data, selectedN
   );
 };
 
+
 export default function PapersPage() {
   const router = useRouter();
   const params = useParams();
@@ -517,17 +518,14 @@ export default function PapersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   
-  // Text selection state
-  const [selectedText, setSelectedText] = useState<{text: string, page: number} | null>(null);
-  const [showSelectionDialog, setShowSelectionDialog] = useState(false);
-  const [selectionComment, setSelectionComment] = useState("");
-  const [showAddToChat, setShowAddToChat] = useState(false);
-  const [selectionPosition, setSelectionPosition] = useState<{x: number, y: number} | null>(null);
-  const [showSelectionHint, setShowSelectionHint] = useState(false);
+  // Text selection state - simplified
+  const [selectedTextContext, setSelectedTextContext] = useState<{text: string, page: number} | null>(null);
   const [showTip, setShowTip] = useState(true);
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [selectionStartPos, setSelectionStartPos] = useState<{x: number, y: number} | null>(null);
-  const [selectionRect, setSelectionRect] = useState<{x: number, y: number, width: number, height: number} | null>(null);
+  
+  // Hovering button state
+  const [showHoverButton, setShowHoverButton] = useState(false);
+  const [hoverButtonPosition, setHoverButtonPosition] = useState<{x: number, y: number} | null>(null);
+  const [currentSelection, setCurrentSelection] = useState<{text: string, page: number} | null>(null);
 
   const handleZoomIn = () => setPdfZoom((z) => Math.min(z + 0.1, 2));
   const handleZoomOut = () => setPdfZoom((z) => Math.max(z - 0.1, 0.5));
@@ -539,98 +537,71 @@ export default function PapersPage() {
     }
   };
 
-  // Text selection handlers
-  const handleTextSelection = (event?: MouseEvent) => {
-    if (typeof window !== 'undefined') {
-      const selection = window.getSelection();
-      if (selection && selection.toString().trim()) {
-        const selectedTextContent = selection.toString().trim();
-        setSelectedText({ text: selectedTextContent, page: currentPage });
-        
-        // Get selection position for floating button
-        const range = selection.getRangeAt(0);
+  // Simplified text selection handler
+  const handleTextSelection = () => {
+    if (typeof window === 'undefined') return;
+    
+    // Helper to extract selection info from a Selection object
+    const getInfoFromSelection = (sel: Selection | null, offsetX = 0, offsetY = 0) => {
+      if (!sel || !sel.toString().trim()) return null;
+      try {
+        const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        setSelectionPosition({
-          x: rect.right + 10,
-          y: rect.top + (rect.height / 2)
-        });
-        setShowAddToChat(true);
-      } else {
-        // Clear selection UI if no text selected
-        setShowAddToChat(false);
-        setSelectedText(null);
-        setSelectionPosition(null);
+        return {
+          text: sel.toString().trim(),
+          rect: {
+            x: rect.right + offsetX,
+            y: rect.top + rect.height / 2 + offsetY,
+          },
+        };
+      } catch {
+        return null;
       }
-    }
-  };
-
-  const handleAddToChatClick = () => {
-    setShowAddToChat(false);
-    setShowSelectionDialog(true);
-    // Clear the visual selection from main document
-    if (typeof window !== 'undefined') {
-      const selection = window.getSelection();
-      if (selection) {
-        selection.removeAllRanges();
-      }
-    }
-  };
-
-  const handleSendSelectionToChat = async () => {
-    if (!selectedText || !selectionComment.trim() || !projectId || !selectedPaper) return;
-
-    const contextMessage = `[Selected text from page ${selectedText.page}]:\n"${selectedText.text}"\n\nQuestion: ${selectionComment.trim()}`;
-
-    // Add user message to chat
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: contextMessage,
-      timestamp: new Date().toISOString(),
-      paper_context: selectedPaper.id,
     };
-
-    setChatMessages(prev => [...prev, userMessage]);
-    setChatInput("");
-    setIsProcessingMessage(true);
-    setShowSelectionDialog(false);
-    setSelectedText(null);
-    setSelectionComment("");
-    setShowAddToChat(false);
-    setSelectionPosition(null);
-    setShowSelectionHint(false);
-
-    try {
-      const response = await agenticApi.paperChat(projectId, {
-        paper_id: selectedPaper.id,
-        message: contextMessage,
-        conversation_id: currentConversationId || undefined,
-      });
-
-      const assistantMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'assistant',
-        content: response.response,
-        timestamp: new Date().toISOString(),
-      };
-
-      setChatMessages(prev => [...prev, assistantMessage]);
-      
-      if (response.conversation_id) {
-        setCurrentConversationId(response.conversation_id);
+    
+    // 2. Check same-origin iframes (e.g., the PDF iframe)
+    const iframes = Array.from(document.querySelectorAll<HTMLIFrameElement>('iframe'));
+    for (const frame of iframes) {
+      try {
+        const sel = frame.contentWindow?.getSelection() ?? null;
+        const frameRect = frame.getBoundingClientRect();
+        const info = getInfoFromSelection(sel, frameRect.left, frameRect.top);
+        if (info && info.text.length > 3) {
+          setCurrentSelection({ text: info.text, page: currentPage });
+          setHoverButtonPosition({ x: info.rect.x, y: info.rect.y });
+          setShowHoverButton(true);
+          setTimeout(() => setShowHoverButton(false), 10000);
+          return;
+        }
+      } catch (_) {
+        // Ignore cross-origin frames
       }
-    } catch (error: any) {
-      console.error('Failed to process selection message:', error);
-      const errorMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'assistant',
-        content: 'Sorry, I encountered an error processing your selection. Please try again.',
-        timestamp: new Date().toISOString(),
-      };
-      setChatMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsProcessingMessage(false);
     }
+    // No valid selection
+    setShowHoverButton(false);
+    setCurrentSelection(null);
+  };
+
+  // Handle adding selection to chat
+  const handleAddSelectionToChat = () => {
+    if (currentSelection) {
+      setSelectedTextContext(currentSelection);
+      setShowHoverButton(false);
+      setCurrentSelection(null);
+      
+      // Clear the visual selection
+      if (typeof window !== 'undefined') {
+        const selection = window.getSelection();
+        if (selection) {
+          selection.removeAllRanges();
+        }
+      }
+    }
+  };
+
+  // Clear selection context
+  const clearSelectedContext = () => {
+    setSelectedTextContext(null);
   };
   
   // Analytics state
@@ -883,107 +854,24 @@ export default function PapersPage() {
     return null;
   };
 
-  // Enhanced PDF text selection handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    setIsSelecting(true);
-    setSelectionStartPos({ x, y });
-    setSelectionRect(null);
-    setShowAddToChat(false);
-  };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isSelecting || !selectionStartPos) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
-    
-    const x = Math.min(selectionStartPos.x, currentX);
-    const y = Math.min(selectionStartPos.y, currentY);
-    const width = Math.abs(currentX - selectionStartPos.x);
-    const height = Math.abs(currentY - selectionStartPos.y);
-    
-    // Only show selection rectangle if drag is meaningful
-    if (width > 5 || height > 5) {
-      setSelectionRect({ x, y, width, height });
-    }
-  };
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isSelecting || !selectionStartPos) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
-    
-    const width = Math.abs(currentX - selectionStartPos.x);
-    const height = Math.abs(currentY - selectionStartPos.y);
-    
-    setIsSelecting(false);
-    
-    // Show selection button if user made a meaningful selection
-    if (width > 10 && height > 10) {
-      const centerX = Math.min(selectionStartPos.x, currentX) + width / 2;
-      const centerY = Math.min(selectionStartPos.y, currentY) + height / 2;
-      
-      // Convert to screen coordinates
-      const pdfContainer = e.currentTarget.getBoundingClientRect();
-      setSelectionPosition({
-        x: pdfContainer.left + centerX,
-        y: pdfContainer.top + centerY
-      });
-      
-      setSelectedText({ text: "", page: currentPage });
-      setShowAddToChat(true);
-      
-      // Auto-hide after 8 seconds
-      setTimeout(() => {
-        setShowAddToChat(false);
-        setSelectionRect(null);
-      }, 8000);
-    } else {
-      setSelectionRect(null);
-    }
-    
-    setSelectionStartPos(null);
-  };
-
-  // Also maintain fallback text selection detection
+  // Simplified text selection detection
   useEffect(() => {
-    const handleSelectionEvents = () => {
-      setTimeout(() => {
-        const info = getSelectionInfo();
-        if (info && info.text.length > 3) {
-          setSelectedText({ text: info.text, page: currentPage });
-          setSelectionPosition({ x: info.x + 10, y: info.y });
-          setShowAddToChat(true);
-          
-          setTimeout(() => {
-            setShowAddToChat(false);
-          }, 8000);
-        }
-      }, 100);
+    const handleSelectionChange = () => {
+      setTimeout(handleTextSelection, 100);
     };
 
-    document.addEventListener('mouseup', handleSelectionEvents);
-    document.addEventListener('selectionchange', handleSelectionEvents);
+    document.addEventListener('mouseup', handleSelectionChange);
+    document.addEventListener('selectionchange', handleSelectionChange);
 
     return () => {
-      document.removeEventListener('mouseup', handleSelectionEvents);
-      document.removeEventListener('selectionchange', handleSelectionEvents);
+      document.removeEventListener('mouseup', handleSelectionChange);
+      document.removeEventListener('selectionchange', handleSelectionChange);
     };
   }, [currentPage]);
 
-  const showPDFSelectionPrompt = (x: number, y: number) => {
-    setSelectionPosition({ x: x + 10, y: y });
-    setShowAddToChat(true);
-    // Set a placeholder for PDF text - user will input the actual text in dialog
-    setSelectedText({ text: "", page: currentPage });
-  };
+
 
   const handleAddPapers = async () => {
     if (!projectId) {
@@ -1032,6 +920,7 @@ export default function PapersPage() {
         
         setPapers(convertedPapers);
         
+        
       } catch (error: any) {
         console.error('Failed to upload papers:', error);
       } finally {
@@ -1043,24 +932,32 @@ export default function PapersPage() {
   };
 
   const handleSendMessage = async () => {
-    if (!chatInput.trim() || !projectId || isProcessingMessage) return;
+    if ((!chatInput.trim() && !selectedTextContext) || !projectId || isProcessingMessage) return;
+
+    let messageContent = chatInput.trim();
+    
+    // If there's selected text context, prepend it to the message
+    if (selectedTextContext) {
+      messageContent = `[Selected text from page ${selectedTextContext.page}]:\n"${selectedTextContext.text}"\n\nQuestion: ${messageContent || "Please explain this text."}`;
+    }
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'user',
-      content: chatInput.trim(),
+      content: messageContent,
       timestamp: new Date().toISOString(),
       paper_context: selectedPaper?.id,
     };
 
     setChatMessages(prev => [...prev, userMessage]);
     setChatInput("");
+    setSelectedTextContext(null); // Clear context after sending
     setIsProcessingMessage(true);
 
     try {
       const response = await agenticApi.paperChat(projectId, {
         paper_id: selectedPaper!.id,
-        message: userMessage.content,
+        message: messageContent,
         conversation_id: currentConversationId || undefined,
       });
 
@@ -1349,53 +1246,20 @@ export default function PapersPage() {
                       style={{transform:`scale(${pdfZoom})`, transformOrigin:'top center'}}
                     />
                     
-                    {/* Text Selection Overlay */}
-                    <div
-                      className="absolute inset-0 z-10 cursor-text"
-                      onMouseDown={handleMouseDown}
-                      onMouseMove={handleMouseMove}
-                      onMouseUp={handleMouseUp}
-                      style={{
-                        background: 'transparent',
-                        pointerEvents: 'auto'
-                      }}
-                    >
-                      {/* Selection Rectangle */}
-                      {selectionRect && (
-                        <div
-                          className="absolute border-2 border-primary bg-primary/10 rounded-sm pointer-events-none"
-                          style={{
-                            left: `${selectionRect.x}px`,
-                            top: `${selectionRect.y}px`,
-                            width: `${selectionRect.width}px`,
-                            height: `${selectionRect.height}px`,
-                          }}
-                        />
-                      )}
-                    </div>
-                    
-                    {/* Selection Hint Overlay */}
-                    {showSelectionHint && (
-                      <div className="absolute top-4 left-4 z-20 bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium shadow-lg animate-in fade-in-0 slide-in-from-top-2 duration-300">
-                        📝 Keep selecting text...
-                      </div>
-                    )}
-
-                    {/* Floating Add to Chat Button */}
-                    {showAddToChat && selectionPosition && (
+                    {/* Hovering Add to Chat Button */}
+                    {showHoverButton && hoverButtonPosition && (
                       <div
-                        className="fixed z-30 transform -translate-y-1/2"
+                        className="fixed z-50 transform -translate-y-1/2"
                         style={{
-                          left: `${Math.min(selectionPosition.x, window.innerWidth - 200)}px`,
-                          top: `${Math.max(50, Math.min(selectionPosition.y, window.innerHeight - 100))}px`,
+                          left: `${Math.min(hoverButtonPosition.x, window.innerWidth - 200)}px`,
+                          top: `${Math.max(50, Math.min(hoverButtonPosition.y, window.innerHeight - 100))}px`,
                         }}
                       >
                         <Button
-                          onClick={handleAddToChatClick}
-                          data-selection-button
+                          onClick={handleAddSelectionToChat}
                           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-xl border border-white/20 rounded-lg px-4 py-2 text-sm font-medium animate-in fade-in-0 zoom-in-95 duration-200 transform hover:scale-105 transition-transform"
                         >
-                          ⚡ Ask about selected area
+                          💬 Add to Chat
                         </Button>
                       </div>
                     )}
@@ -1435,17 +1299,7 @@ export default function PapersPage() {
                         </Button>
                       </div>
                       
-                      {/* Ask About Text Button - Always Visible */}
-                      <Button
-                        onClick={() => {
-                          setSelectedText({ text: "", page: currentPage });
-                          setShowSelectionDialog(true);
-                        }}
-                        className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg border border-white/20 rounded-lg px-3 py-2 text-sm font-medium backdrop-blur-sm transform hover:scale-105 transition-all duration-200"
-                        title="Quick way to ask questions about any text from this page"
-                      >
-                        🚀 Quick Ask
-                      </Button>
+
                     </div>
                   </>
                 )}
@@ -1702,16 +1556,51 @@ export default function PapersPage() {
 
                 {/* Chat Input */}
                 <div className="p-4 border-t border-border flex-shrink-0">
+                  {/* Selected text context */}
+                  {selectedTextContext && (
+                    <div className="mb-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-primary">
+                          📄 Selected text (Page {selectedTextContext.page})
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={clearSelectedContext}
+                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                        >
+                          ✕
+                        </Button>
+                      </div>
+                      <div className="text-xs text-muted-foreground bg-background/50 p-2 rounded border border-border/50 max-h-20 overflow-y-auto">
+                        "{selectedTextContext.text}"
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        💡 Type your question below to ask about this text
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="flex space-x-2">
                     <Input
-                      placeholder={selectedPaper ? 'Ask about this paper...' : 'Select a paper to start chatting...'}
+                      placeholder={
+                        selectedTextContext 
+                          ? 'Ask about the selected text...' 
+                          : selectedPaper 
+                            ? 'Ask about this paper...' 
+                            : 'Select a paper to start chatting...'
+                      }
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
                       disabled={!selectedPaper || isProcessingMessage}
                       className="flex-1"
                     />
-                    <Button onClick={handleSendMessage} disabled={!chatInput.trim() || !selectedPaper || isProcessingMessage} size="sm">
+                    <Button 
+                      onClick={handleSendMessage} 
+                      disabled={(!chatInput.trim() && !selectedTextContext) || !selectedPaper || isProcessingMessage} 
+                      size="sm"
+                    >
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
@@ -1838,96 +1727,8 @@ export default function PapersPage() {
           )}
         </div>
         
-        {/* Selection Dialog */}
-        <Dialog open={showSelectionDialog} onOpenChange={setShowSelectionDialog}>
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Ask about selected text (Page {selectedText?.page})</DialogTitle>
-              <DialogDescription>
-                <div className="mt-2 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg text-sm">
-                  <span className="font-medium text-green-800 dark:text-green-200">⚡ Quick workflow:</span>
-                  <ol className="text-xs text-green-600 dark:text-green-300 mt-1 list-decimal list-inside space-y-1">
-                    <li>Copy the text you want to ask about from the PDF</li>
-                    <li>Paste it below and type your question</li>
-                    <li>Get instant AI insights!</li>
-                  </ol>
-                </div>
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label htmlFor="selectedText" className="text-sm font-medium mb-2 block text-foreground flex items-center gap-2">
-                    📄 Selected text
-                    <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">Paste here</span>
-                  </label>
-                  <Textarea
-                    id="selectedText"
-                    placeholder="Ctrl+C from PDF, then Ctrl+V here..."
-                    value={selectedText?.text || ""}
-                    onChange={(e) => setSelectedText(prev => prev ? {...prev, text: e.target.value} : {text: e.target.value, page: currentPage})}
-                    className="min-h-[80px] resize-none font-mono text-sm bg-background border-2 border-dashed border-primary/30 focus:border-primary"
-                    autoFocus
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="question" className="text-sm font-medium mb-2 block text-foreground flex items-center gap-2">
-                    ❓ Your question
-                    <span className="text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">Fast & smart</span>
-                  </label>
-                  <Textarea
-                    id="question"
-                    placeholder="Ask anything: 'Explain this', 'Summarize', 'What's the main point?', 'How does this work?'"
-                    value={selectionComment}
-                    onChange={(e) => setSelectionComment(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                        e.preventDefault();
-                        if (selectionComment.trim() && selectedText?.text?.trim() && !isProcessingMessage) {
-                          handleSendSelectionToChat();
-                        }
-                      }
-                    }}
-                    className="min-h-[80px] resize-none focus:border-primary"
-                  />
-                </div>
-              </div>
-            </div>
-            <DialogFooter className="gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setShowSelectionDialog(false);
-                  setSelectedText(null);
-                  setSelectionComment("");
-                  setShowAddToChat(false);
-                  setSelectionPosition(null);
-                  setShowSelectionHint(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSendSelectionToChat}
-                disabled={!selectionComment.trim() || !selectedText?.text?.trim() || isProcessingMessage}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-              >
-                {isProcessingMessage ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    ⚡ Ask AI
-                    <span className="ml-2 text-xs opacity-75">(Ctrl+Enter)</span>
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+
     </div>
   );
-} 
+}
+
