@@ -149,7 +149,6 @@ uploads/
 temp/
 static/media/
 data/
-models/
 *.db
 *.sqlite
 *.sqlite3

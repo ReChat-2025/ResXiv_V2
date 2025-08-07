@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
-    domains: ['localhost', 'up.railway.app'],
+    domains: ['localhost', 'cbeta.resxiv.com', '35.154.171.72'],
   },
 
   // Webpack configuration for Monaco Editor

@@ -21,7 +21,7 @@ export const userApi = {
    */
   getAuthToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('accessToken');
+    return localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
   },
 
   /**

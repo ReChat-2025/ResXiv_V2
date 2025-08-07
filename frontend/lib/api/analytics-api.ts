@@ -136,12 +136,7 @@ class AnalyticsApiClient {
 
   private getAuthToken(): string | null {
     if (typeof window === 'undefined') return null;
-    // Align with other API clients that store the JWT under 'accessToken'
-    // Fallback to 'authToken' for backward compatibility
-    return (
-      localStorage.getItem('accessToken') ||
-      localStorage.getItem('authToken')
-    );
+    return localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
   }
 
   private extractErrorMessage(data: any, defaultMessage: string): string {

@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Frontend Service
   frontend:
     build:
       context: ./frontend
@@ -9,14 +8,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://35.154.171.72:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
       - NODE_ENV=production
     depends_on:
       - backend
-    networks:
-      - resxiv-network
+    restart: unless-stopped
 
-  # Backend Service
   backend:
     build:
       context: ./backend/resxiv_backend
@@ -24,20 +21,14 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - SECRET_KEY=demo-secret-key-for-investors-2024
+      - JWT_SECRET_KEY=demo-jwt-secret-key-2024
       - ENVIRONMENT=production
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=resxiv_v2
-      - POSTGRES_USER=resxiv_user
-      - POSTGRES_PASSWORD=resxiv_password
-      - MONGODB_HOST=mongodb
-      - MONGODB_PORT=27017
-      - MONGODB_DB=resxiv_v2
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_DB=0
-      - HOST=0.0.0.0
-      - PORT=8000
+      - DEBUG=false
+      - CORS_ORIGINS=http://localhost:3000,https://cbeta.resxiv.com,http://cbeta.resxiv.com
+      - DATABASE_URL=postgresql://resxiv_user:resxiv_password@postgres:5432/resxiv_db
+      - REDIS_URL=redis://redis:6379/0
+      - MONGODB_URL=mongodb://mongodb:27017/resxiv_chat
     depends_on:
       - postgres
       - mongodb
@@ -46,65 +37,41 @@ services:
       - ./backend/resxiv_backend/uploads:/app/uploads
       - ./backend/resxiv_backend/downloads:/app/downloads
       - ./backend/resxiv_backend/static:/app/static
-    networks:
-      - resxiv-network
+    restart: unless-stopped
 
-  # PostgreSQL Database
   postgres:
-    image: postgres:15-alpine
+    image: postgres:15
     environment:
-      - POSTGRES_DB=resxiv_v2
+      - POSTGRES_DB=resxiv_db
       - POSTGRES_USER=resxiv_user
       - POSTGRES_PASSWORD=resxiv_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
-    networks:
-      - resxiv-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U resxiv_user -d resxiv_v2"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # MongoDB Database
-  mongodb:
-    image: mongo:7-jammy
-    environment:
-      - MONGO_INITDB_DATABASE=resxiv_v2
     volumes:
-      - mongodb_data:/data/db
+      - postgres_data:/var/lib/postgresql/data
+      - ./database_export.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6
+    environment:
+      - MONGO_INITDB_DATABASE=resxiv_chat
     ports:
       - "27018:27017"
-    networks:
-      - resxiv-network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/resxiv_v2 --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 5
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb_dump:/docker-entrypoint-initdb.d/dump
+    restart: unless-stopped
 
-  # Redis Cache
   redis:
     image: redis:7-alpine
-    volumes:
-      - redis_data:/data
     ports:
       - "6380:6379"
-    networks:
-      - resxiv-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   mongodb_data:
-  redis_data:
-
-networks:
-  resxiv-network:
-    driver: bridge 
+  redis_data: 

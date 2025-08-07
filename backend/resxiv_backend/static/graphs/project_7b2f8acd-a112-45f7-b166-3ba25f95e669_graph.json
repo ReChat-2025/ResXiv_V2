@@ -4,6 +4,86 @@
   "graph": {
     "nodes": [
       {
+        "id": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+        "title": "A Lightweight Feature Fusion Architecture For Resource-Constrained Crowd Counting",
+        "authors": [
+          "Yashwardhan Chaudhuri",
+          "Ankit Kumar",
+          "Orchid Chetia Phukan",
+          "Arun Balaji Buduru"
+        ],
+        "abstract": "Crowd counting finds direct applications in real-world situations, making computational efficiency and performance crucial. However, most of the previous methods rely on a heavy backbone and a complex...",
+        "keywords": [],
+        "metadata": {
+          "file_type": null,
+          "file_size": 1902431,
+          "doi": null,
+          "arxiv_id": "2401.05968"
+        },
+        "created_at": "2025-08-04T14:20:59.158468+00:00",
+        "degree": 4,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 2,
+        "cluster_color": "#45B7D1"
+      },
+      {
+        "id": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+        "authors": [
+          "Paridhi Mundra",
+          "Manik Sharma",
+          "Yashwardhan Chaudhuri",
+          "Orchid Chetia Phukan",
+          "Arun Balaji Buduru"
+        ],
+        "abstract": "As respiratory illnesses become more common, it is crucial to quickly and accurately detect them to improve patient care. There is a need for improved diagnostic methods for immediate medical assessme...",
+        "keywords": [],
+        "metadata": {
+          "file_type": null,
+          "file_size": 541047,
+          "doi": null,
+          "arxiv_id": "2407.18926"
+        },
+        "created_at": "2025-08-04T14:20:09.737945+00:00",
+        "degree": 7,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 0,
+        "cluster_color": "#FF6B6B"
+      },
+      {
+        "id": "979a7d62-ce40-414b-b084-09e05894bf1c",
+        "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+        "authors": [
+          "Yashwardhan Chaudhuri",
+          "Paridhi Mundra",
+          "Arnesh Batra",
+          "Orchid Chetia Phukan",
+          "Arun Balaji Buduru"
+        ],
+        "abstract": "Recognition and interpretation of bird vocalizations are pivotal in ornithological research and ecological conservation efforts due to their significance in understanding avian behaviour, performing h...",
+        "keywords": [],
+        "metadata": {
+          "file_type": null,
+          "file_size": 8814578,
+          "doi": null,
+          "arxiv_id": "2407.18927"
+        },
+        "created_at": "2025-08-04T14:19:46.095601+00:00",
+        "degree": 2,
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "cluster": 0,
+        "cluster_color": "#FF6B6B"
+      },
+      {
         "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
         "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
         "authors": [
@@ -24,7 +104,7 @@
           "arxiv_id": null
         },
         "created_at": "2025-08-03T22:04:32.718726+00:00",
-        "degree": 3,
+        "degree": 4,
         "position": {
           "x": 0,
           "y": 0
@@ -56,7 +136,7 @@
           "arxiv_id": null
         },
         "created_at": "2025-08-03T22:04:04.858776+00:00",
-        "degree": 5,
+        "degree": 6,
         "position": {
           "x": 0,
           "y": 0
@@ -81,7 +161,7 @@
           "arxiv_id": null
         },
         "created_at": "2025-08-03T22:03:41.382870+00:00",
-        "degree": 3,
+        "degree": 4,
         "position": {
           "x": 0,
           "y": 0
@@ -106,7 +186,7 @@
           "arxiv_id": null
         },
         "created_at": "2025-08-03T22:03:14.876021+00:00",
-        "degree": 4,
+        "degree": 5,
         "position": {
           "x": 0,
           "y": 0
@@ -136,7 +216,7 @@
           "arxiv_id": null
         },
         "created_at": "2025-08-03T21:59:20.751396+00:00",
-        "degree": 5,
+        "degree": 6,
         "position": {
           "x": 0,
           "y": 0
@@ -170,7 +250,7 @@
           "arxiv_id": null
         },
         "created_at": "2025-08-03T20:44:34.902459+00:00",
-        "degree": 0,
+        "degree": 1,
         "position": {
           "x": 0,
           "y": 0
@@ -199,8 +279,8 @@
           "x": 0,
           "y": 0
         },
-        "cluster": 0,
-        "cluster_color": "#FF6B6B"
+        "cluster": 3,
+        "cluster_color": "#96CEB4"
       },
       {
         "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
@@ -221,13 +301,13 @@
           "CNN"
         ],
         "metadata": {
-          "file_type": "application/pdf",
+          "file_type": null,
           "file_size": 11356498,
           "doi": null,
           "arxiv_id": null
         },
         "created_at": "2025-08-03T20:43:20.706106+00:00",
-        "degree": 2,
+        "degree": 3,
         "position": {
           "x": 0,
           "y": 0
@@ -270,6 +350,76 @@
       }
     ],
     "edges": [
+      {
+        "source": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+        "target": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "weight": 0.3278812471410096,
+        "strength": 0.039830353058585136,
+        "type": "similarity"
+      },
+      {
+        "source": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+        "target": "979a7d62-ce40-414b-b084-09e05894bf1c",
+        "weight": 0.35229713795335255,
+        "strength": 0.07471019707621794,
+        "type": "similarity"
+      },
+      {
+        "source": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+        "target": "f9c43b41-6e01-4571-ae88-909821c25fed",
+        "weight": 0.5030046041694554,
+        "strength": 0.29000657738493624,
+        "type": "similarity"
+      },
+      {
+        "source": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+        "target": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
+        "weight": 0.5767307679131863,
+        "strength": 0.3953296684474091,
+        "type": "similarity"
+      },
+      {
+        "source": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "target": "979a7d62-ce40-414b-b084-09e05894bf1c",
+        "weight": 0.5231399047304884,
+        "strength": 0.3187712924721264,
+        "type": "similarity"
+      },
+      {
+        "source": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "target": "d28b3211-9f93-4271-8d5b-680807b486e0",
+        "weight": 0.3640103610063594,
+        "strength": 0.09144337286622777,
+        "type": "similarity"
+      },
+      {
+        "source": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "target": "135598cf-16f6-46c7-948a-db8275485a68",
+        "weight": 0.3533324436301369,
+        "strength": 0.07618920518590985,
+        "type": "similarity"
+      },
+      {
+        "source": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "target": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
+        "weight": 0.3584884479401005,
+        "strength": 0.083554925628715,
+        "type": "similarity"
+      },
+      {
+        "source": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "target": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
+        "weight": 0.3262065255633001,
+        "strength": 0.0374378936618573,
+        "type": "similarity"
+      },
+      {
+        "source": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+        "target": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
+        "weight": 0.33405840218080485,
+        "strength": 0.04865486025829266,
+        "type": "similarity"
+      },
       {
         "source": "d28b3211-9f93-4271-8d5b-680807b486e0",
         "target": "135598cf-16f6-46c7-948a-db8275485a68",
@@ -336,8 +486,8 @@
       {
         "source": "f9c43b41-6e01-4571-ae88-909821c25fed",
         "target": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
-        "weight": 0.47735623231295127,
-        "strength": 0.253366046161359,
+        "weight": 0.4773562323129512,
+        "strength": 0.2533660461613589,
         "type": "similarity"
       },
       {
@@ -350,22 +500,22 @@
       {
         "source": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
         "target": "00b2848f-d0b0-4623-a321-bc74539f9703",
-        "weight": 0.3434769098956431,
-        "strength": 0.06210987127949018,
+        "weight": 0.34347690989564283,
+        "strength": 0.06210987127948978,
         "type": "similarity"
       },
       {
         "source": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
         "target": "00b2848f-d0b0-4623-a321-bc74539f9703",
-        "weight": 0.3494823232093997,
-        "strength": 0.07068903315628532,
+        "weight": 0.3494823232094,
+        "strength": 0.0706890331562857,
         "type": "similarity"
       }
     ],
     "layout": "force-directed",
     "metadata": {
-      "node_count": 9,
-      "edge_count": 13,
+      "node_count": 12,
+      "edge_count": 23,
       "similarity_threshold": 0.3
     },
     "clustering_enabled": true,
@@ -373,10 +523,46 @@
     "cluster_visualization": {
       "points": [
         {
+          "id": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+          "title": "A Lightweight Feature Fusion Architecture For Resource-Constrained Crowd Counting",
+          "x": 0.46701319887879,
+          "y": 0.17237566257180525,
+          "cluster": 2,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Orchid Chetia Phukan"
+          ]
+        },
+        {
+          "id": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+          "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+          "x": 0.07416052424295791,
+          "y": -0.44565783763904215,
+          "cluster": 0,
+          "authors": [
+            "Paridhi Mundra",
+            "Manik Sharma",
+            "Yashwardhan Chaudhuri"
+          ]
+        },
+        {
+          "id": "979a7d62-ce40-414b-b084-09e05894bf1c",
+          "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+          "x": 0.325953904652008,
+          "y": -0.37617926305710003,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Paridhi Mundra",
+            "Arnesh Batra"
+          ]
+        },
+        {
           "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
           "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
-          "x": -0.4917868730382568,
-          "y": 0.06293927090863534,
+          "x": -0.5482438670447168,
+          "y": -0.0015007234732455715,
           "cluster": 1,
           "authors": [
             "Israa Odeh",
@@ -387,8 +573,8 @@
         {
           "id": "135598cf-16f6-46c7-948a-db8275485a68",
           "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
-          "x": -0.3884171761858972,
-          "y": -0.16771563430398,
+          "x": -0.479638430755938,
+          "y": 0.2256790967449017,
           "cluster": 1,
           "authors": [
             "Saket Chaturvedi",
@@ -399,8 +585,8 @@
         {
           "id": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
           "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
-          "x": -0.5228760795210041,
-          "y": 0.039496765280517245,
+          "x": -0.560793334343793,
+          "y": 0.014442630947103222,
           "cluster": 1,
           "authors": [
             "Misgina Hagos",
@@ -411,8 +597,8 @@
         {
           "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
           "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
-          "x": 0.2964627800759964,
-          "y": -0.46267284534424624,
+          "x": 0.2199737669452547,
+          "y": 0.4828522006943687,
           "cluster": 2,
           "authors": [
             "Yuhong Li",
@@ -423,8 +609,8 @@
         {
           "id": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
           "title": "DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING",
-          "x": -0.34761466895663456,
-          "y": -0.21211814754059333,
+          "x": -0.4355009796204119,
+          "y": 0.2298171953103099,
           "cluster": 1,
           "authors": [
             "Jay Nandy",
@@ -435,8 +621,8 @@
         {
           "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
           "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
-          "x": 0.018022067600396735,
-          "y": 0.6083912837981692,
+          "x": -0.08642906664177347,
+          "y": -0.5834383768222892,
           "cluster": 0,
           "authors": [
             "Maitham Yousif",
@@ -447,9 +633,9 @@
         {
           "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
           "title": "C-lisp and Flexible Macro Programming with S-expressions",
-          "x": 0.45246313246609116,
-          "y": 0.5831568462974233,
-          "cluster": 0,
+          "x": 0.2869133185834839,
+          "y": -0.21431504004981025,
+          "cluster": 3,
           "authors": [
             "Vedanth Padmaraman",
             "Sasank Chilamkurthy"
@@ -458,8 +644,8 @@
         {
           "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
           "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
-          "x": 0.5125909647974732,
-          "y": -0.29478069220343445,
+          "x": 0.4810036484461633,
+          "y": 0.30551977091399213,
           "cluster": 2,
           "authors": [
             "Yashwardhan Chaudhuri",
@@ -470,8 +656,8 @@
         {
           "id": "00b2848f-d0b0-4623-a321-bc74539f9703",
           "title": "Attention Is All You Need",
-          "x": 0.47115585276183536,
-          "y": -0.15669684689249125,
+          "x": 0.2555873166579755,
+          "y": 0.19040468385900583,
           "cluster": 2,
           "authors": [
             "Ashish Vaswani",
@@ -483,10 +669,10 @@
       "dimensionality_reduction": {
         "method": "PCA",
         "explained_variance_ratio": [
-          0.2819026252707235,
-          0.20077827546390406
+          0.2301822365854927,
+          0.15642342929733744
         ],
-        "total_explained_variance": 0.48268090073462755
+        "total_explained_variance": 0.38660566588283013
       },
       "layout_algorithm": "scatter",
       "color_scheme": "cluster_based"
@@ -494,53 +680,55 @@
   },
   "metrics": {
     "basic_metrics": {
-      "node_count": 9,
-      "edge_count": 13,
-      "density": 0.3611111111111111,
+      "node_count": 12,
+      "edge_count": 23,
+      "density": 0.3484848484848485,
       "is_connected": false
     },
     "centrality_metrics": {
-      "average_degree_centrality": 0.3611111111111111,
-      "max_degree_centrality": 0.625,
-      "average_betweenness_centrality": 0.03968253968253968,
-      "max_betweenness_centrality": 0.10714285714285714,
-      "average_closeness_centrality": 0.4095238095238095,
-      "max_closeness_centrality": 0.6428571428571428
+      "average_degree_centrality": 0.34848484848484845,
+      "max_degree_centrality": 0.6363636363636364,
+      "average_betweenness_centrality": 0.05757575757575758,
+      "max_betweenness_centrality": 0.30727272727272725,
+      "average_closeness_centrality": 0.504597695879711,
+      "max_closeness_centrality": 0.6993006993006993
     },
     "clustering_metrics": {
-      "average_clustering_coefficient": 0.6148148148148149,
-      "transitivity": 0.6923076923076923
+      "average_clustering_coefficient": 0.5583333333333333,
+      "transitivity": 0.5730337078651685
     },
     "component_analysis": {
-      "number_of_components": 3,
-      "largest_component_size": 7,
+      "number_of_components": 2,
+      "largest_component_size": 11,
       "component_sizes": [
-        7,
-        1,
+        11,
         1
       ]
     }
   },
   "parameters": {
     "similarity_threshold": 0.3,
-    "papers_count": 9,
-    "edges_count": 13
+    "papers_count": 12,
+    "edges_count": 23
   },
-  "generated_at": "2025-08-03T22:06:05.279966",
+  "generated_at": "2025-08-04T14:33:28.332600",
   "clustering": {
     "success": true,
     "algorithm_used": "hierarchical",
     "parameters": {
-      "n_clusters": 3
+      "n_clusters": 4
     },
     "cluster_labels": [
+      2,
+      0,
+      0,
       1,
       1,
       1,
       2,
       1,
       0,
-      0,
+      3,
       2,
       2
     ],
@@ -548,8 +736,30 @@
       "clusters": {
         "0": {
           "label": 0,
-          "size": 2,
+          "size": 3,
           "papers": [
+            {
+              "id": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+              "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+              "authors": [
+                "Paridhi Mundra",
+                "Manik Sharma",
+                "Yashwardhan Chaudhuri",
+                "Orchid Chetia Phukan",
+                "Arun Balaji Buduru"
+              ]
+            },
+            {
+              "id": "979a7d62-ce40-414b-b084-09e05894bf1c",
+              "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+              "authors": [
+                "Yashwardhan Chaudhuri",
+                "Paridhi Mundra",
+                "Arnesh Batra",
+                "Orchid Chetia Phukan",
+                "Arun Balaji Buduru"
+              ]
+            },
             {
               "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
               "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
@@ -560,18 +770,10 @@
                 "Mohammad Grmt",
                 "Maithm Ghaly"
               ]
-            },
-            {
-              "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
-              "title": "C-lisp and Flexible Macro Programming with S-expressions",
-              "authors": [
-                "Vedanth Padmaraman",
-                "Sasank Chilamkurthy"
-              ]
             }
           ],
           "characteristics": {
-            "avg_intra_similarity": 0.04693715069410887,
+            "avg_intra_similarity": 0.3211430251341413,
             "common_keywords": [
               {
                 "keyword": "COVID-19",
@@ -598,7 +800,7 @@
                 "frequency": 1
               }
             ],
-            "centroid_norm": 0.7235109965529204
+            "centroid_norm": 0.739884230186573
           }
         },
         "1": {
@@ -692,8 +894,18 @@
         },
         "2": {
           "label": 2,
-          "size": 3,
+          "size": 4,
           "papers": [
+            {
+              "id": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+              "title": "A Lightweight Feature Fusion Architecture For Resource-Constrained Crowd Counting",
+              "authors": [
+                "Yashwardhan Chaudhuri",
+                "Ankit Kumar",
+                "Orchid Chetia Phukan",
+                "Arun Balaji Buduru"
+              ]
+            },
             {
               "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
               "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
@@ -732,7 +944,7 @@
             }
           ],
           "characteristics": {
-            "avg_intra_similarity": 0.411928474635213,
+            "avg_intra_similarity": 0.4204835292183618,
             "common_keywords": [
               {
                 "keyword": "Crowd Count Estimation",
@@ -759,23 +971,78 @@
                 "frequency": 1
               }
             ],
-            "centroid_norm": 0.7797127085189063
+            "centroid_norm": 0.751905754758866
+          }
+        },
+        "3": {
+          "label": 3,
+          "size": 1,
+          "papers": [
+            {
+              "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
+              "title": "C-lisp and Flexible Macro Programming with S-expressions",
+              "authors": [
+                "Vedanth Padmaraman",
+                "Sasank Chilamkurthy"
+              ]
+            }
+          ],
+          "characteristics": {
+            "avg_intra_similarity": 1.0,
+            "common_keywords": [],
+            "centroid_norm": 0.9999994732533612
           }
         }
       },
       "summary": {
-        "total_clusters": 3,
+        "total_clusters": 4,
         "largest_cluster_size": 4,
-        "smallest_cluster_size": 2
+        "smallest_cluster_size": 1
       }
     },
     "visualization": {
       "points": [
         {
+          "id": "535dec14-58bf-4e24-adc4-2e83ea47e236",
+          "title": "A Lightweight Feature Fusion Architecture For Resource-Constrained Crowd Counting",
+          "x": 0.46701319887879,
+          "y": 0.17237566257180525,
+          "cluster": 2,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Ankit Kumar",
+            "Orchid Chetia Phukan"
+          ]
+        },
+        {
+          "id": "6b6c749d-7d7c-4cbb-b263-23fc1931c5f8",
+          "title": "VoxMed: One-Step Respiratory Disease Classifier using Digital Stethoscope Sounds",
+          "x": 0.07416052424295791,
+          "y": -0.44565783763904215,
+          "cluster": 0,
+          "authors": [
+            "Paridhi Mundra",
+            "Manik Sharma",
+            "Yashwardhan Chaudhuri"
+          ]
+        },
+        {
+          "id": "979a7d62-ce40-414b-b084-09e05894bf1c",
+          "title": "ASGIR: Audio Spectrogram Transformer Guided Classification And Information Retrieval For Birds",
+          "x": 0.325953904652008,
+          "y": -0.37617926305710003,
+          "cluster": 0,
+          "authors": [
+            "Yashwardhan Chaudhuri",
+            "Paridhi Mundra",
+            "Arnesh Batra"
+          ]
+        },
+        {
           "id": "d28b3211-9f93-4271-8d5b-680807b486e0",
           "title": "Diabetic Retinopathy Detection using Ensemble Machine Learning",
-          "x": -0.4917868730382568,
-          "y": 0.06293927090863534,
+          "x": -0.5482438670447168,
+          "y": -0.0015007234732455715,
           "cluster": 1,
           "authors": [
             "Israa Odeh",
@@ -786,8 +1053,8 @@
         {
           "id": "135598cf-16f6-46c7-948a-db8275485a68",
           "title": "Automated Diabetic Retinopathy Grading using Deep Convolutional Neural Network",
-          "x": -0.3884171761858972,
-          "y": -0.16771563430398,
+          "x": -0.479638430755938,
+          "y": 0.2256790967449017,
           "cluster": 1,
           "authors": [
             "Saket Chaturvedi",
@@ -798,8 +1065,8 @@
         {
           "id": "3d228d2f-6e0b-438f-828a-432e7e8b7247",
           "title": "AUTOMATED SMARTPHONE BASED SYSTEM FOR DIAGNOSIS OF DIABETIC RETINOPATHY",
-          "x": -0.5228760795210041,
-          "y": 0.039496765280517245,
+          "x": -0.560793334343793,
+          "y": 0.014442630947103222,
           "cluster": 1,
           "authors": [
             "Misgina Hagos",
@@ -810,8 +1077,8 @@
         {
           "id": "f9c43b41-6e01-4571-ae88-909821c25fed",
           "title": "CSRNet: Dilated Convolutional Neural Networks for Understanding the Highly Congested Scenes",
-          "x": 0.2964627800759964,
-          "y": -0.46267284534424624,
+          "x": 0.2199737669452547,
+          "y": 0.4828522006943687,
           "cluster": 2,
           "authors": [
             "Yuhong Li",
@@ -822,8 +1089,8 @@
         {
           "id": "b3251a67-101b-40ab-a1e7-551c18ccbecb",
           "title": "DISTRIBUTIONAL SHIFTS IN AUTOMATED DIABETIC RETINOPATHY SCREENING",
-          "x": -0.34761466895663456,
-          "y": -0.21211814754059333,
+          "x": -0.4355009796204119,
+          "y": 0.2298171953103099,
           "cluster": 1,
           "authors": [
             "Jay Nandy",
@@ -834,8 +1101,8 @@
         {
           "id": "c32bdae7-2c1e-4987-9d3d-da9244c3ce68",
           "title": "Machine Learning-driven Analysis of Gastrointestinal Symptoms in Post-COVID-19 Patients",
-          "x": 0.018022067600396735,
-          "y": 0.6083912837981692,
+          "x": -0.08642906664177347,
+          "y": -0.5834383768222892,
           "cluster": 0,
           "authors": [
             "Maitham Yousif",
@@ -846,9 +1113,9 @@
         {
           "id": "6300b3d8-1cdc-4a76-a5a9-4eaae00352e7",
           "title": "C-lisp and Flexible Macro Programming with S-expressions",
-          "x": 0.45246313246609116,
-          "y": 0.5831568462974233,
-          "cluster": 0,
+          "x": 0.2869133185834839,
+          "y": -0.21431504004981025,
+          "cluster": 3,
           "authors": [
             "Vedanth Padmaraman",
             "Sasank Chilamkurthy"
@@ -857,8 +1124,8 @@
         {
           "id": "a6df804b-9eae-4e20-9dcd-f730c04d6058",
           "title": "FGA: Fourier-Guided Attention Network for Crowd Count Estimation",
-          "x": 0.5125909647974732,
-          "y": -0.29478069220343445,
+          "x": 0.4810036484461633,
+          "y": 0.30551977091399213,
           "cluster": 2,
           "authors": [
             "Yashwardhan Chaudhuri",
@@ -869,8 +1136,8 @@
         {
           "id": "00b2848f-d0b0-4623-a321-bc74539f9703",
           "title": "Attention Is All You Need",
-          "x": 0.47115585276183536,
-          "y": -0.15669684689249125,
+          "x": 0.2555873166579755,
+          "y": 0.19040468385900583,
           "cluster": 2,
           "authors": [
             "Ashish Vaswani",
@@ -882,23 +1149,24 @@
       "dimensionality_reduction": {
         "method": "PCA",
         "explained_variance_ratio": [
-          0.2819026252707235,
-          0.20077827546390406
+          0.2301822365854927,
+          0.15642342929733744
         ],
-        "total_explained_variance": 0.48268090073462755
+        "total_explained_variance": 0.38660566588283013
       },
       "layout_algorithm": "scatter",
       "color_scheme": "cluster_based"
     },
     "quality_metrics": {
-      "silhouette_score": 0.17324673017362585,
+      "silhouette_score": 0.16152275911169112,
       "cluster_distribution": {
-        "0": 2,
+        "0": 3,
         "1": 4,
-        "2": 3
+        "2": 4,
+        "3": 1
       },
-      "number_of_clusters": 3
+      "number_of_clusters": 4
     }
   },
-  "saved_at": "2025-08-03T22:06:05.351077"
+  "saved_at": "2025-08-04T14:33:28.461031"
 }

@@ -520,7 +520,6 @@ export default function PapersPage() {
   
   // Text selection state - simplified
   const [selectedTextContext, setSelectedTextContext] = useState<{text: string, page: number} | null>(null);
-  const [showTip, setShowTip] = useState(true);
   
   // Hovering button state
   const [showHoverButton, setShowHoverButton] = useState(false);
@@ -688,13 +687,7 @@ export default function PapersPage() {
     fetchPapers();
   }, [projectId, searchQuery]);
 
-  // Auto-hide tip after 8 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowTip(false);
-    }, 8000);
-    return () => clearTimeout(timer);
-  }, [selectedPaper]);
+
 
   // Load PDF when selected paper changes
   useEffect(() => {
@@ -760,7 +753,8 @@ export default function PapersPage() {
   // Fetch analytics data for graph view
   useEffect(() => {
     const fetchAnalytics = async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const token = typeof window !== 'undefined' ? 
+        (localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken')) : null;
       if (!token) {
         // Skip analytics call when not authenticated (e.g. public browsing)
         return;
@@ -1219,23 +1213,7 @@ export default function PapersPage() {
               <div className="relative w-full h-full overflow-auto">
                 {pdfUrl && (
                   <>
-                    {/* Helper Message for Text Selection */}
-                    {showTip && (
-                      <div className="absolute top-4 left-4 z-20 bg-muted/90 text-muted-foreground px-3 py-2 rounded-lg text-xs border border-border/50 backdrop-blur-sm max-w-64 animate-in fade-in-0 slide-in-from-top-2 duration-300">
-                        <div className="flex items-start gap-2">
-                          <div className="flex-1">
-                            🎯 <strong>NEW:</strong> Click and drag to select text areas, then ask questions instantly!
-                          </div>
-                          <button
-                            onClick={() => setShowTip(false)}
-                            className="text-muted-foreground hover:text-foreground opacity-60 hover:opacity-100 transition-opacity ml-1"
-                            title="Dismiss tip"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      </div>
-                    )}
+
                     
                     <iframe
                       ref={pdfIframeRef}

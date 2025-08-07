@@ -88,7 +88,7 @@ export const authConfig = {
       loading: "Signing in..."
     },
     socialLogin: {
-      enabled: true,
+      enabled: false,
       providers: [
         {
           id: "google",

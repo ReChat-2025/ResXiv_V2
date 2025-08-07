@@ -12,9 +12,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const setInitializing = useSetInitializing();
 
   useEffect(() => {
-    const initAuth = () => {
+    const initAuth = async () => {
       try {
-        authService.initializeAuth();
+        await authService.initializeAuth();
       } catch (error) {
         console.error('Auth initialization failed:', error);
       } finally {

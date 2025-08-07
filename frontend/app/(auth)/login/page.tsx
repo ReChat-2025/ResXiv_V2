@@ -9,7 +9,7 @@ import { AuthLayout } from "@/components/auth/auth-layout";
 import { FormField } from "@/components/auth/form-field";
 import { SocialLogin } from "@/components/auth/social-login";
 import { authConfig, getValidationMessage } from "@/lib/auth-config";
-import { authApi } from "@/lib/api/auth-api";
+import { authService } from "@/lib/services/auth-service";
 
 interface FormData {
   email: string;
@@ -117,17 +117,11 @@ export default function LoginPage() {
     setErrors({});
 
     try {
-      const result = await authApi.login(
+      const result = await authService.login(
         formData.email,
         formData.password,
         formData.rememberMe
       );
-
-      // Store tokens
-      if (result.tokens) {
-        localStorage.setItem('accessToken', result.tokens.access_token);
-        localStorage.setItem('refreshToken', result.tokens.refresh_token);
-      }
 
       // Redirect to projects page or intended destination
       const redirectTo = new URLSearchParams(window.location.search).get('redirect') || '/projects';

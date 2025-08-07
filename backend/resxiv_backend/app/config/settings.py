@@ -93,7 +93,7 @@ class JWTSettings(BaseSettings):
     
     secret_key: str = Field(..., env="JWT_SECRET_KEY")
     algorithm: str = Field(default="HS256", env="JWT_ALGORITHM")
-    access_token_expire_minutes: int = Field(default=30, env="JWT_ACCESS_TOKEN_EXPIRE_MINUTES")
+    access_token_expire_minutes: int = Field(default=300, env="JWT_ACCESS_TOKEN_EXPIRE_MINUTES")
     refresh_token_expire_days: int = Field(default=7, env="JWT_REFRESH_TOKEN_EXPIRE_DAYS")
     
     @field_validator("secret_key")
@@ -299,7 +299,7 @@ class Settings(BaseSettings):
     reload: bool = Field(default=True, env="RELOAD")
 
     # Frontend URL (used in e-mails for links)
-    frontend_url: str = Field(default="http://35.154.171.72:3000", env="FRONTEND_URL")
+    frontend_url: str = Field(default="cbeta.resxiv.com", env="FRONTEND_URL")
     
     # Sub-settings
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)

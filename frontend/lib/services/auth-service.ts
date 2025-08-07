@@ -130,14 +130,26 @@ class AuthService {
   /**
    * Initialize auth state from stored tokens
    */
-  initializeAuth(): void {
+  async initializeAuth(): Promise<void> {
     const accessToken = this.getAccessToken();
     const { setAuthenticated, setUser } = useAppStore.getState();
     
     if (accessToken) {
-      // TODO: Validate token with backend and fetch user info
-      // For now, just set authenticated state
-      setAuthenticated(true);
+      try {
+        // Validate token and fetch user info from backend
+        const userApi = (await import('../api/user-api')).userApi;
+        const user = await userApi.getCurrentUser();
+        
+        setAuthenticated(true);
+        setUser(user);
+      } catch (error) {
+        console.error('Failed to validate token or fetch user:', error);
+        // Token might be invalid/expired, clear it
+        this.removeToken(TOKEN_KEYS.ACCESS);
+        this.removeToken(TOKEN_KEYS.REFRESH);
+        setAuthenticated(false);
+        setUser(null);
+      }
     } else {
       setAuthenticated(false);
       setUser(null);
