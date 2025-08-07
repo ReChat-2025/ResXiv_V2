@@ -273,6 +273,14 @@ function ProjectsPage() {
       <SimpleNavbar 
         notifications={notifications}
         onNotificationClick={handleNotificationClick}
+        onSettingClick={(settingId) => {
+          // Navigate to settings page with specific section
+          window.location.href = `/settings?section=${settingId}`;
+        }}
+        onProjectClick={(projectId) => {
+          // Navigate to specific project
+          window.location.href = `/projects/${projectId}`;
+        }}
       />
 
       {/* Main Content */}
@@ -414,19 +422,19 @@ function ProjectsPage() {
                     <TableCell className="text-muted-foreground py-4">
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4" />
-                        <span>{project.member_count}</span>
+                        <span>{project.member_count || (project.members ? project.members.length : 0)}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground py-4">
                       <div className="flex items-center gap-1">
                         <FileText className="h-4 w-4" />
-                        <span>{project.paper_count}</span>
+                        <span>{project.paper_count || 0}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground py-4">
                       <div className="flex items-center gap-1">
                         <CheckSquare className="h-4 w-4" />
-                        <span>{project.task_count}</span>
+                        <span>{project.task_count ?? 0}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground py-4">

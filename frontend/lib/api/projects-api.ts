@@ -37,7 +37,7 @@ export interface Project {
   current_user_is_owner: boolean;
   member_count: number;
   paper_count: number;
-  task_count: number;
+  task_count?: number;
 }
 
 export interface UserBasicInfo {
@@ -133,7 +133,7 @@ export const projectsApi = {
    * Create a new project
    */
   async createProject(projectData: ProjectCreate): Promise<Project> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     
     if (!token) {
@@ -177,7 +177,7 @@ export const projectsApi = {
    * Get user's projects with optional filtering and pagination
    */
   async getProjects(params: ProjectsQueryParams = {}): Promise<ProjectListResponse> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     
     if (!token) {
@@ -230,7 +230,7 @@ export const projectsApi = {
    * Get a specific project by ID
    */
   async getProject(projectId: string): Promise<Project> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     
     if (!token) {
@@ -273,7 +273,7 @@ export const projectsApi = {
    * Update a project
    */
   async updateProject(projectId: string, projectData: Partial<ProjectCreate>): Promise<Project> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     
     if (!token) {
@@ -317,7 +317,7 @@ export const projectsApi = {
    * Delete a project
    */
   async deleteProject(projectId: string): Promise<void> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     
     if (!token) {
@@ -356,7 +356,7 @@ export const projectsApi = {
    * Get project statistics
    */
   async getProjectStats(projectId: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     if (!token) {
       throw new Error('No authentication token found');
@@ -386,7 +386,7 @@ export const projectsApi = {
    * Get project activity
    */
   async getProjectActivity(projectId: string, params: { limit?: number; offset?: number; activity_type?: string; } = {}): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const token = this.getAuthToken();
     if (!token) {
       throw new Error('No authentication token found');

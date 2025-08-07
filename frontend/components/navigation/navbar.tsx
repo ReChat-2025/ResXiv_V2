@@ -20,6 +20,7 @@ import {
   Icon 
 } from "@/components/ui/icon";
 import { layoutConstants, designSystem } from "@/lib/design-system";
+import { UserProfileDropdown } from "./user-profile-dropdown";
 
 // Types
 interface Notification {
@@ -54,6 +55,8 @@ interface NavbarProps {
   notifications?: Notification[];
   onNotificationClick?: (notificationId: string) => void;
   onProjectChange?: (projectId: string) => void;
+  onSettingClick?: (settingId: string) => void;
+  onUserProjectClick?: (projectId: string) => void;
   className?: string;
 }
 
@@ -110,6 +113,8 @@ export function Navbar({
   notifications = [],
   onNotificationClick,
   onProjectChange,
+  onSettingClick,
+  onUserProjectClick,
   className,
 }: NavbarProps) {
   const pathname = usePathname();
@@ -154,14 +159,23 @@ export function Navbar({
       style={{ height: layoutConstants.navbar.height }}
     >
       <div className="flex h-full items-center px-6">
-        {/* Left Section - Project Selector */}
+        {/* Left Section - R Logo + Project Selector */}
         <div className="flex items-center gap-3 min-w-0 w-64">
-          {showProjectSelector && currentProject ? (
+          {/* Always show R logo */}
+          <Link href="/projects" className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <span className="text-primary-foreground text-sm font-bold">R</span>
+            </div>
+            <span className="font-bold text-lg">ResXiv</span>
+          </Link>
+          
+          {/* Project Selector (if enabled) */}
+          {showProjectSelector && currentProject && (
             <DropdownMenu open={showProjectDropdown} onOpenChange={setShowProjectDropdown}>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="h-9 px-3 gap-2 justify-start min-w-0"
+                  className="h-9 px-3 gap-2 justify-start min-w-0 flex-1"
                 >
                   <Avatar className="h-6 w-6">
                     <AvatarImage src={currentProject.avatar} />
@@ -193,13 +207,6 @@ export function Navbar({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Link href="/" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <span className="text-primary-foreground text-sm font-bold">R</span>
-              </div>
-              <span className="font-bold text-lg">ResXiv</span>
-            </Link>
           )}
         </div>
 
@@ -303,19 +310,11 @@ export function Navbar({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* User Avatars */}
-          {userAvatars.length > 0 && (
-            <div className="flex items-center gap-2">
-              {userAvatars.map((avatar) => (
-                <Avatar key={avatar.id} className="h-8 w-8">
-                  <AvatarImage src={avatar.src} alt={avatar.alt} />
-                  <AvatarFallback className="text-xs font-medium">
-                    {avatar.fallback}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
-            </div>
-          )}
+          {/* User Profile Dropdown */}
+          <UserProfileDropdown 
+            onSettingClick={onSettingClick}
+            onProjectClick={onUserProjectClick}
+          />
         </div>
       </div>
     </header>

@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
@@ -11,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Bell } from "lucide-react";
-import { userApi, type UserResponse } from "@/lib/api/user-api";
+import { UserProfileDropdown } from "./user-profile-dropdown";
 
 // Types
 interface Notification {
@@ -26,26 +25,16 @@ interface Notification {
 interface SimpleNavbarProps {
   notifications?: Notification[];
   onNotificationClick?: (notification: Notification) => void;
+  onSettingClick?: (settingId: string) => void;
+  onProjectClick?: (projectId: string) => void;
 }
 
 export function SimpleNavbar({ 
   notifications = [], 
-  onNotificationClick 
+  onNotificationClick,
+  onSettingClick,
+  onProjectClick
 }: SimpleNavbarProps) {
-  const [currentUser, setCurrentUser] = useState<UserResponse | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await userApi.getCurrentUser();
-        setCurrentUser(user);
-      } catch (error) {
-        console.warn('Failed to fetch current user for navbar:', error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const unreadNotifications = notifications.filter(n => !n.read);
 
@@ -55,7 +44,10 @@ export function SimpleNavbar({
         <div className="flex h-16 items-center justify-between">
           {/* Left - Logo */}
           <div className="flex items-center">
-            <div className="flex items-center space-x-2">
+            <div 
+              className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => window.location.href = '/projects'}
+            >
               <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">R</span>
               </div>
@@ -108,40 +100,11 @@ export function SimpleNavbar({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* User Avatar */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src={undefined} alt={currentUser?.name || 'User'} />
-                    <AvatarFallback>
-                      {currentUser?.name ? 
-                        currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() :
-                        'U'
-                      }
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem disabled>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{currentUser?.name || 'User'}</p>
-                    <p className="text-xs text-muted-foreground">{currentUser?.email || ''}</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {
-                  localStorage.removeItem('accessToken');
-                  localStorage.removeItem('refreshToken');
-                  window.location.href = '/login';
-                }}>
-                  Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* User Profile Dropdown */}
+            <UserProfileDropdown 
+              onSettingClick={onSettingClick}
+              onProjectClick={onProjectClick}
+            />
           </div>
         </div>
       </div>

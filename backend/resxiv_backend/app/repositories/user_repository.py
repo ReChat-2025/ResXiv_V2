@@ -80,11 +80,26 @@ class UserRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
     
-    async def get_user_by_email(self, email: str) -> Optional[User]:
-        """Get user by email address"""
-        stmt = select(User).where(
-            and_(User.email == email.lower(), User.deleted_at.is_(None))
-        )
+    async def get_user_by_email(self, email: str, verified_only: bool = False) -> Optional[User]:
+        """
+        Get user by email address with optional verification filter.
+        
+        Args:
+            email: Email address to search for
+            verified_only: If True, only return verified users
+            
+        Returns:
+            User if found, None otherwise
+        """
+        conditions = [
+            User.email == email.lower(), 
+            User.deleted_at.is_(None)
+        ]
+        
+        if verified_only:
+            conditions.append(User.email_verified == True)
+        
+        stmt = select(User).where(and_(*conditions))
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
     
@@ -430,6 +445,26 @@ class UserRepository:
         )
         result = await self.session.execute(stmt)
         return result.rowcount
+
+    async def cleanup_expired_email_verification_tokens(self) -> int:
+        """Clean up expired email verification tokens"""
+        stmt = delete(EmailVerificationToken).where(
+            EmailVerificationToken.expires_at <= datetime.now(timezone.utc)
+        )
+        result = await self.session.execute(stmt)
+        return result.rowcount
+
+    async def cleanup_expired_password_reset_tokens(self) -> int:
+        """Clean up expired password reset tokens"""
+        stmt = delete(PasswordResetToken).where(
+            PasswordResetToken.expires_at <= datetime.now(timezone.utc)
+        )
+        result = await self.session.execute(stmt)
+        return result.rowcount
+
+    async def cleanup_expired_refresh_tokens(self) -> int:
+        """Clean up expired refresh tokens (user sessions)"""
+        return await self.cleanup_expired_sessions()
     
     async def store_refresh_token(
         self,
@@ -482,14 +517,109 @@ class UserRepository:
     # VALIDATION AND UTILITY METHODS
     # ================================
     
-    async def email_exists(self, email: str) -> bool:
-        """Check if email already exists"""
-        stmt = select(User.id).where(
-            and_(User.email == email.lower(), User.deleted_at.is_(None))
-        )
+    async def email_exists(self, email: str, verified_only: bool = True) -> bool:
+        """
+        Check if email already exists.
+        
+        Args:
+            email: Email address to check
+            verified_only: If True, only consider verified emails as existing
+            
+        Returns:
+            True if email exists (and verified if verified_only=True), False otherwise
+        """
+        conditions = [
+            User.email == email.lower(), 
+            User.deleted_at.is_(None)
+        ]
+        
+        if verified_only:
+            conditions.append(User.email_verified == True)
+        
+        stmt = select(User.id).where(and_(*conditions))
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none() is not None
+
+    async def get_unverified_user_by_email(self, email: str) -> Optional[User]:
+        """
+        Get unverified user by email address.
+        
+        Args:
+            email: Email address to search for
+            
+        Returns:
+            Unverified user if found, None otherwise
+        """
+        # Use the enhanced get_user_by_email method with explicit unverified filter
+        stmt = select(User).where(
+            and_(
+                User.email == email.lower(), 
+                User.deleted_at.is_(None),
+                User.email_verified == False
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def delete_unverified_user(self, user_id: uuid.UUID) -> bool:
+        """
+        Hard delete an unverified user to allow re-registration.
+        
+        This is safe for unverified users as they haven't completed registration.
+        
+        Args:
+            user_id: UUID of the unverified user to delete
+            
+        Returns:
+            True if user was deleted, False otherwise
+        """
+        # First verify the user is unverified
+        user = await self.get_user_by_id(user_id)
+        if not user or user.email_verified:
+            return False
+        
+        # Delete associated verification tokens first (referential integrity)
+        await self._hard_delete_email_verification_tokens(user_id)
+        
+        # Hard delete the user
+        stmt = delete(User).where(User.id == user_id)
+        result = await self.session.execute(stmt)
+        return result.rowcount > 0
+
+    async def _hard_delete_email_verification_tokens(self, user_id: uuid.UUID):
+        """Hard delete email verification tokens for a user"""
+        stmt = delete(EmailVerificationToken).where(
+            EmailVerificationToken.user_id == user_id
+        )
+        await self.session.execute(stmt)
+
+    async def get_recent_verification_tokens(
+        self,
+        user_id: uuid.UUID,
+        since: datetime
+    ) -> List[EmailVerificationToken]:
+        """
+        Get recent email verification tokens for rate limiting.
+        
+        Args:
+            user_id: User UUID
+            since: Datetime to check from
+            
+        Returns:
+            List of recent verification tokens
+        """
+        stmt = select(EmailVerificationToken).where(
+            and_(
+                EmailVerificationToken.user_id == user_id,
+                EmailVerificationToken.created_at >= since
+            )
+        ).order_by(EmailVerificationToken.created_at.desc())
+        
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+
     
+
     async def verify_password(self, email: str, password: str) -> Optional[User]:
         """Verify user password and return user if valid"""
         user = await self.get_user_by_email(email)

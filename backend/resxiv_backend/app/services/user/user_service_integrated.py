@@ -5,7 +5,7 @@ Orchestrates specialized user sub-services with clean separation of concerns.
 
 import uuid
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.error_handling import handle_service_errors
@@ -128,6 +128,25 @@ class UserService:
     async def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
         """Get user by email address."""
         return await self.profile_service.get_user_by_email(email)
+    
+    async def get_users_basic_info_batch(self, user_ids: List[uuid.UUID]) -> Dict[str, Dict[str, Any]]:
+        """Get basic information for multiple users by UUIDs."""
+        users_info = {}
+        
+        for user_id in user_ids:
+            try:
+                user = await self.auth_service.repository.get_user_by_id(user_id)
+                if user:
+                    users_info[str(user_id)] = {
+                        "id": str(user.id),
+                        "name": user.name,
+                        "email": user.email
+                    }
+            except Exception as e:
+                logger.warning(f"Failed to get user {user_id}: {e}")
+                continue
+        
+        return users_info
     
     async def delete_user_account(
         self,

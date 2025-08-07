@@ -67,16 +67,19 @@ class UserVerificationService:
         """
         Resend email verification to user.
         
+        Handles both existing verified and unverified users appropriately.
+        
         Args:
             email: User email address
             
         Returns:
             Operation result
         """
-        # Get user by email
-        user = await self.repository.get_user_by_email(email)
+        # Get user by email (including unverified users)
+        user = await self.repository.get_user_by_email(email, verified_only=False)
+        
         if not user:
-            # Don't reveal if email exists
+            # Don't reveal if email exists for security
             return {
                 "success": True,
                 "message": "If an account with this email exists, a verification email has been sent."
@@ -85,7 +88,8 @@ class UserVerificationService:
         # Check if already verified
         if user.email_verified:
             return {
-                "success": True,
+                "success": False,
+                "error": "already_verified",
                 "message": "Email is already verified"
             }
         

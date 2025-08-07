@@ -3,8 +3,12 @@
  * Centralized configuration for all API endpoints
  */
 
-// Get the API base URL from environment or use development default
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Simple fix: Sanitize the environment variable to remove trailing /api
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+
+// Use the sanitized URL
+export const API_BASE_URL = rawApiUrl;
 
 // Export for legacy compatibility
 export const getApiBaseUrl = () => API_BASE_URL;

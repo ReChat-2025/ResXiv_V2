@@ -170,6 +170,17 @@ export function PageLayout({
           notifications={notifications}
           onNotificationClick={handleNotificationClick}
           onProjectChange={onProjectChange}
+          onSettingClick={(settingId) => {
+            // Navigate to settings page with specific section
+            window.location.href = `/settings?section=${settingId}`;
+          }}
+          onUserProjectClick={(projectId) => {
+            // Navigate to specific project
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+              window.location.href = `/projects/${project.id}`;
+            }
+          }}
         />
       )}
 

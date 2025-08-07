@@ -44,6 +44,9 @@ class UserAuthService:
         """
         Register a new user with email verification.
         
+        Handles re-registration for unverified accounts by cleaning up
+        previous incomplete registrations.
+        
         Args:
             registration_data: User registration data
             request_info: Request information (IP, user agent, etc.)
@@ -51,12 +54,41 @@ class UserAuthService:
         Returns:
             Success response with user data
         """
-        # Check if email already exists
+        # Check if email already exists for a verified user
         if await self.repository.email_exists(registration_data.email):
             raise ServiceError(
                 "An account with this email already exists",
                 ErrorCodes.VALIDATION_ERROR
             )
+        
+        # Check for unverified user with same email
+        unverified_user = await self.repository.get_unverified_user_by_email(registration_data.email)
+        if unverified_user:
+            logger.info(f"Cleaning up unverified account for re-registration: {registration_data.email}")
+            
+            # Check if the unverified account is recent (within 24 hours)
+            # If it's very recent, we might want to just resend verification instead
+            from datetime import datetime, timezone, timedelta
+            
+            account_age = datetime.now(timezone.utc) - unverified_user.created_at
+            if account_age < timedelta(minutes=5):
+                # Account is very recent, suggest resending verification instead
+                logger.warning(f"Recent unverified account found for {registration_data.email}, suggesting resend verification")
+                raise ServiceError(
+                    "An unverified account with this email was recently created. Please check your email for the verification link or use the 'Resend Verification' option.",
+                    ErrorCodes.VALIDATION_ERROR
+                )
+            
+            # Clean up the old unverified account
+            deleted = await self.repository.delete_unverified_user(unverified_user.id)
+            if not deleted:
+                logger.error(f"Failed to delete unverified user {unverified_user.id} for re-registration")
+                raise ServiceError(
+                    "Unable to process registration. Please contact support.",
+                    ErrorCodes.INTERNAL_ERROR
+                )
+            
+            logger.info(f"Successfully cleaned up unverified account {unverified_user.id} for re-registration")
         
         # Validate password strength
         if not PasswordService.validate_password_strength(registration_data.password):

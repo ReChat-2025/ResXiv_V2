@@ -22,6 +22,50 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 
+class EmailUrlConfig:
+    """
+    Centralized URL configuration for email links following SOLID principles.
+    Single Responsibility: Manages all email-related URL generation.
+    """
+    
+    def __init__(self):
+        self.base_url = self._get_base_url()
+        self.use_https = self._should_use_https()
+    
+    def _get_base_url(self) -> str:
+        """Get base URL from settings or environment"""
+        # Check if frontend_url is configured in settings
+        if hasattr(settings, 'frontend_url') and settings.frontend_url:
+            return settings.frontend_url.rstrip('/')
+        
+        # Fallback to domain-based URL
+        domain = getattr(settings, 'domain', 'cbeta.resxiv.com')
+        protocol = 'https' if self._should_use_https() else 'http'
+        return f"{protocol}://{domain}"
+    
+    def _should_use_https(self) -> bool:
+        """Determine if HTTPS should be used based on environment"""
+        # Use HTTPS for production domains
+        base_url = getattr(settings, 'frontend_url', '') or getattr(settings, 'domain', '')
+        return not ('localhost' in base_url or '127.0.0.1' in base_url)
+    
+    def get_verification_url(self, token: str) -> str:
+        """Generate email verification URL"""
+        return f"{self.base_url}/verify-email?token={token}"
+    
+    def get_password_reset_url(self, token: str) -> str:
+        """Generate password reset URL"""
+        return f"{self.base_url}/reset-password?token={token}"
+    
+    def get_project_invitation_url(self, token: str) -> str:
+        """Generate project invitation URL"""
+        return f"{self.base_url}/projects/invite?token={token}"
+    
+    def get_dashboard_url(self) -> str:
+        """Get dashboard URL"""
+        return f"{self.base_url}/projects"
+
+
 class EmailService:
     """Service for sending emails via SMTP"""
     
@@ -32,12 +76,15 @@ class EmailService:
         self.smtp_password = settings.email.smtp_password
         self.smtp_tls = settings.email.smtp_tls
         self.from_email = settings.email.from_email or self.smtp_username
+        
+        # Initialize URL configuration
+        self.url_config = EmailUrlConfig()
 
         # If using Gmail SMTP but from_email domain differs, fall back to smtp_username
         if self.smtp_host.endswith("gmail.com") and self.smtp_username and self.from_email.split("@")[-1] != "gmail.com":
             logger.warning("FROM_EMAIL domain differs from Gmail SMTP username; using smtp_username as sender to satisfy Gmail policy")
             self.from_email = self.smtp_username
-        
+    
     async def send_email(
         self,
         to_email: str,
@@ -140,8 +187,7 @@ class EmailService:
         Returns:
             True if email sent successfully
         """
-        # Create verification URL (you may need to adjust the domain)
-        verification_url = f"http://localhost:3000/auth/verify-email?token={verification_token}"
+        verification_url = self.url_config.get_verification_url(verification_token)
         
         subject = f"Welcome to {settings.app_name} - Verify Your Email"
         
@@ -239,8 +285,7 @@ The {settings.app_name} Team
         Returns:
             True if email sent successfully
         """
-        # Create reset URL
-        reset_url = f"http://localhost:3000/auth/reset-password?token={reset_token}"
+        reset_url = self.url_config.get_password_reset_url(reset_token)
         
         subject = f"Reset Your {settings.app_name} Password"
         
@@ -361,7 +406,7 @@ Here's what you can do next:
 3. Upload papers: Add research papers to your projects for discussion and analysis
 4. Invite collaborators: Bring your team members to the platform
 
-Visit your dashboard: http://localhost:3000/dashboard
+Visit your dashboard: {self.url_config.get_dashboard_url()}
 
 If you have any questions or need help getting started, don't hesitate to reach out to our support team.
 
@@ -421,7 +466,7 @@ The {settings.app_name} Team
             </div>
             
             <p style="text-align: center;">
-                <a href="http://localhost:3000/dashboard" class="button">Go to Dashboard</a>
+                <a href="{self.url_config.get_dashboard_url()}" class="button">Go to Dashboard</a>
             </p>
             
             <p>If you have any questions or need help getting started, don't hesitate to reach out to our support team.</p>
@@ -458,7 +503,7 @@ Timestamp: {datetime.now().isoformat()}
         invitation_token: str,
     ) -> bool:
         """Send a project invitation e-mail with an accept link."""
-        accept_url = f"{settings.frontend_url}/projects/invite?token={invitation_token}"
+        accept_url = self.url_config.get_project_invitation_url(invitation_token)
         subject = f"You\'ve been invited to join '{project_name}' on {settings.app_name}"
         body = (
             f"Hi,\n\n"

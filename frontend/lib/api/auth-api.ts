@@ -1,5 +1,31 @@
 /* Authentication API wrapper */
 
+// Centralized API configuration following DRY principles
+class ApiConfig {
+  private static instance: ApiConfig;
+  
+  private readonly baseUrl: string;
+  
+  private constructor() {
+    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  }
+  
+  public static getInstance(): ApiConfig {
+    if (!ApiConfig.instance) {
+      ApiConfig.instance = new ApiConfig();
+    }
+    return ApiConfig.instance;
+  }
+  
+  public getBaseUrl(): string {
+    return this.baseUrl;
+  }
+  
+  public getEndpoint(path: string): string {
+    return `${this.baseUrl}${path}`;
+  }
+}
+
 // Define minimal request/response types to satisfy strict TypeScript settings
 export interface Tokens {
   access_token: string;
@@ -22,6 +48,9 @@ export interface LoginSuccess {
 }
 
 export const authApi = {
+  // Get centralized API configuration
+  config: ApiConfig.getInstance(),
+
   /**
    * Safely serialize data for logging to avoid reference issues
    */
@@ -98,9 +127,7 @@ export const authApi = {
     password: string,
     remember_me = false
   ): Promise<LoginSuccess> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
-    const url = `${API_BASE_URL}/api/v1/auth/login`;
+    const url = this.config.getEndpoint('/api/v1/auth/login');
     const requestBody = { email, password, remember_me };
     
     const response = await fetch(url, {
@@ -148,9 +175,7 @@ export const authApi = {
    * Refresh access token using refresh token
    */
   async refreshToken(refreshToken: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
+    const response = await fetch(this.config.getEndpoint('/api/v1/auth/refresh'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -198,9 +223,7 @@ export const authApi = {
     accepted_terms: boolean,
     interests: string[] = []
   ): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
-    const url = `${API_BASE_URL}/api/v1/auth/register`;
+    const url = this.config.getEndpoint('/api/v1/auth/register');
     
     const response = await fetch(url, {
       method: 'POST',
@@ -250,9 +273,7 @@ export const authApi = {
    * Verify email address using verification token
    */
   async verifyEmail(token: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`, {
+    const response = await fetch(this.config.getEndpoint(`/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`), {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -301,9 +322,7 @@ export const authApi = {
    * Resend verification email
    */
   async resendVerificationEmail(email: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
-    
-    const url = `${API_BASE_URL}/api/v1/auth/resend-verification?email=${encodeURIComponent(email)}`;
+    const url = this.config.getEndpoint(`/api/v1/auth/resend-verification?email=${encodeURIComponent(email)}`);
     console.log('Calling resend verification API:', url);
     
     const response = await fetch(url, {
@@ -362,9 +381,7 @@ export const authApi = {
    * Request password reset email
    */
   async forgotPassword(email: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/forgot-password`, {
+    const response = await fetch(this.config.getEndpoint('/api/v1/auth/forgot-password'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -411,9 +428,7 @@ export const authApi = {
    * Reset password using reset token
    */
   async resetPassword(token: string, newPassword: string, confirmNewPassword: string): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
-    
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/reset-password`, {
+    const response = await fetch(this.config.getEndpoint('/api/v1/auth/reset-password'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -466,14 +481,13 @@ export const authApi = {
     newPassword: string,
     confirmNewPassword: string
   ): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
     const token = localStorage.getItem('accessToken');
     
     if (!token) {
       throw new Error('Authentication required');
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me/change-password`, {
+    const response = await fetch(this.config.getEndpoint('/api/v1/auth/me/change-password'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -518,14 +532,13 @@ export const authApi = {
    * Verify access token
    */
   async verifyToken(): Promise<any> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
     const token = localStorage.getItem('accessToken');
     
     if (!token) {
       throw new Error('No token found');
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify`, {
+    const response = await fetch(this.config.getEndpoint('/api/v1/auth/verify'), {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -566,9 +579,8 @@ export const authApi = {
   async logout(token?: string): Promise<void> {
     if (!token) return;
     
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
     try {
-      await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
+      await fetch(this.config.getEndpoint('/api/v1/auth/logout'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -496,7 +496,7 @@ async def get_user_statistics(
     Returns various statistics about the user's activity and content.
     """
     user_service = UserService(session)
-    stats = await user_service.get_user_stats(uuid.UUID(current_user["user_id"]))
+    stats = await user_service.get_user_statistics(uuid.UUID(current_user["user_id"]))
     
     return {
         "success": True,
