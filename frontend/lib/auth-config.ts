@@ -81,8 +81,8 @@ export const authConfig = {
 
   // Login page configuration
   login: {
-    title: "Welcome back",
-    cardTitle: "Sign in",
+    // title: "Welcome back",
+    cardTitle: "Welcome back",
     submitButton: {
       idle: "Sign in",
       loading: "Signing in..."
@@ -139,8 +139,8 @@ export const authConfig = {
 
   // Signup page configuration
   signup: {
-    title: "Create your account",
-    cardTitle: "Sign up",
+    // title: "Create your account",
+    cardTitle: "Create your account",
     submitButton: {
       idle: "Create account",
       loading: "Creating account..."

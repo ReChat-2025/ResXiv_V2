@@ -19,11 +19,12 @@ export default function SignupPage() {
     handleRememberMeChange,
     handleSubmit,
     setErrors,
+    setIsLoading,
   } = useSignupForm();
 
   return (
     <AuthLayout
-      title={config.title}
+      // title={config.title}
       cardTitle={config.cardTitle}
       links={config.links}
     >
@@ -36,7 +37,7 @@ export default function SignupPage() {
           </div>
         )}
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
           {config.fields.map((field) => (
             <FormField
               key={field.id}
