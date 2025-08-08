@@ -28,7 +28,7 @@ Enums:
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 import enum
-from pydantic import BaseModel, Field, validator, EmailStr
+from pydantic import BaseModel, Field, validator, EmailStr, field_validator
 import uuid
 from enum import Enum
 
@@ -38,11 +38,33 @@ from enum import Enum
 # ================================
 
 class ProjectRole(str, Enum):
-    """Unified access-control levels."""
+    """Unified access-control levels with backward compatibility."""
     OWNER = "owner"
     ADMIN = "admin"
-    WRITE = "write"
-    READ = "read"
+    WRITER = "writer"
+    READ = "reader"
+    
+    @classmethod
+    def normalize(cls, value: str) -> "ProjectRole":
+        """Normalize input values for backward compatibility."""
+        # Handle backward compatibility mapping
+        compatibility_map = {
+            "write": cls.WRITER,  # old -> new
+            "read": cls.READ,     # old -> new
+            "writer": cls.WRITER, # new (passthrough)
+            "reader": cls.READ,   # new (passthrough)
+            "owner": cls.OWNER,   # unchanged
+            "admin": cls.ADMIN,   # unchanged
+        }
+        
+        normalized = compatibility_map.get(value.lower())
+        if normalized:
+            return normalized
+        
+        # Fallback to standard enum validation
+        return cls(value)
+    
+
 
 
 class PermissionType(str, Enum):
@@ -130,6 +152,13 @@ class MemberAdd(BaseModel):
     send_invitation: bool = Field(True, description="Whether to send invitation email")
     message: Optional[str] = Field(None, max_length=500, description="Personal invitation message")
     
+    @validator('role', pre=True)
+    def normalize_role(cls, v):
+        """Normalize role for backward compatibility."""
+        if isinstance(v, str):
+            return ProjectRole.normalize(v)
+        return v
+    
     @validator("user_id")
     def validate_user_or_email(cls, v, values):
         email = values.get('email')
@@ -170,6 +199,13 @@ class InvitationCreate(BaseModel):
     permission: Optional[PermissionType] = Field(None, description="Permission for invitee")
     message: Optional[str] = Field(None, max_length=500, description="Personal invitation message")
     expires_in_days: int = Field(7, ge=1, le=30, description="Invitation expiry (1-30 days)")
+    
+    @validator('role', pre=True)
+    def normalize_role(cls, v):
+        """Normalize role for backward compatibility."""
+        if isinstance(v, str):
+            return ProjectRole.normalize(v)
+        return v
 
 
 class InvitationRespond(BaseModel):
@@ -340,6 +376,7 @@ class ProjectListItem(BaseModel):
     # Basic stats
     member_count: int = 0
     paper_count: int = 0
+    task_count: int = 0
     
     class Config:
         from_attributes = True

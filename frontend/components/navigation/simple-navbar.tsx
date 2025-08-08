@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Bell } from "lucide-react";
 import { UserProfileDropdown } from "./user-profile-dropdown";
+import { ResXivLogo } from "@/components/ui/resxiv-logo";
 
 // Types
 interface Notification {
@@ -45,13 +46,10 @@ export function SimpleNavbar({
           {/* Left - Logo */}
           <div className="flex items-center">
             <div 
-              className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+              className="cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => window.location.href = '/projects'}
             >
-              <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">R</span>
-              </div>
-              <span className="text-xl font-bold text-foreground">ResXiv</span>
+              <ResXivLogo width={120} height={37} />
             </div>
           </div>
 

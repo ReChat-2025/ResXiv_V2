@@ -31,8 +31,8 @@ class ProjectRoleEnum(str, enum.Enum):
     """Python representation of project_role ENUM."""
     owner = "owner"
     admin = "admin"
-    write = "write"
-    read = "read"
+    writer = "writer"
+    reader = "reader"
 
 
 # PermissionType for permission-based access (read, write, admin)
@@ -129,7 +129,7 @@ class ProjectMember(Base):
     role = Column(
         PGEnum(ProjectRoleEnum, name="project_role", create_type=False),
         nullable=False,
-        default=ProjectRoleEnum.read
+        default=ProjectRoleEnum.reader
     )  # uses existing PostgreSQL ENUM
     added_at = Column(DateTime(timezone=True), server_default=func.now())
 
@@ -139,7 +139,7 @@ class ProjectMember(Base):
     # Unique constraint: one role per user per project
     __table_args__ = (
         UniqueConstraint('user_id', 'project_id', name='unique_user_project'),
-        CheckConstraint("role IN ('owner', 'admin', 'write', 'read')", name='valid_project_role')
+        CheckConstraint("role IN ('owner', 'admin', 'writer', 'reader')", name='valid_project_role')
     )
     
     # Relationships
@@ -179,7 +179,7 @@ class ProjectInvitation(Base):
     role = Column(
         PGEnum(ProjectRoleEnum, name="project_role", create_type=False),
         nullable=False,
-        default=ProjectRoleEnum.read
+        default=ProjectRoleEnum.reader
     )  # project_role enum
     permission = Column(
         PGEnum(PermissionType, name="permission_type", create_type=False),

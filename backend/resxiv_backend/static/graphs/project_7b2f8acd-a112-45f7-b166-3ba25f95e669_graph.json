@@ -711,7 +711,7 @@
     "papers_count": 12,
     "edges_count": 23
   },
-  "generated_at": "2025-08-04T14:33:28.332600",
+  "generated_at": "2025-08-08T09:09:29.907982",
   "clustering": {
     "success": true,
     "algorithm_used": "hierarchical",
@@ -1168,5 +1168,5 @@
       "number_of_clusters": 4
     }
   },
-  "saved_at": "2025-08-04T14:33:28.461031"
+  "saved_at": "2025-08-08T09:09:30.088884"
 }

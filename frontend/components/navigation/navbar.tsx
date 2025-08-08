@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/icon";
 import { layoutConstants, designSystem } from "@/lib/design-system";
 import { UserProfileDropdown } from "./user-profile-dropdown";
+import { ResXivLogo } from "@/components/ui/resxiv-logo";
 
 // Types
 interface Notification {
@@ -159,14 +160,11 @@ export function Navbar({
       style={{ height: layoutConstants.navbar.height }}
     >
       <div className="flex h-full items-center px-6">
-        {/* Left Section - R Logo + Project Selector */}
+        {/* Left Section - ResXiv Logo + Project Selector */}
         <div className="flex items-center gap-3 min-w-0 w-64">
-          {/* Always show R logo */}
-          <Link href="/projects" className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-              <span className="text-primary-foreground text-sm font-bold">R</span>
-            </div>
-            <span className="font-bold text-lg">ResXiv</span>
+          {/* Always show ResXiv logo */}
+          <Link href="/projects" className="hover:opacity-80 transition-opacity flex-shrink-0">
+            <ResXivLogo width={120} height={37} />
           </Link>
           
           {/* Project Selector (if enabled) */}
