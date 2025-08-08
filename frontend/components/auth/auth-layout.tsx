@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthLink } from "@/lib/auth-config";
 
 interface AuthLayoutProps {
-  title: string;
+  title?: string;
   cardTitle: string;
   children: React.ReactNode;
   links: AuthLink[];
@@ -12,7 +12,7 @@ interface AuthLayoutProps {
 }
 
 export function AuthLayout({ 
-  title, 
+  //  title,
   cardTitle, 
   children, 
   links, 
@@ -22,11 +22,11 @@ export function AuthLayout({
     <div className={`min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8 ${className}`}>
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
-        <div className="text-center">
+        {/* <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             {title}
           </h1>
-        </div>
+        </div> */}
 
         {/* Main Card */}
         <Card>

@@ -1,205 +1,141 @@
+// components/auth/VerifyEmailForm.tsx
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { authApi } from '@/lib/api/auth-api';
-import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle, XCircle, Mail, AlertTriangle } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { AuthLayout } from "./auth-layout";
+import { Button } from "@/components/ui/button";
+import { authApi } from "@/lib/api/auth-api";
 
-type VerifyState = 'loading' | 'success' | 'error' | 'invalid_token';
+interface VerifyEmailFormProps {
+  token: string;
+}
 
-export default function VerifyEmailForm() {
+export default function VerifyEmailForm({ token }: VerifyEmailFormProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [state, setState] = useState<VerifyState>('loading');
-  const [token, setToken] = useState<string | null>(null);
-  const [message, setMessage] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationResult, setVerificationResult] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
-  useEffect(() => {
-    const tokenParam = searchParams.get('token');
-    if (!tokenParam) {
-      setState('invalid_token');
-      setMessage('No verification token provided');
-      return;
-    }
-
-    setToken(tokenParam);
-    
-    // Add timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      setState('error');
-      setMessage('Verification is taking too long. Please try again or check your network connection.');
-    }, 10000); // 10 second timeout
-    
-    verifyEmail(tokenParam).finally(() => {
-      clearTimeout(timeoutId);
-    });
-    
-    return () => clearTimeout(timeoutId);
-  }, [searchParams]);
-
-  const verifyEmail = async (verificationToken: string) => {
-    setState('loading'); // Ensure we're in loading state
+  const handleVerification = async () => {
+    setIsVerifying(true);
     
     try {
-      console.log('Starting email verification...');
-      const result = await authApi.verifyEmail(verificationToken);
-      console.log('Verification successful:', result);
-      
-      setState('success');
-      setMessage(result.message || 'Email verified successfully! Welcome to ResXiv.');
-      
-      // Redirect to login after success
-      setTimeout(() => {
-        router.push('/login?message=email-verified');
-      }, 4000);
-      
-    } catch (error: any) {
-      console.error('Email verification error details:', {
-        error,
-        message: error?.message,
-        type: typeof error,
-        stack: error?.stack
+      const result = await authApi.verifyEmail(token);
+      setVerificationResult({
+        success: result.success,
+        message: result.message || "Email verified successfully!"
       });
       
-      let errorMessage = "Failed to verify email";
-      
-      if (error && error.message) {
-        errorMessage = error.message;
-      } else if (error && typeof error === 'string') {
-        errorMessage = error;
+      if (result.success) {
+        // Redirect to login with success message after a delay
+        setTimeout(() => {
+          router.push('/login?message=email-verified');
+        }, 2000);
       }
-
-      console.log('Setting error state with message:', errorMessage);
-      
-      if (errorMessage.includes('token') || errorMessage.includes('expired') || errorMessage.includes('invalid') || errorMessage.includes('link has expired')) {
-        setState('invalid_token');
-      } else {
-        setState('error');
-      }
-      setMessage(errorMessage);
+    } catch (error: any) {
+      console.error('Email verification error:', error);
+      setVerificationResult({
+        success: false,
+        message: error.message || "Failed to verify email. Please try again."
+      });
+    } finally {
+      setIsVerifying(false);
     }
   };
 
-  const handleRetryVerification = () => {
-    if (token) {
-      setState('loading');
-      verifyEmail(token);
-    }
-  };
-
-  const renderContent = () => {
-    switch (state) {
-      case 'loading':
-        return (
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Verifying your email...</h2>
-              <p className="text-sm text-gray-600 mt-2">Please wait while we verify your email address.</p>
-            </div>
+  if (verificationResult) {
+    return (
+      <AuthLayout
+        title={verificationResult.success ? "Email verified!" : "Verification failed"}
+        cardTitle={verificationResult.success ? "Welcome!" : "Error"}
+        links={[{
+          text: verificationResult.success ? "Continue to" : "Try again or",
+          linkText: "Login",
+          href: "/login"
+        }]}
+      >
+        <div className="text-center space-y-4">
+          <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center ${
+            verificationResult.success 
+              ? 'bg-green-100' 
+              : 'bg-red-100'
+          }`}>
+            {verificationResult.success ? (
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            )}
           </div>
-        );
-
-      case 'success':
-        return (
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Email verified successfully!</h2>
-              <p className="text-sm text-gray-600 mt-2">{message}</p>
-              <p className="text-xs text-gray-500 mt-3">Redirecting to login in a few seconds...</p>
-            </div>
-            <Button
-              onClick={() => router.push('/login?message=email-verified')}
-              className="w-full"
-            >
-              Continue to Login
-            </Button>
-          </div>
-        );
-
-      case 'invalid_token':
-        return (
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto bg-yellow-100 rounded-full flex items-center justify-center">
-              <AlertTriangle className="w-8 h-8 text-yellow-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Invalid verification link</h2>
-              <p className="text-sm text-gray-600 mt-2">{message}</p>
-              <p className="text-xs text-gray-500 mt-3">
-                The verification link may have expired or is invalid.
+          
+          <div className="space-y-2">
+            <p className={`text-lg font-semibold ${
+              verificationResult.success ? 'text-green-800' : 'text-red-800'
+            }`}>
+              {verificationResult.message}
+            </p>
+            {verificationResult.success && (
+              <p className="text-muted-foreground">
+                You can now log in to your account.
               </p>
-            </div>
-            <div className="space-y-2">
-              <Button
-                onClick={() => router.push('/signup')}
-                className="w-full"
-              >
-                Register Again
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push('/login')}
-                className="w-full"
-              >
-                Back to Login
-              </Button>
-            </div>
+            )}
           </div>
-        );
 
-      case 'error':
-        return (
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
-              <XCircle className="w-8 h-8 text-red-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Verification failed</h2>
-              <p className="text-sm text-gray-600 mt-2">{message}</p>
-            </div>
-            <div className="space-y-2">
-              <Button
-                onClick={handleRetryVerification}
+          {verificationResult.success && (
+            <div className="pt-4">
+              <Button 
+                onClick={() => router.push('/login?message=email-verified')}
                 className="w-full"
               >
-                Try Again
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push('/login')}
-                className="w-full"
-              >
-                Back to Login
+                Continue to login
               </Button>
             </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
+          )}
+        </div>
+      </AuthLayout>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <Mail className="mx-auto h-12 w-12 text-primary" />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-foreground">
-            Email Verification
-          </h1>
+    <AuthLayout
+      title="Verify your email"
+      cardTitle="Email verification"
+      links={[{
+        text: "Back to",
+        linkText: "Login",
+        href: "/login"
+      }]}
+    >
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+          <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26c.3.16.67.16.97 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
+          </svg>
         </div>
-        <div className="bg-card rounded-lg border shadow-sm p-6">
-          {renderContent()}
+        
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold">Verify your email address</h3>
+          <p className="text-muted-foreground">
+            Click the button below to verify your email address and activate your account.
+          </p>
+        </div>
+
+        <div className="pt-4">
+          <Button 
+            onClick={handleVerification}
+            disabled={isVerifying}
+            className="w-full"
+          >
+            {isVerifying ? 'Verifying...' : 'Verify Email'}
+          </Button>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
-} 
+}

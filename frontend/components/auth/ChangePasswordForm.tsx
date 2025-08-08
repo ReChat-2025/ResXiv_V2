@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getValidationMessage } from "@/lib/auth-config";
@@ -165,10 +166,9 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
             <Label htmlFor="currentPassword">
               Current password <span className="text-destructive">*</span>
             </Label>
-            <Input
+            <PasswordInput
               id="currentPassword"
               name="currentPassword"
-              type="password"
               required
               value={formData.currentPassword}
               onChange={handleFieldChange}
@@ -186,10 +186,9 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
             <Label htmlFor="newPassword">
               New password <span className="text-destructive">*</span>
             </Label>
-            <Input
+            <PasswordInput
               id="newPassword"
               name="newPassword"
-              type="password"
               required
               value={formData.newPassword}
               onChange={handleFieldChange}
@@ -210,10 +209,9 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
             <Label htmlFor="confirmNewPassword">
               Confirm new password <span className="text-destructive">*</span>
             </Label>
-            <Input
+            <PasswordInput
               id="confirmNewPassword"
               name="confirmNewPassword"
-              type="password"
               required
               value={formData.confirmNewPassword}
               onChange={handleFieldChange}

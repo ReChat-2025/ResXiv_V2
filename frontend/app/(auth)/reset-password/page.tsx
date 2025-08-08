@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { authConfig, getValidationMessage } from "@/lib/auth-config";
@@ -38,12 +39,26 @@ function ResetPasswordForm() {
 
   // Validate token on component mount
   useEffect(() => {
-    if (!resetToken) {
-      setTokenValid(false);
-      setErrors({ general: 'Invalid or missing reset token' });
-    } else {
-      setTokenValid(true);
-    }
+    const validateToken = async () => {
+      if (!resetToken) {
+        setTokenValid(false);
+        setErrors({ general: 'Invalid or missing reset token' });
+        return;
+      }
+
+      try {
+        await authApi.validateResetToken(resetToken);
+        setTokenValid(true);
+      } catch (error: any) {
+        console.error('Token validation error:', error);
+        setTokenValid(false);
+        setErrors({ 
+          general: error.message || 'Invalid or expired reset token' 
+        });
+      }
+    };
+
+    validateToken();
   }, [resetToken]);
 
   // Handle form field changes
@@ -213,10 +228,9 @@ function ResetPasswordForm() {
         {/* New Password */}
         <div className="space-y-2">
           <Label htmlFor="newPassword">New Password</Label>
-          <Input
+          <PasswordInput
             id="newPassword"
             name="newPassword"
-            type="password"
             value={formData.newPassword}
             onChange={handleFieldChange}
             disabled={isLoading}
@@ -231,10 +245,9 @@ function ResetPasswordForm() {
         {/* Confirm New Password */}
         <div className="space-y-2">
           <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
-          <Input
+          <PasswordInput
             id="confirmNewPassword"
             name="confirmNewPassword"
-            type="password"
             value={formData.confirmNewPassword}
             onChange={handleFieldChange}
             disabled={isLoading}

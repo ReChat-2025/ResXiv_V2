@@ -81,14 +81,14 @@ export const authConfig = {
 
   // Login page configuration
   login: {
-    title: "Welcome back",
-    cardTitle: "Sign in",
+    // title: "Welcome back",
+    cardTitle: "Welcome back",
     submitButton: {
       idle: "Sign in",
       loading: "Signing in..."
     },
     socialLogin: {
-      enabled: false,
+      enabled: true,
       providers: [
         {
           id: "google",
@@ -139,8 +139,8 @@ export const authConfig = {
 
   // Signup page configuration
   signup: {
-    title: "Create your account",
-    cardTitle: "Sign up",
+    // title: "Create your account",
+    cardTitle: "Create your account",
     submitButton: {
       idle: "Create account",
       loading: "Creating account..."
@@ -215,6 +215,15 @@ export const authConfig = {
       }
     ] as FormFieldConfig[],
     features: {
+      rememberMe: {
+        enabled: true,
+        label: "Remember me"
+      },
+      forgotPassword: {
+        enabled: true,
+        text: "Forgot password?",
+        href: "/forgot-password"
+      },
       termsAcceptance: {
         enabled: true,
         label: "I agree to the",
@@ -228,6 +237,7 @@ export const authConfig = {
         }
       }
     }
+    
   } as AuthPageConfig & { fields: FormFieldConfig[]; features: any }
 } as const;
 
