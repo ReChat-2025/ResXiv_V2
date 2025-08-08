@@ -10,6 +10,9 @@ interface FormData {
   password: string;
   confirmPassword: string;
   rememberMe: boolean;
+  firstName?: string;
+  lastName?: string;
+  acceptedTerms?: boolean;
 }
 
 interface FormErrors {
@@ -28,6 +31,9 @@ export function useSignupForm() {
     password: "",
     confirmPassword: "",
     rememberMe: false,
+    firstName: "",
+    lastName: "",
+    acceptedTerms: false,
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -93,9 +99,11 @@ export function useSignupForm() {
 
     try {
       await authService.register(
+        `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || 'User',
         formData.email,
         formData.password,
-        formData.rememberMe
+        formData.confirmPassword,
+        formData.acceptedTerms || false
       );
       router.push("/login?message=verification-required");
     } catch (error: any) {

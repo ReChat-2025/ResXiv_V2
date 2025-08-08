@@ -11,4 +11,4 @@ export { default as SearchInput } from './ui/SearchInput';
 export { ChangePasswordForm } from './auth/ChangePasswordForm';
 export { AuthLayout } from './auth/auth-layout';
 export { ProtectedRoute } from './auth/protected-route';
-export { default as VerifyEmailForm } from './auth/VerifyEmailContent'; 
+export { VerifyEmailContent as VerifyEmailForm } from './auth/VerifyEmailContent'; 

@@ -148,7 +148,7 @@ class PapersApiClient {
 
     // Get response text first to handle both JSON and non-JSON responses
     const responseText = await response.text();
-    
+
     let data: any;
     try {
       data = JSON.parse(responseText);
@@ -166,7 +166,7 @@ class PapersApiClient {
       if (response.status === 413) {
         throw new Error('Upload failed: file is too large for the server limit. Please try a smaller PDF or ask the admin to increase the upload size.');
       }
-
+      
       const errorMessage = this.extractErrorMessage(
         data, 
         `Papers API error (${response.status}): ${response.statusText || 'Unknown error'}`

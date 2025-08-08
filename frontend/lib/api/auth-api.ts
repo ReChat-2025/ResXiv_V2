@@ -649,7 +649,7 @@ export const authApi = {
       throw new Error(errorMessage);
     }
 
-    return data;
+    return data as { authUrl: string };
   },
 
   /**
@@ -689,7 +689,7 @@ export const authApi = {
       throw new Error(errorMessage);
     }
 
-    return data;
+    return data as LoginSuccess;
   },
 
   /**

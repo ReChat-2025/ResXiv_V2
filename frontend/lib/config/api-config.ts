@@ -27,7 +27,7 @@ export const API_ENDPOINTS = {
   
   // Conversations
   CONVERSATIONS: '/api/v1/conversations',
-} as const;
+} as const; 
 
 export default {
   API_BASE_URL,
