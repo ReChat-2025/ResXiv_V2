@@ -32,29 +32,7 @@ export default function LoginPage() {
       cardTitle={config.cardTitle}
       links={config.links}
     >
-      {/* Social Login */}
-      {config.socialLogin.enabled && (
-        <SocialLogin
-          providers={config.socialLogin.providers}
-          dividerText={config.socialLogin.dividerText}
-          disabled={isLoading}
-          onProviderClick={async (providerId) => {
-            try {
-              // setIsLoading(true); // Note: setIsLoading is managed by the hook
-              const result = await authApi.initiateSocialLogin(providerId);
-              // Redirect to social provider's auth URL
-              window.location.href = result.authUrl;
-            } catch (error: any) {
-              console.error('Social login error:', error);
-              setErrors({
-                general: error.message || 'Social login failed. Please try again.'
-              });
-            } finally {
-              // setIsLoading(false); // Note: setIsLoading is managed by the hook
-            }
-          }}
-        />
-      )}
+      
 
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -117,6 +95,30 @@ export default function LoginPage() {
           {isLoading ? config.submitButton.loading : config.submitButton.idle}
         </Button>
       </form>
+
+      {/* Social Login */}
+      {config.socialLogin.enabled && (
+        <SocialLogin
+          providers={config.socialLogin.providers}
+          dividerText={config.socialLogin.dividerText}
+          disabled={isLoading}
+          onProviderClick={async (providerId) => {
+            try {
+              // setIsLoading(true); // Note: setIsLoading is managed by the hook
+              const result = await authApi.initiateSocialLogin(providerId);
+              // Redirect to social provider's auth URL
+              window.location.href = result.authUrl;
+            } catch (error: any) {
+              console.error('Social login error:', error);
+              setErrors({
+                general: error.message || 'Social login failed. Please try again.'
+              });
+            } finally {
+              // setIsLoading(false); // Note: setIsLoading is managed by the hook
+            }
+          }}
+        />
+      )}
     </AuthLayout>
   );
 }

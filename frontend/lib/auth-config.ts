@@ -215,6 +215,15 @@ export const authConfig = {
       }
     ] as FormFieldConfig[],
     features: {
+      rememberMe: {
+        enabled: true,
+        label: "Remember me"
+      },
+      forgotPassword: {
+        enabled: true,
+        text: "Forgot password?",
+        href: "/forgot-password"
+      },
       termsAcceptance: {
         enabled: true,
         label: "I agree to the",
@@ -228,6 +237,7 @@ export const authConfig = {
         }
       }
     }
+    
   } as AuthPageConfig & { fields: FormFieldConfig[]; features: any }
 } as const;
 

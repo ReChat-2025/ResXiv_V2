@@ -27,28 +27,7 @@ export default function SignupPage() {
       cardTitle={config.cardTitle}
       links={config.links}
     >
-      {config.socialLogin.enabled && (
-        <SocialLogin
-          providers={config.socialLogin.providers}
-          dividerText={config.socialLogin.dividerText}
-          disabled={isLoading}
-          onProviderClick={async (providerId) => {
-            try {
-              setIsLoading(true);
-              const result = await authApi.initiateSocialLogin(providerId);
-              // Redirect to social provider's auth URL
-              window.location.href = result.authUrl;
-            } catch (error: any) {
-              console.error('Social signup error:', error);
-              setErrors({
-                general: error.message || 'Social signup failed. Please try again.'
-              });
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-        />
-      )}
+      
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {errors.general && (
@@ -103,6 +82,30 @@ export default function SignupPage() {
             : config.submitButton.idle}
         </Button>
       </form>
+
+      {config.socialLogin.enabled && (
+        <SocialLogin
+          providers={config.socialLogin.providers}
+          dividerText={config.socialLogin.dividerText}
+          disabled={isLoading}
+          onProviderClick={async (providerId) => {
+            try {
+              setIsLoading(true);
+              const result = await authApi.initiateSocialLogin(providerId);
+              // Redirect to social provider's auth URL
+              window.location.href = result.authUrl;
+            } catch (error: any) {
+              console.error('Social signup error:', error);
+              setErrors({
+                general: error.message || 'Social signup failed. Please try again.'
+              });
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+        />
+      )}
+      
     </AuthLayout>
   );
 }
