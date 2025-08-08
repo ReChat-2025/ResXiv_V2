@@ -77,43 +77,12 @@ export const userApi = {
    * Endpoint: GET /api/v1/auth/me
    */
   async getCurrentUser(): Promise<UserResponse> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const token = this.getAuthToken();
+    const httpClient = (await import('./http-client')).default;
     
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-      },
-    });
-
-    let data: any;
-    try {
-      data = await response.json();
-    } catch (error) {
-      console.error('Get current user JSON parse error:', error);
-      throw new Error('Server returned invalid response. Please check if the backend is running.');
-    }
-
-    if (!response.ok) {
-      console.error('Get current user API error - Server error');
-      console.error(`Status: ${response.status} ${response.statusText}`);
-      console.error('Response data:', JSON.stringify(data, null, 2));
-      
-      const errorMessage = this.extractErrorMessage(
-        data, 
-        `Failed to fetch current user (${response.status}): ${response.statusText || 'Unknown error'}`
-      );
-      
-      throw new Error(errorMessage);
-    }
-
-    return data;
+    // Use enhanced HTTP client with existing error extraction logic
+    return await httpClient
+      .withErrorExtractor(this.extractErrorMessage.bind(this))
+      .get<UserResponse>('/api/v1/auth/me');
   },
 
   /**
@@ -121,45 +90,11 @@ export const userApi = {
    * Endpoint: PUT /api/v1/auth/me
    */
   async updateCurrentUser(profileUpdate: UserProfileUpdate): Promise<{ success: boolean; message: string; user: UserResponse }> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const token = this.getAuthToken();
+    const httpClient = (await import('./http-client')).default;
     
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(profileUpdate),
-    });
-
-    let data: any;
-    try {
-      data = await response.json();
-    } catch (error) {
-      console.error('Update user profile JSON parse error:', error);
-      throw new Error('Server returned invalid response. Please check if the backend is running.');
-    }
-
-    if (!response.ok) {
-      console.error('Update user profile API error - Server error');
-      console.error(`Status: ${response.status} ${response.statusText}`);
-      console.error('Response data:', JSON.stringify(data, null, 2));
-      
-      const errorMessage = this.extractErrorMessage(
-        data, 
-        `Failed to update user profile (${response.status}): ${response.statusText || 'Unknown error'}`
-      );
-      
-      throw new Error(errorMessage);
-    }
-
-    return data;
+    return await httpClient
+      .withErrorExtractor(this.extractErrorMessage.bind(this))
+      .put<{ success: boolean; message: string; user: UserResponse }>('/api/v1/auth/me', profileUpdate);
   },
 
   /**
@@ -167,42 +102,11 @@ export const userApi = {
    * Endpoint: GET /api/v1/auth/me/stats
    */
   async getUserStats(): Promise<UserStats> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const token = this.getAuthToken();
+    const httpClient = (await import('./http-client')).default;
     
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me/stats`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-      },
-    });
-
-    let data: any;
-    try {
-      data = await response.json();
-    } catch (error) {
-      console.error('Get user stats JSON parse error:', error);
-      throw new Error('Server returned invalid response. Please check if the backend is running.');
-    }
-
-    if (!response.ok) {
-      console.error('Get user stats API error - Server error');
-      console.error(`Status: ${response.status} ${response.statusText}`);
-      console.error('Response data:', JSON.stringify(data, null, 2));
-      
-      const errorMessage = this.extractErrorMessage(
-        data, 
-        `Failed to fetch user statistics (${response.status}): ${response.statusText || 'Unknown error'}`
-      );
-      
-      throw new Error(errorMessage);
-    }
-
+    const data = await httpClient
+      .withErrorExtractor(this.extractErrorMessage.bind(this))
+      .get<{ stats: UserStats }>('/api/v1/auth/me/stats');
     return data.stats;
   },
 
@@ -211,45 +115,11 @@ export const userApi = {
    * Endpoint: POST /api/v1/auth/me/change-password
    */
   async changePassword(passwordData: PasswordChangeRequest): Promise<{ success: boolean; message: string }> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const token = this.getAuthToken();
+    const httpClient = (await import('./http-client')).default;
     
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me/change-password`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(passwordData),
-    });
-
-    let data: any;
-    try {
-      data = await response.json();
-    } catch (error) {
-      console.error('Change password JSON parse error:', error);
-      throw new Error('Server returned invalid response. Please check if the backend is running.');
-    }
-
-    if (!response.ok) {
-      console.error('Change password API error - Server error');
-      console.error(`Status: ${response.status} ${response.statusText}`);
-      console.error('Response data:', JSON.stringify(data, null, 2));
-      
-      const errorMessage = this.extractErrorMessage(
-        data, 
-        `Failed to change password (${response.status}): ${response.statusText || 'Unknown error'}`
-      );
-      
-      throw new Error(errorMessage);
-    }
-
-    return data;
+    return await httpClient
+      .withErrorExtractor(this.extractErrorMessage.bind(this))
+      .post<{ success: boolean; message: string }>('/api/v1/auth/me/change-password', passwordData);
   },
 
   /**

@@ -133,44 +133,11 @@ export const projectsApi = {
    * Create a new project
    */
   async createProject(projectData: ProjectCreate): Promise<Project> {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const token = this.getAuthToken();
+    const httpClient = (await import('./http-client')).default;
     
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/projects/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(projectData),
-    });
-
-    let data: any;
-    try {
-      data = await response.json();
-    } catch (error) {
-      console.error('Create project JSON parse error:', error);
-      throw new Error('Server returned invalid response. Please check if the backend is running.');
-    }
-
-    if (!response.ok) {
-      console.error('Create project API error - Server error');
-      console.error(`Status: ${response.status} ${response.statusText}`);
-      console.error('Response data:', JSON.stringify(data, null, 2));
-      
-      const errorMessage = this.extractErrorMessage(
-        data, 
-        `Failed to create project (${response.status}): ${response.statusText || 'Unknown error'}`
-      );
-      
-      throw new Error(errorMessage);
-    }
-
-    return data;
+    return await httpClient
+      .withErrorExtractor(this.extractErrorMessage.bind(this))
+      .post<Project>('/api/v1/projects/', projectData);
   },
 
   /**

@@ -195,9 +195,13 @@ class AuthService {
 
       const response = await authApi.refreshToken(refreshToken);
       
+      // Determine storage type based on where the current tokens are stored
+      const wasInLocalStorage = !!localStorage.getItem(TOKEN_KEYS.ACCESS);
+      const remember = wasInLocalStorage;
+      
       // Update stored tokens
-      this.setToken(TOKEN_KEYS.ACCESS, response.access_token, false);
-      this.setToken(TOKEN_KEYS.REFRESH, response.refresh_token, false);
+      this.setToken(TOKEN_KEYS.ACCESS, response.access_token, remember);
+      this.setToken(TOKEN_KEYS.REFRESH, response.refresh_token, remember);
       
       return true;
     } catch (error) {
