@@ -10,6 +10,7 @@ import { FormField } from "@/components/auth/form-field";
 import { SocialLogin } from "@/components/auth/social-login";
 import { authConfig } from "@/lib/auth-config";
 import { useLoginForm } from "@/hooks/useLoginForm";
+import { authApi } from "@/lib/api/auth-api";
 
 export default function LoginPage() {
   const config = authConfig.login;
@@ -22,6 +23,7 @@ export default function LoginPage() {
     isLoading,
     errors,
     successMessage,
+    setErrors,
   } = useLoginForm();
 
   return (
@@ -35,9 +37,21 @@ export default function LoginPage() {
         <SocialLogin
           providers={config.socialLogin.providers}
           dividerText={config.socialLogin.dividerText}
-          onProviderClick={(providerId) => {
-            console.log("Social login with:", providerId);
-            // TODO: implement
+          disabled={isLoading}
+          onProviderClick={async (providerId) => {
+            try {
+              // setIsLoading(true); // Note: setIsLoading is managed by the hook
+              const result = await authApi.initiateSocialLogin(providerId);
+              // Redirect to social provider's auth URL
+              window.location.href = result.authUrl;
+            } catch (error: any) {
+              console.error('Social login error:', error);
+              setErrors({
+                general: error.message || 'Social login failed. Please try again.'
+              });
+            } finally {
+              // setIsLoading(false); // Note: setIsLoading is managed by the hook
+            }
           }}
         />
       )}

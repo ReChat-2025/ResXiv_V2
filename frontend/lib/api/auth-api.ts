@@ -425,6 +425,46 @@ export const authApi = {
   },
 
   /**
+   * Validate reset password token
+   */
+  async validateResetToken(token: string): Promise<any> {
+    const response = await fetch(this.config.getEndpoint('/api/v1/auth/validate-reset-token'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    let data: Record<string, any>;
+    try {
+      data = (await response.json()) as Record<string, any>;
+    } catch (error) {
+      console.error('Validate reset token JSON parse error:', error);
+      throw new Error('Server returned invalid response. Please check if the backend is running.');
+    }
+
+    if (!response.ok) {
+      const logData = this.safeLogData(data);
+      console.error('Validate reset token API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        data: logData
+      });
+      
+      const errorMessage = this.extractErrorMessage(
+        data, 
+        `Token validation failed (${response.status}): ${response.statusText || 'Unknown error'}`
+      );
+       
+      throw new Error(errorMessage);
+    }
+
+    return data;
+  },
+
+  /**
    * Reset password using reset token
    */
   async resetPassword(token: string, newPassword: string, confirmNewPassword: string): Promise<any> {
@@ -565,6 +605,85 @@ export const authApi = {
       const errorMessage = this.extractErrorMessage(
         data, 
         `Token verification failed (${response.status}): ${response.statusText || 'Unknown error'}`
+      );
+       
+      throw new Error(errorMessage);
+    }
+
+    return data;
+  },
+
+  /**
+   * Initiate social login (Google, etc.)
+   */
+  async initiateSocialLogin(provider: string): Promise<{ authUrl: string }> {
+    const response = await fetch(this.config.getEndpoint(`/api/v1/auth/social/${provider}/login`), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    let data: Record<string, any>;
+    try {
+      data = (await response.json()) as Record<string, any>;
+    } catch (error) {
+      console.error('Social login initiate JSON parse error:', error);
+      throw new Error('Server returned invalid response. Please check if the backend is running.');
+    }
+
+    if (!response.ok) {
+      const logData = this.safeLogData(data);
+      console.error('Social login initiate API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        data: logData
+      });
+      
+      const errorMessage = this.extractErrorMessage(
+        data, 
+        `Social login failed (${response.status}): ${response.statusText || 'Unknown error'}`
+      );
+       
+      throw new Error(errorMessage);
+    }
+
+    return data;
+  },
+
+  /**
+   * Handle social login callback
+   */
+  async handleSocialCallback(provider: string, code: string, state?: string): Promise<LoginSuccess> {
+    const response = await fetch(this.config.getEndpoint(`/api/v1/auth/social/${provider}/callback`), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code, state }),
+    });
+
+    let data: Record<string, any>;
+    try {
+      data = (await response.json()) as Record<string, any>;
+    } catch (error) {
+      console.error('Social login callback JSON parse error:', error);
+      throw new Error('Server returned invalid response. Please check if the backend is running.');
+    }
+
+    if (!response.ok) {
+      const logData = this.safeLogData(data);
+      console.error('Social login callback API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        data: logData
+      });
+      
+      const errorMessage = this.extractErrorMessage(
+        data, 
+        `Social login callback failed (${response.status}): ${response.statusText || 'Unknown error'}`
       );
        
       throw new Error(errorMessage);

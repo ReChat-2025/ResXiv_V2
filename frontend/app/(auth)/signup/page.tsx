@@ -7,6 +7,7 @@ import { AuthLayout } from "@/components/auth/auth-layout";
 import { FormField } from "@/components/auth/form-field";
 import { SocialLogin } from "@/components/auth/social-login";
 import { useSignupForm } from "@/hooks/useSignupForm";
+import { authApi } from "@/lib/api/auth-api";
 
 export default function SignupPage() {
   const {
@@ -17,6 +18,7 @@ export default function SignupPage() {
     handleFieldChange,
     handleRememberMeChange,
     handleSubmit,
+    setErrors,
   } = useSignupForm();
 
   return (
@@ -29,9 +31,22 @@ export default function SignupPage() {
         <SocialLogin
           providers={config.socialLogin.providers}
           dividerText={config.socialLogin.dividerText}
-          onProviderClick={(providerId) =>
-            console.log("Social signup with:", providerId)
-          }
+          disabled={isLoading}
+          onProviderClick={async (providerId) => {
+            try {
+              setIsLoading(true);
+              const result = await authApi.initiateSocialLogin(providerId);
+              // Redirect to social provider's auth URL
+              window.location.href = result.authUrl;
+            } catch (error: any) {
+              console.error('Social signup error:', error);
+              setErrors({
+                general: error.message || 'Social signup failed. Please try again.'
+              });
+            } finally {
+              setIsLoading(false);
+            }
+          }}
         />
       )}
 

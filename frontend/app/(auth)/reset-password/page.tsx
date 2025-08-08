@@ -38,12 +38,26 @@ function ResetPasswordForm() {
 
   // Validate token on component mount
   useEffect(() => {
-    if (!resetToken) {
-      setTokenValid(false);
-      setErrors({ general: 'Invalid or missing reset token' });
-    } else {
-      setTokenValid(true);
-    }
+    const validateToken = async () => {
+      if (!resetToken) {
+        setTokenValid(false);
+        setErrors({ general: 'Invalid or missing reset token' });
+        return;
+      }
+
+      try {
+        await authApi.validateResetToken(resetToken);
+        setTokenValid(true);
+      } catch (error: any) {
+        console.error('Token validation error:', error);
+        setTokenValid(false);
+        setErrors({ 
+          general: error.message || 'Invalid or expired reset token' 
+        });
+      }
+    };
+
+    validateToken();
   }, [resetToken]);
 
   // Handle form field changes
