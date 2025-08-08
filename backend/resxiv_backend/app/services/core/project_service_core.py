@@ -644,8 +644,8 @@ class ProjectCoreService(BaseService):
             return {
                 "success": True,
                 "data": {
-                    "invitations": invitation_responses,
-                    "total_count": len(invitation_responses)
+                "invitations": invitation_responses,
+                "total_count": len(invitation_responses)
                 }
             }
             

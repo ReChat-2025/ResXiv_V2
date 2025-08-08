@@ -125,7 +125,7 @@ export interface GraphClustersResponse {
   };
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+import { API_BASE_URL } from '@/lib/config/api-config';
 
 class AnalyticsApiClient {
   private baseURL: string;

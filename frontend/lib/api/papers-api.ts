@@ -79,8 +79,7 @@ export interface UpdatePaperParams {
   abstract?: string;
 }
 
-// Base API configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8123';
+import { API_BASE_URL } from '@/lib/config/api-config';
 
 // HTTP client with error handling
 class PapersApiClient {
@@ -147,19 +146,27 @@ class PapersApiClient {
       },
     });
 
+    // Get response text first to handle both JSON and non-JSON responses
+    const responseText = await response.text();
+    
     let data: any;
     try {
-      data = await response.json();
+      data = JSON.parse(responseText);
     } catch (error) {
       console.error('Papers API JSON parse error:', error);
-      throw new Error('Server returned invalid response. Please check if the backend is running.');
+      console.error('Response status:', response.status, response.statusText);
+      console.error('Response URL:', response.url);
+      console.error('Response body (first 500 chars):', responseText.substring(0, 500));
+      
+      throw new Error(`Server returned invalid response (${response.status}). Expected JSON but got: ${responseText.substring(0, 100)}...`);
     }
 
     if (!response.ok) {
-      console.error('Papers API error - Server error');
-      console.error(`Status: ${response.status} ${response.statusText}`);
-      console.error('Response data:', JSON.stringify(data, null, 2));
-      
+      // Special-case 413 (Payload Too Large)
+      if (response.status === 413) {
+        throw new Error('Upload failed: file is too large for the server limit. Please try a smaller PDF or ask the admin to increase the upload size.');
+      }
+
       const errorMessage = this.extractErrorMessage(
         data, 
         `Papers API error (${response.status}): ${response.statusText || 'Unknown error'}`
@@ -225,6 +232,9 @@ class PapersApiClient {
       throw new Error('Authentication required');
     }
 
+    console.log('Uploading paper to project:', params.project_id);
+    console.log('File details:', { name: params.file.name, size: params.file.size, type: params.file.type });
+
     const formData = new FormData();
     formData.append('file', params.file);
     
@@ -240,6 +250,8 @@ class PapersApiClient {
     }
 
     const endpoint = `/api/v1/projects/${params.project_id}/upload`;
+    console.log('Upload endpoint:', `${this.baseURL}${endpoint}`);
+    
     return this.makeRequest<PaperResponse>(endpoint, {
       method: 'POST',
       body: formData,
