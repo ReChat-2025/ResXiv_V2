@@ -40,7 +40,7 @@ class PaperStorageService:
         self._ensure_directories()
         
         # Processing settings
-        self.max_file_size = 50 * 1024 * 1024  # 50MB
+        self.max_file_size = 100 * 1024 * 1024  # 50MB
         self.allowed_extensions = {'.pdf', '.tex', '.bib'}
     
     def _ensure_directories(self) -> None:

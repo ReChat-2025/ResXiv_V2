@@ -143,12 +143,24 @@ cython_debug/
 # VS Code
 .vscode/
 
-# Application specific
-logs/
-uploads/
-temp/
-static/media/
+# Application specific data directories
+.data/
 data/
+bib/
+xml/
+papers/
+uploads/
+downloads/
+temp/
+logs/
+
+# Static files and generated content
+static/
+static/media/
+static/debug/
+static/graphs/
+
+# Database files
 *.db
 *.sqlite
 *.sqlite3
@@ -198,7 +210,6 @@ docker-compose.override.yml
 *.toc
 
 # Research data
-papers/
 documents/
 research_data/
 
