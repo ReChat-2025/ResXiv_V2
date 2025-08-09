@@ -50,7 +50,7 @@ class ProductionAgenticService:
                     
                     # Create config with model name
                     config = LangGraphConfig(
-                        model_name=getattr(self.settings.agentic, 'model_name', 'gpt-4o-mini')
+                        model_name=getattr(self.settings.agentic, 'agentic_model', 'gpt-4o-mini')
                     )
                     
                     self.orchestrator = ProductionOrchestrator(
@@ -101,7 +101,7 @@ class ProductionAgenticService:
         try:
             # Generate thread ID for conversation continuity
             thread_id = conversation_id or str(uuid4())
-            
+            logger.debug(f"Conversation ID: {conversation_id}")
             # Prepare context
             processing_context = {
                 "user_id": user_id,
@@ -117,6 +117,7 @@ class ProductionAgenticService:
                         conversation_id,
                         limit=10
                     )
+                    logger.debug(f"Loaded conversation history: {len(history)} messages")
                     processing_context["conversation_history"] = history
                 except Exception as e:
                     logger.warning(f"Failed to load conversation history: {e}")
@@ -157,7 +158,7 @@ class ProductionAgenticService:
                             user_id="system",
                             message=assistant_message,
                             message_type="assistant",
-                            metadata={"agent_result": result}
+                            metadata={"agent_result": result, "ai_response": True}
                         )
                 except Exception as e:
                     logger.warning(f"Failed to save conversation: {e}")

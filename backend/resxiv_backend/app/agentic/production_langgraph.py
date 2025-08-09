@@ -1027,43 +1027,173 @@ Transcript:
     @handle_service_errors("conversation processing")
     async def _handle_conversation(self, state: AgentState) -> AgentState:
         """Intelligent conversation agent for general queries"""
-        user_query = state.get("user_intent", "")
+        # Always derive the actual user query from the latest user message,
+        # not from the intent label which can be categorical.
+        user_query = ""
+        try:
+            for m in reversed(state.get("messages") or []):
+                if isinstance(m, dict) and m.get("role") == "user":
+                    user_query = m.get("content", "")
+                    break
+        except Exception:
+            user_query = ""
         
-        # Use LLM to provide intelligent conversational response
-        conversation_prompt = f"""
-You are an AI research assistant helping with academic research. 
+        # Build chat messages including prior conversation history (if any)
+        messages_payload = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a helpful AI research assistant. Be conversational but professional. "
+                    "Leverage the provided conversation history to maintain context and continuity. "
+                    "If the user asks about prior messages or a recap, use the provided conversation history to summarize them."
+                ),
+            }
+        ]
+
+        history = (state.get("context", {}) or {}).get("conversation_history", []) or []
+
+        # If the user is asking about past messages, provide a deterministic recap without an LLM call
+        query_lower = (user_query or "").lower()
+        recap_triggers = [
+            "what were my last messages", "what was my last chat", "recap of our chat",
+            "summarize our chat", "summary of our chat", "what did we talk about",
+            "what were my previous messages", "what were my last few messages"
+        ]
+        if history and any(trigger in query_lower for trigger in recap_triggers):
+            try:
+                # Summarize the last up to 8 messages succinctly (thematic summary via LLM)
+                recent = history[-8:]
+                transcript_lines = []
+                for msg in recent:
+                    content = (msg.get("content") or msg.get("message") or "").strip()
+                    if not content:
+                        continue
+                    is_assistant = (
+                        (msg.get("message_type") == "assistant")
+                        or (msg.get("sender_type") == "agent")
+                        or (msg.get("metadata", {}).get("ai_response") is True)
+                    )
+                    role = "Assistant" if is_assistant else "You"
+                    snippet = content if len(content) <= 300 else content[:297] + "..."
+                    transcript_lines.append(f"{role}: {snippet}")
+
+                # If transcript is empty, return no-history message
+                if not transcript_lines:
+                    state["result"] = {
+                        "message": "I couldn’t find prior messages in this conversation.",
+                        "type": "conversation_recap",
+                    }
+                    state["context"]["response_ready"] = True
+                    state["context"]["agent_type"] = "conversation"
+                    state["updated_at"] = datetime.now()
+                    return state
+
+                thematic_prompt = (
+                    "You are an expert conversation summarizer. Given the recent chat transcript, "
+                    "identify 1-5 thematic segments that group similar user intents, and for each user theme, "
+                    "infer the corresponding assistant response theme (overall gist of the assistant’s replies).\n\n"
+                    "Output in the following plain-text format (no JSON):\n\n"
+                    "Here’s a thematic summary of our recent messages:\n\n"
+                    "1) User theme: <short phrase>\n"
+                    "   Assistant theme: <short phrase>\n"
+                    "   Representative messages:\n"
+                    "   - You: \"<short user snippet>\"\n"
+                    "   - Assistant: \"<short assistant snippet>\"\n\n"
+                    "2) ... (and so on if applicable)\n\n"
+                    "Transcript:\n" + "\n".join(transcript_lines)
+                )
+
+                # Try LLM-based thematic summary
+                try:
+                    llm_resp = await self.llm.ainvoke([
+                        {"role": "system", "content": "You are precise and concise. Produce clean, readable summaries."},
+                        {"role": "user", "content": thematic_prompt},
+                    ])
+                    llm_text = (getattr(llm_resp, "content", "") or str(llm_resp)).strip()
+                    if llm_text:
+                        state["result"] = {
+                            "message": llm_text,
+                            "type": "conversation_recap",
+                        }
+                        state["context"]["response_ready"] = True
+                        state["context"]["agent_type"] = "conversation"
+                        state["updated_at"] = datetime.now()
+                        return state
+                except Exception as e:
+                    logger.warning(f"LLM thematic summary failed, falling back to deterministic recap: {e}")
+
+                # Deterministic fallback: bullet recap
+                lines = ["Here’s a brief recap of our recent messages:"]
+                lines.extend([f"- {t}" for t in transcript_lines])
+                state["result"] = {
+                    "message": "\n".join(lines),
+                    "type": "conversation_recap",
+                }
+                state["context"]["response_ready"] = True
+                state["context"]["agent_type"] = "conversation"
+                state["updated_at"] = datetime.now()
+                return state
+            except Exception as e:
+                logger.warning(f"Failed to build recap: {e}. Falling back to normal conversation flow.")
+
+        # Include last few messages to control token growth
+        for msg in history[-8:]:
+            try:
+                content = msg.get("content") or msg.get("message") or ""
+                # Prefer explicit message_type; fallback to sender_type or ai_response flag
+                is_assistant = (
+                    (msg.get("message_type") == "assistant")
+                    or (msg.get("sender_type") == "agent")
+                    or (msg.get("metadata", {}).get("ai_response") is True)
+                )
+                role = "assistant" if is_assistant else "user"
+                if content:
+                    messages_payload.append({"role": role, "content": content})
+            except Exception:
+                continue
+
+        # Append current user query with clear instruction to utilize history when asked
+        if user_query:
+            conversation_prompt = f"""
+You are an AI research assistant helping with academic research.
 
 User Query: "{user_query}"
 
-Provide a helpful, conversational response. If the query seems research-related but unclear, offer to help with:
-- Searching for papers and research
-- Finding authors and citations  
-- Analyzing research trends
-- Managing research projects
-- Processing papers and documents
+Guidelines:
+- If the user requests a recap/what was said previously, use the conversation history (provided in earlier messages) to summarize recent turns.
+- Otherwise, provide a helpful, conversational response. If research-related but unclear, offer to help with:
+  - Searching for papers and research
+  - Finding authors and citations  
+  - Analyzing research trends
+  - Managing research projects
+  - Processing papers and documents
 
-Be friendly, professional, and offer specific ways you can assist with their research work.
+Be friendly, professional, and specific.
 """
+            messages_payload.append({"role": "user", "content": conversation_prompt})
+        else:
+            # No user content found; ask a clarifying question
+            messages_payload.append({
+                "role": "user",
+                "content": "The user message is missing. Ask a brief clarifying question to proceed."
+            })
 
         try:
-            response = await self.llm.ainvoke([
-                {"role": "system", "content": "You are a helpful AI research assistant. Be conversational but professional."},
-                {"role": "user", "content": conversation_prompt}
-            ])
-            
+            response = await self.llm.ainvoke(messages_payload)
+
             state["result"] = {
-                "message": response.content.strip(),
-                "type": "conversation_response"
+                "message": (getattr(response, "content", "") or str(response)).strip(),
+                "type": "conversation_response",
             }
             state["context"]["response_ready"] = True
-            
+
         except Exception as e:
             logger.error(f"Conversation processing failed: {e}")
             state["result"] = {
                 "message": "How can I assist you with your research today? I can help you search for papers, find authors, analyze research trends, and manage your research projects.",
-                "type": "conversation_response"
+                "type": "conversation_response",
             }
-        
+
         state["context"]["agent_type"] = "conversation"
         state["updated_at"] = datetime.now()
         return state
