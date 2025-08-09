@@ -142,3 +142,31 @@ async def get_project_paper_stats(
         "stats": result["stats"],
         "project_id": str(project_id)
     } 
+
+
+@router.get("/{project_id}/papers/{paper_id}/references", response_model=Dict[str, Any], tags=["Papers"])
+@handle_service_errors("get paper references")
+async def get_paper_references(
+    project_id: uuid.UUID,
+    paper_id: uuid.UUID,
+    current_user: Dict[str, Any] = Depends(get_current_user_required),
+    project_access: Dict[str, Any] = Depends(verify_project_access),
+    session: AsyncSession = Depends(get_postgres_session)
+):
+    """
+    Get structured references for a paper parsed from its GROBID-generated BibTeX file.
+    - Requires read access to the project.
+    - Returns a normalized list with title, authors, year, journal/booktitle, doi, eprint, etc.
+    """
+    if not project_access.get("can_read", False):
+        raise forbidden("view references for this project")
+
+    svc = PaperService(session)
+    result = await svc.get_paper_references(str(paper_id))
+    return {
+        "success": True,
+        "references": result.get("references", []),
+        "count": result.get("count", 0),
+        "project_id": str(project_id),
+        "paper_id": str(paper_id),
+    } 

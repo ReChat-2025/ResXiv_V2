@@ -7,6 +7,7 @@ import uuid
 import logging
 from typing import Dict, Any, List, Optional
 from pathlib import Path
+import os
 
 from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,6 +23,7 @@ from .paper_storage_service import PaperStorageService
 from .paper_processing_service import PaperProcessingService
 from .paper_embedding_service import PaperEmbeddingService
 from .paper_crud_service import PaperCrudService
+from .bib_parser import BibParser
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +50,8 @@ class PaperService:
         self.processing_service = PaperProcessingService(session)
         self.embedding_service = PaperEmbeddingService(session)
         self.crud_service = PaperCrudService(session)
-
+        self.base_dir = Path(os.getenv("RESXIV_DATA_DIR", "/ResXiv_V2"))
+    
     # ================================
     # ARXIV INTEGRATION
     # ================================
@@ -1248,3 +1251,33 @@ class PaperService:
         except Exception as e:
             logger.error(f"Error generating diagnostics for paper {paper_id}: {e}")
             return {"success": False, "error": str(e)} 
+
+    @handle_service_errors("get paper references")
+    async def get_paper_references(self, paper_id: str) -> Dict[str, Any]:
+        """
+        Return structured references parsed from the paper's BibTeX file.
+        - Reads the bib file path stored on the paper (if any)
+        - Parses entries via BibParser
+        - Returns normalized fields ready for frontend rendering
+        """
+        paper = await self.crud_service.repository.get_paper_by_id(uuid.UUID(paper_id))
+        if not paper:
+            raise ServiceError("Paper not found", ErrorCodes.NOT_FOUND_ERROR)
+        if not paper.bib_path:
+            return {"success": True, "references": [], "count": 0}
+        bib_file = self.base_dir / paper.bib_path
+        refs = BibParser.parse_file(bib_file)
+        items = []
+        for r in refs:
+            items.append({
+                "title": r.title,
+                "authors": r.authors,
+                "year": r.year,
+                "journal": r.journal,
+                "booktitle": r.booktitle,
+                "doi": r.doi,
+                "eprint": r.eprint,
+                "entry_type": r.entry_type,
+                "citation_key": r.citation_key,
+            })
+        return {"success": True, "references": items, "count": len(items)} 

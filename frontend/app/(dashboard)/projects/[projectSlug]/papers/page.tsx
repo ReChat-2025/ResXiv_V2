@@ -27,6 +27,7 @@ import { Minus, Plus } from "phosphor-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import * as d3 from 'd3';
+import PdfViewer from '@/components/pdf/PdfViewer';
 
 // Types
 interface Paper {
@@ -468,22 +469,22 @@ const GraphVisualization: React.FC<GraphVisualizationProps> = ({ data, selectedN
       // Remove zoom controls
       d3.select(container).selectAll("div").remove();
     };
-  }, [data, selectedNodeId, onNodeClick]);
-
-  // Render container with SVG for the graph
-  return (
-    <div
-      ref={containerRef}
-      className="w-full h-full relative bg-gradient-to-br from-background via-muted/5 to-muted/20 rounded-xl overflow-hidden border border-border/40 backdrop-blur-sm"
-      style={{ minHeight: '500px' }}
-    >
-      <svg ref={svgRef} className="w-full h-full" />
-    </div>
-  );
-};
-
-
-export default function PapersPage() {
+    }, [data, selectedNodeId, onNodeClick]);
+ 
+   // Render container with SVG for the graph
+   return (
+     <div
+       ref={containerRef}
+       className="w-full h-full relative bg-gradient-to-br from-background via-muted/5 to-muted/20 rounded-xl overflow-hidden border border-border/40 backdrop-blur-sm"
+       style={{ minHeight: '500px' }}
+     >
+       <svg ref={svgRef} className="w-full h-full" />
+     </div>
+   );
+ };
+ 
+ 
+ export default function PapersPage() {
   const router = useRouter();
   const params = useParams();
   const projectSlug = params.projectSlug as string;
@@ -508,10 +509,10 @@ export default function PapersPage() {
   const [isProcessingMessage, setIsProcessingMessage] = useState(false);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   // Right sidebar tab
-  const [rightTab, setRightTab] = useState<'chat' | 'insights'>('chat');
+  const [rightTab, setRightTab] = useState<'chat' | 'insights' | 'references'>('chat');
   // --- PDF viewer state ---
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  // Reference to the PDF iframe to hook selection events inside it
+  // Legacy: kept for compatibility; not used with react-pdf
   const pdfIframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoadingPdf, setIsLoadingPdf] = useState(false);
   const [pdfZoom, setPdfZoom] = useState(1);
@@ -525,6 +526,11 @@ export default function PapersPage() {
   const [showHoverButton, setShowHoverButton] = useState(false);
   const [hoverButtonPosition, setHoverButtonPosition] = useState<{x: number, y: number} | null>(null);
   const [currentSelection, setCurrentSelection] = useState<{text: string, page: number} | null>(null);
+  
+  // Keep a cleanup callback for iframe selection listeners
+  const iframeSelectionCleanupRef = useRef<null | (() => void)>(null);
+  // Host element that wraps the PDF viewer (used to scope selection detection)
+  const pdfHostRef = useRef<HTMLDivElement>(null);
 
   const handleZoomIn = () => setPdfZoom((z) => Math.min(z + 0.1, 2));
   const handleZoomOut = () => setPdfZoom((z) => Math.max(z - 0.1, 0.5));
@@ -541,7 +547,7 @@ export default function PapersPage() {
     if (typeof window === 'undefined') return;
     
     // Helper to extract selection info from a Selection object
-    const getInfoFromSelection = (sel: Selection | null, offsetX = 0, offsetY = 0) => {
+    const getInfoFromSelection = (sel: Selection | null, offsetX = 0, offsetY = 0, scale = 1) => {
       if (!sel || !sel.toString().trim()) return null;
       try {
         const range = sel.getRangeAt(0);
@@ -549,8 +555,8 @@ export default function PapersPage() {
         return {
           text: sel.toString().trim(),
           rect: {
-            x: rect.right + offsetX,
-            y: rect.top + rect.height / 2 + offsetY,
+            x: offsetX + rect.right * scale,
+            y: offsetY + (rect.top + rect.height / 2) * scale,
           },
         };
       } catch {
@@ -558,24 +564,26 @@ export default function PapersPage() {
       }
     };
     
-    // 2. Check same-origin iframes (e.g., the PDF iframe)
-    const iframes = Array.from(document.querySelectorAll<HTMLIFrameElement>('iframe'));
-    for (const frame of iframes) {
-      try {
-        const sel = frame.contentWindow?.getSelection() ?? null;
-        const frameRect = frame.getBoundingClientRect();
-        const info = getInfoFromSelection(sel, frameRect.left, frameRect.top);
-        if (info && info.text.length > 3) {
-          setCurrentSelection({ text: info.text, page: currentPage });
-          setHoverButtonPosition({ x: info.rect.x, y: info.rect.y });
-          setShowHoverButton(true);
-          setTimeout(() => setShowHoverButton(false), 10000);
-          return;
-        }
-      } catch (_) {
-        // Ignore cross-origin frames
+    // Only allow selections within the PDF host element
+    const sel = window.getSelection();
+    if (sel && sel.anchorNode) {
+      const host = pdfHostRef.current;
+      const anchorEl = (sel.anchorNode as Node).parentElement || null;
+      if (!host || !anchorEl || !host.contains(anchorEl)) {
+        setShowHoverButton(false);
+        setCurrentSelection(null);
+        return;
       }
     }
+    const info = getInfoFromSelection(sel);
+    if (info && info.text.length > 3) {
+      setCurrentSelection({ text: info.text, page: currentPage });
+      setHoverButtonPosition({ x: info.rect.x, y: info.rect.y });
+      setShowHoverButton(true);
+      setTimeout(() => setShowHoverButton(false), 10000);
+      return;
+    }
+
     // No valid selection
     setShowHoverButton(false);
     setCurrentSelection(null);
@@ -588,12 +596,12 @@ export default function PapersPage() {
       setShowHoverButton(false);
       setCurrentSelection(null);
       
-      // Clear the visual selection
+      // Clear the visual selection in both parent and iframe if accessible
       if (typeof window !== 'undefined') {
-        const selection = window.getSelection();
-        if (selection) {
-          selection.removeAllRanges();
-        }
+        try {
+          const selection = window.getSelection();
+          selection?.removeAllRanges();
+        } catch {}
       }
     }
   };
@@ -616,6 +624,10 @@ export default function PapersPage() {
   const [graphAnalyticsData, setGraphAnalyticsData] = useState<GraphAnalyticsResponse | null>(null);
   const [isLoadingGraphAnalytics, setIsLoadingGraphAnalytics] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  // References state
+  const [references, setReferences] = useState<any[] | null>(null);
+  const [isLoadingReferences, setIsLoadingReferences] = useState<boolean>(false);
 
   // Fetch project ID from slug
   useEffect(() => {
@@ -816,6 +828,27 @@ export default function PapersPage() {
     fetchDiagnostics();
   }, [projectId, selectedPaper, rightTab]);
 
+  // Fetch references when references tab is selected
+  useEffect(() => {
+    const fetchReferences = async () => {
+      if (projectId && selectedPaper && rightTab === 'references') {
+        try {
+          setIsLoadingReferences(true);
+          const res = await papersApi.getPaperReferences(projectId, selectedPaper.id);
+          setReferences(res?.references || []);
+        } catch (err) {
+          console.error('Failed to fetch references', err);
+          setReferences([]);
+        } finally {
+          setIsLoadingReferences(false);
+        }
+      } else if (rightTab !== 'references') {
+        setReferences(null);
+      }
+    };
+    fetchReferences();
+  }, [projectId, selectedPaper, rightTab]);
+
   // Utility to detect selected text in main document or any same-origin iframe.
   const getSelectionInfo = (): { text: string; x: number; y: number } | null => {
     // Check main document first
@@ -850,21 +883,33 @@ export default function PapersPage() {
 
 
 
-  // Simplified text selection detection
+  // Selection detection limited to the PDF host element
   useEffect(() => {
-    const handleSelectionChange = () => {
-      setTimeout(handleTextSelection, 100);
-    };
-
-    document.addEventListener('mouseup', handleSelectionChange);
-    document.addEventListener('selectionchange', handleSelectionChange);
-
+    const host = pdfHostRef.current;
+    if (!host) return;
+    const handleSelectionChange = () => setTimeout(handleTextSelection, 80);
+    host.addEventListener('mouseup', handleSelectionChange);
+    host.addEventListener('keyup', handleSelectionChange);
     return () => {
-      document.removeEventListener('mouseup', handleSelectionChange);
-      document.removeEventListener('selectionchange', handleSelectionChange);
+      host.removeEventListener('mouseup', handleSelectionChange);
+      host.removeEventListener('keyup', handleSelectionChange);
     };
-  }, [currentPage]);
+  }, [currentPage, pdfZoom]);
 
+  // Attach selection listeners inside the PDF iframe (when accessible)
+  const handlePdfIframeLoad = () => {
+    // No-op now that we render via react-pdf; keeping stub in case of regressions
+  };
+
+  // Cleanup listeners when component unmounts or PDF changes
+  useEffect(() => {
+    return () => {
+      if (iframeSelectionCleanupRef.current) {
+        try { iframeSelectionCleanupRef.current(); } catch {}
+        iframeSelectionCleanupRef.current = null;
+      }
+    };
+  }, [pdfUrl, currentPage]);
 
 
   const handleAddPapers = async () => {
@@ -1037,6 +1082,20 @@ export default function PapersPage() {
     );
   };
 
+  // Parse user messages that include embedded selected-text context
+  const parseSelectedContextMessage = (content: string): { page: number; text: string; question: string } | null => {
+    try {
+      const regex = /^\[Selected text from page\s+(\d+)\]:\s*"([\s\S]*?)"\s*(?:\n\n|\n)?(?:Question:\s*([\s\S]*))?$/i;
+      const match = content.match(regex);
+      if (!match) return null;
+      const page = Number(match[1]);
+      const text = match[2]?.trim() || '';
+      const question = (match[3] || '').trim();
+      return { page, text, question };
+    } catch {
+      return null;
+    }
+  };
 
 
   if (isLoading) {
@@ -1214,30 +1273,42 @@ export default function PapersPage() {
                 {pdfUrl && (
                   <>
 
-                    
-                    <iframe
-                      ref={pdfIframeRef}
-                      key={`${selectedPaper?.id}-${currentPage}`}
-                      src={`${pdfUrl}#page=${currentPage}&toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&view=FitH`}
-                      title={selectedPaper.title}
-                      className="w-full h-full" 
-                      style={{transform:`scale(${pdfZoom})`, transformOrigin:'top center'}}
-                    />
+                    <div className="w-full h-full">
+                      <div ref={pdfHostRef} className="w-full h-full">
+                        <PdfViewer 
+                          ref={(r:any)=>{ (window as any).__pdfViewerRef = r; }}
+                          fileUrl={pdfUrl}
+                          zoom={pdfZoom}
+                          currentPage={currentPage}
+                          onTotalPages={(n)=> setTotalPages(n && n > 0 ? n : totalPages)}
+                          onPageChange={(p)=> handlePageChange(p)}
+                          onTextSelection={(data)=>{
+                            if (data.text && data.text.length > 3) {
+                              setCurrentSelection({ text: data.text, page: currentPage });
+                              setHoverButtonPosition({ x: data.x, y: data.y });
+                              setShowHoverButton(true);
+                              setTimeout(()=> setShowHoverButton(false), 10000);
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
                     
                     {/* Hovering Add to Chat Button */}
                     {showHoverButton && hoverButtonPosition && (
                       <div
-                        className="fixed z-50 transform -translate-y-1/2"
+                        className="fixed z-50 -translate-y-full"
                         style={{
-                          left: `${Math.min(hoverButtonPosition.x, window.innerWidth - 200)}px`,
-                          top: `${Math.max(50, Math.min(hoverButtonPosition.y, window.innerHeight - 100))}px`,
+                          left: `${Math.min(hoverButtonPosition.x, window.innerWidth - 160)}px`,
+                          top: `${Math.max(60, Math.min(hoverButtonPosition.y - 8, window.innerHeight - 80))}px`,
                         }}
                       >
                         <Button
                           onClick={handleAddSelectionToChat}
-                          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-xl border border-white/20 rounded-lg px-4 py-2 text-sm font-medium animate-in fade-in-0 zoom-in-95 duration-200 transform hover:scale-105 transition-transform"
+                          variant="outline"
+                          className="h-8 px-3 rounded-full border-border/70 bg-background/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow text-xs"
                         >
-                          💬 Add to Chat
+                          Add to chat
                         </Button>
                       </div>
                     )}
@@ -1266,18 +1337,16 @@ export default function PapersPage() {
                     </div>
                     
                     {/* Floating Zoom Controls - Top Right */}
-                    <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-                      <div className="flex items-center gap-2 bg-background/90 backdrop-blur-sm border border-border rounded-lg px-3 py-1.5 shadow-lg">
-                        <Button variant="ghost" size="icon" onClick={handleZoomOut}>
-                          <Minus size={16} />
+                    <div className="absolute top-3 right-3 z-10 opacity-0 hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 bg-background/80 border border-border/60 rounded-md px-2 py-1 shadow-sm">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleZoomOut}>
+                          <Minus size={14} />
                         </Button>
-                        <span className="text-sm w-12 text-center select-none font-medium">{Math.round(pdfZoom*100)}%</span>
-                        <Button variant="ghost" size="icon" onClick={handleZoomIn}>
-                          <Plus size={16} />
+                        <span className="text-xs w-10 text-center select-none">{Math.round(pdfZoom*100)}%</span>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleZoomIn}>
+                          <Plus size={14} />
                         </Button>
                       </div>
-                      
-
                     </div>
                   </>
                 )}
@@ -1455,6 +1524,13 @@ export default function PapersPage() {
                 >
                   Insights
                 </Button>
+                <Button
+                  variant={rightTab === 'references' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setRightTab('references')}
+                >
+                  References
+                </Button>
               </>
             )}
 
@@ -1489,37 +1565,57 @@ export default function PapersPage() {
                       <p className="text-sm">Start a conversation about this paper</p>
                     </div>
                   ) : (
-                    chatMessages.map((m) => (
-                      <div key={m.id} className={`w-full ${m.type === 'user' ? 'text-right' : 'text-left'}`}>
-                        <div className={`inline-block p-3 rounded-lg text-sm ${m.type === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'} max-w-full`}>
+                    chatMessages.map((m) => {
+                      const parsed = m.type === 'user' ? parseSelectedContextMessage(m.content) : null;
+                      return (
+                        <div key={m.id} className={`w-full ${m.type === 'user' ? 'text-right' : 'text-left'}`}>
                           {m.type === 'assistant' ? (
-                            <div className="prose prose-sm prose-slate dark:prose-invert max-w-none">
-                              <ReactMarkdown 
-                                remarkPlugins={[remarkGfm]}
-                                components={{
-                                  h1: ({children}) => <h1 className="text-sm font-bold mb-2 mt-2 first:mt-0">{children}</h1>,
-                                  h2: ({children}) => <h2 className="text-sm font-bold mb-2 mt-2 first:mt-0">{children}</h2>,
-                                  h3: ({children}) => <h3 className="text-xs font-bold mb-1 mt-2 first:mt-0">{children}</h3>,
-                                  p: ({children}) => <p className="mb-2 last:mb-0 text-sm leading-relaxed">{children}</p>,
-                                  ul: ({children}) => <ul className="list-disc list-inside mb-2 space-y-1 text-sm">{children}</ul>,
-                                  ol: ({children}) => <ol className="list-decimal list-inside mb-2 space-y-1 text-sm">{children}</ol>,
-                                  li: ({children}) => <li className="leading-relaxed">{children}</li>,
-                                  strong: ({children}) => <strong className="font-semibold">{children}</strong>,
-                                  em: ({children}) => <em className="italic">{children}</em>,
-                                  code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
-                                  pre: ({children}) => <pre className="bg-muted p-2 rounded text-xs overflow-x-auto mb-2">{children}</pre>,
-                                  blockquote: ({children}) => <blockquote className="border-l-4 border-muted-foreground pl-3 my-2 italic">{children}</blockquote>
-                                }}
-                              >
-                                {m.content}
-                              </ReactMarkdown>
+                            <div className={`inline-block p-3 rounded-lg text-sm bg-muted text-foreground max-w-full`}>
+                              <div className="prose prose-sm prose-slate dark:prose-invert max-w-none">
+                                <ReactMarkdown 
+                                  remarkPlugins={[remarkGfm]}
+                                  components={{
+                                    h1: ({children}) => <h1 className="text-sm font-bold mb-2 mt-2 first:mt-0">{children}</h1>,
+                                    h2: ({children}) => <h2 className="text-sm font-bold mb-2 mt-2 first:mt-0">{children}</h2>,
+                                    h3: ({children}) => <h3 className="text-xs font-bold mb-1 mt-2 first:mt-0">{children}</h3>,
+                                    p: ({children}) => <p className="mb-2 last:mb-0 text-sm leading-relaxed">{children}</p>,
+                                    ul: ({children}) => <ul className="list-disc list-inside mb-2 space-y-1 text-sm">{children}</ul>,
+                                    ol: ({children}) => <ol className="list-decimal list-inside mb-2 space-y-1 text-sm">{children}</ol>,
+                                    li: ({children}) => <li className="leading-relaxed">{children}</li>,
+                                    strong: ({children}) => <strong className="font-semibold">{children}</strong>,
+                                    em: ({children}) => <em className="italic">{children}</em>,
+                                    code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
+                                    pre: ({children}) => <pre className="bg-muted p-2 rounded text-xs overflow-x-auto mb-2">{children}</pre>,
+                                    blockquote: ({children}) => <blockquote className="border-l-4 border-muted-foreground pl-3 my-2 italic">{children}</blockquote>
+                                  }}
+                                >
+                                  {m.content}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          ) : parsed ? (
+                            <div className="inline-block max-w-full space-y-2">
+                              <div className="rounded-lg border border-border bg-card text-card-foreground p-3 text-left shadow-sm">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-xs font-medium text-muted-foreground">Selected text</span>
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">Page {parsed.page}</span>
+                                </div>
+                                <blockquote className="text-sm leading-relaxed border-l-2 border-primary pl-3 max-h-32 overflow-y-auto">
+                                  {parsed.text}
+                                </blockquote>
+                              </div>
+                              <div className="inline-block p-3 rounded-lg text-sm bg-primary text-primary-foreground">
+                                {parsed.question || 'Please explain this text.'}
+                              </div>
                             </div>
                           ) : (
-                            <span className="whitespace-pre-wrap break-words">{m.content}</span>
+                            <div className="inline-block p-3 rounded-lg text-sm bg-primary text-primary-foreground max-w-full">
+                              <span className="whitespace-pre-wrap break-words">{m.content}</span>
+                            </div>
                           )}
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                   {isProcessingMessage && (
                     <div className="flex justify-start">
@@ -1584,7 +1680,7 @@ export default function PapersPage() {
                   </div>
                 </div>
                 </>
-              ) : (
+              ) : rightTab === 'insights' ? (
                 /* Insights Tab */
                 <div className="flex-1 p-4 overflow-auto min-h-0">
                   {isLoadingDiagnostics ? (
@@ -1697,6 +1793,77 @@ export default function PapersPage() {
                       <p className="text-sm text-muted-foreground">
                         Select a paper to view insights.
                       </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* References Tab */
+                <div className="flex-1 p-4 overflow-auto min-h-0">
+                  {isLoadingReferences ? (
+                    <div className="flex items-center justify-center h-32">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                    </div>
+                  ) : references && references.length > 0 ? (
+                    <div className="space-y-3">
+                      {references.map((ref: any, idx: number) => {
+                        const doiUrl = ref.doi ? `https://doi.org/${ref.doi.replace(/^https?:\/\//,'')}` : null;
+                        const arxivUrl = ref.eprint ? `https://arxiv.org/abs/${ref.eprint}` : null;
+                        return (
+                          <div key={`${ref.citation_key || 'ref'}-${idx}`} className="rounded-lg border border-border bg-card p-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs text-muted-foreground mb-1">[{idx + 1}] {ref.entry_type?.toUpperCase()} • {ref.year || ''}</div>
+                                <div className="font-medium text-sm text-foreground mb-1">{ref.title || ref.citation_key}</div>
+                                {Array.isArray(ref.authors) && ref.authors.length > 0 && (
+                                  <div className="text-xs text-muted-foreground mb-1">{ref.authors.join(', ')}</div>
+                                )}
+                                {(ref.journal || ref.booktitle) && (
+                                  <div className="text-xs text-muted-foreground mb-2">{ref.journal || ref.booktitle}</div>
+                                )}
+                                <div className="flex flex-wrap gap-2 text-xs">
+                                  {doiUrl && (
+                                    <a href={doiUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-2 py-1 rounded border border-border hover:bg-accent">
+                                      DOI
+                                    </a>
+                                  )}
+                                  {arxivUrl && (
+                                    <a href={arxivUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-2 py-1 rounded border border-border hover:bg-accent">
+                                      arXiv
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                              {/* Jump button */}
+                              <div className="flex-shrink-0">
+                                                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            const viewer: any = (window as any).__pdfViewerRef;
+                                            if (viewer && typeof viewer.scrollToReference === 'function') {
+                                              viewer.scrollToReference({ doi: ref.doi, title: ref.title, year: ref.year, authors: ref.authors, index: idx + 1 });
+                                            } else {
+                                              console.debug('PdfViewer handle not ready');
+                                            }
+                                          }}
+                                        >
+                                          Jump
+                                        </Button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : selectedPaper ? (
+                    <div className="flex flex-col items-center justify-center h-32 text-center">
+                      <FileText className="h-8 w-8 mb-2 text-muted-foreground opacity-50" />
+                      <p className="text-sm text-muted-foreground">No references found for this paper.</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-32 text-center">
+                      <FileText className="h-8 w-8 mb-2 text-muted-foreground opacity-50" />
+                      <p className="text-sm text-muted-foreground">Select a paper to view references.</p>
                     </div>
                   )}
                 </div>

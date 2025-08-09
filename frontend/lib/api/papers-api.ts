@@ -44,6 +44,26 @@ export interface SearchPapersResponse {
   search_type: string;
 }
 
+export interface PaperReference {
+  title: string;
+  authors: string[];
+  year: string;
+  journal: string;
+  booktitle: string;
+  doi: string;
+  eprint: string;
+  entry_type: string;
+  citation_key: string;
+}
+
+export interface PaperReferencesResponse {
+  success: boolean;
+  references: PaperReference[];
+  count: number;
+  project_id?: string;
+  paper_id?: string;
+}
+
 // Request Types
 export interface GetPapersParams {
   project_id: string;
@@ -324,6 +344,16 @@ class PapersApiClient {
   async getPaperDiagnostics(project_id: string, paper_id: string): Promise<any> {
     const endpoint = `/api/v1/projects/${project_id}/papers/${paper_id}/diagnostics`;
     return this.makeRequest<any>(endpoint, {
+      method: 'GET',
+    });
+  }
+
+  /**
+   * Get paper references (parsed from BibTeX)
+   */
+  async getPaperReferences(project_id: string, paper_id: string): Promise<PaperReferencesResponse> {
+    const endpoint = `/api/v1/projects/${project_id}/papers/${paper_id}/references`;
+    return this.makeRequest<PaperReferencesResponse>(endpoint, {
       method: 'GET',
     });
   }
