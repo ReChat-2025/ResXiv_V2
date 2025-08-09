@@ -69,11 +69,31 @@ class GraphGenerationService:
             
             # Generate adjacency matrix
             adjacency_result = await self._generate_adjacency_matrix(
-                papers_data, similarity_threshold
+                papers_data or [], similarity_threshold
             )
             
             if not adjacency_result["success"]:
-                return adjacency_result
+                # Fallback: return node-only graph (no edges)
+                logger.warning(f"Adjacency failed; returning node-only graph: {adjacency_result.get('error')}")
+                graph_data = await self._create_graph_structure(
+                    papers_data, 
+                    np.zeros((len(papers_data), len(papers_data)), dtype=int),
+                    np.zeros((len(papers_data), len(papers_data)), dtype=float),
+                    similarity_threshold
+                )
+                metrics = await self._calculate_graph_metrics(graph_data["nodes"], graph_data["edges"], np.zeros((len(papers_data), len(papers_data)), dtype=int))
+                return {
+                    "success": True,
+                    "project_id": str(project_id),
+                    "graph": graph_data,
+                    "metrics": metrics,
+                    "parameters": {
+                        "similarity_threshold": similarity_threshold,
+                        "papers_count": len(papers_data),
+                        "edges_count": len(graph_data["edges"])
+                    },
+                    "generated_at": datetime.utcnow().isoformat()
+                }
             
             # Create graph structure
             graph_data = await self._create_graph_structure(
@@ -238,16 +258,24 @@ class GraphGenerationService:
         try:
             # Create nodes
             nodes = []
-            for i, paper in enumerate(papers_data):
+            safe_papers = papers_data or []
+            matrix_size = len(safe_papers)
+            # Normalize matrices
+            if adjacency_matrix is None or not hasattr(adjacency_matrix, 'shape'):
+                adjacency_matrix = np.zeros((matrix_size, matrix_size), dtype=int)
+            if similarity_matrix is None or not hasattr(similarity_matrix, 'shape'):
+                similarity_matrix = np.zeros((matrix_size, matrix_size), dtype=float)
+
+            for i, paper in enumerate(safe_papers):
                 node = {
-                    "id": paper["id"],
-                    "title": paper["title"],
-                    "authors": paper["authors"],
-                    "abstract": paper["abstract"][:200] + "..." if len(paper.get("abstract", "")) > 200 else paper.get("abstract", ""),
+                    "id": paper.get("id"),
+                    "title": paper.get("title"),
+                    "authors": paper.get("authors"),
+                    "abstract": (paper.get("abstract", "")[:200] + "...") if (paper.get("abstract") and len(paper.get("abstract")) > 200) else paper.get("abstract", ""),
                     "keywords": paper.get("keywords", []),
                     "metadata": paper.get("metadata", {}),
                     "created_at": paper.get("created_at"),
-                    "degree": int(np.sum(adjacency_matrix[i])),  # Number of connections
+                    "degree": int(np.sum(adjacency_matrix[i])) if i < adjacency_matrix.shape[0] else 0,
                     "position": {
                         "x": 0,  # Will be set by frontend layout algorithm
                         "y": 0
@@ -257,13 +285,13 @@ class GraphGenerationService:
             
             # Create edges
             edges = []
-            for i in range(len(papers_data)):
-                for j in range(i + 1, len(papers_data)):
-                    if adjacency_matrix[i][j] == 1:
-                        similarity_score = float(similarity_matrix[i][j])
+            for i in range(matrix_size):
+                for j in range(i + 1, matrix_size):
+                    if int(adjacency_matrix[i][j]) == 1:
+                        similarity_score = float(similarity_matrix[i][j]) if similarity_matrix.size else 0.0
                         edge = {
-                            "source": papers_data[i]["id"],
-                            "target": papers_data[j]["id"],
+                            "source": safe_papers[i].get("id"),
+                            "target": safe_papers[j].get("id"),
                             "weight": similarity_score,
                             "strength": min((similarity_score - similarity_threshold) / (1 - similarity_threshold), 1.0),
                             "type": "similarity"
@@ -283,10 +311,17 @@ class GraphGenerationService:
             
         except Exception as e:
             logger.error(f"Error creating graph structure: {e}")
-            raise ServiceError(
-                f"Failed to create graph structure: {str(e)}",
-                ErrorCodes.CREATION_ERROR
-            )
+            # Fallback to node-only structure
+            try:
+                nodes = [{"id": p.get("id"), "title": p.get("title"), "authors": p.get("authors"), "abstract": p.get("abstract", ""), "keywords": p.get("keywords", []), "metadata": p.get("metadata", {}), "created_at": p.get("created_at"), "degree": 0, "position": {"x": 0, "y": 0}} for p in (papers_data or [])]
+            except Exception:
+                nodes = []
+            return {
+                "nodes": nodes,
+                "edges": [],
+                "layout": "force-directed",
+                "metadata": {"node_count": len(nodes), "edge_count": 0, "similarity_threshold": similarity_threshold}
+            }
     
     async def _calculate_graph_metrics(
         self,

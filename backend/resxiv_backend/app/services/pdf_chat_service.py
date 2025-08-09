@@ -13,6 +13,7 @@ import aiofiles
 from typing import Dict, Any, Optional
 from datetime import datetime
 from pathlib import Path
+import json
 
 from openai import AsyncOpenAI
 from fastapi import UploadFile
@@ -121,6 +122,20 @@ class PDFChatService:
             await self.session.commit()
             conversation_id = str(conversation.id)
         
+        # Enforce or persist paper lock
+        locked_ids = await self._get_paper_lock(conversation_id)
+        if locked_ids:
+            if paper_id not in locked_ids:
+                raise ServiceError(
+                    f"This conversation is locked to papers {locked_ids}. Start a new chat to switch papers.",
+                    ErrorCodes.VALIDATION_ERROR
+                )
+        else:
+            await self._persist_paper_lock(conversation_id, user_id, [paper_id])
+        
+        # Persist per-paper PDF context (hidden system message) if not already present
+        await self._ensure_paper_context(conversation_id, user_id, paper_id, paper.title, pdf_content)
+        
         # Get conversation history
         conversation_history = await self._get_conversation_history(conversation_id)
         
@@ -145,7 +160,8 @@ class PDFChatService:
             metadata={
                 "paper_id": paper_id,
                 "paper_title": paper.title,
-                "conversation_type": "PDF"
+                "conversation_type": "PDF",
+                "project_id": project_id
             }
         )
         
@@ -161,135 +177,118 @@ class PDFChatService:
             "metadata": {
                 "paper_title": paper.title,
                 "conversation_type": "PDF",
+                "project_id": project_id,
                 "user_id": user_id
             }
         }
-    
-    @handle_service_errors("chat with dropped file")
-    async def chat_with_dropped_file(
+
+    @handle_service_errors("chat with multiple papers")
+    async def chat_with_papers(
         self,
-        file: Optional[UploadFile],
+        paper_ids: list,
         project_id: str,
         user_id: str,
         message: str,
         conversation_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Chat with a PDF in a project context. Works for both:
-        - First turn with a newly uploaded file (stores PDF context)
-        - Subsequent turns without re-upload (reuses stored context)
-        
-        Args:
-            file: Uploaded PDF file (optional for continuation)
-            project_id: Project UUID for access control and organization
-            user_id: User UUID
-            message: User's message about the file
-            conversation_id: Optional existing conversation ID
-            
-        Returns:
-            Chat response with conversation details
-        """
+        """Chat with up to 3 papers at once. Locks selection for the conversation and stores context."""
         start_time = time.time()
+        if not paper_ids or len(paper_ids) == 0:
+            raise ServiceError("At least one paper_id is required", ErrorCodes.VALIDATION_ERROR)
+        if len(paper_ids) > 3:
+            raise ServiceError("You can select at most 3 papers", ErrorCodes.VALIDATION_ERROR)
         
-        file_id: Optional[str] = None
-        pdf_content: Optional[str] = None
-        file_name: Optional[str] = None
-
-        # Get or create conversation
-        conversation = None
-        if conversation_id and conversation_id.strip() and conversation_id != "string":
+        # Resolve conversation
+        conv = None
+        if conversation_id:
             try:
-                candidate = await self.conversation_repo.get_by_id(uuid.UUID(conversation_id))
-                if candidate and candidate.type == ConversationType.DROP.value:
-                    conversation = candidate
-                else:
-                    logger.info("Provided conversation_id is missing or not DROP; creating a new DROP conversation")
+                conv = await self.conversation_repo.get_by_id(uuid.UUID(conversation_id))
+                if not conv or conv.type != ConversationType.PDF.value:
+                    raise ServiceError("Invalid conversation for paper chat", ErrorCodes.VALIDATION_ERROR)
             except ValueError:
-                logger.info("Provided conversation_id is not a valid UUID; creating a new DROP conversation")
-        if conversation is None:
-            # Create new DROP conversation associated with project
-            conversation = await self.conversation_repo.create(
-                type=ConversationType.DROP,
-                entity=uuid.UUID(project_id),  # Associate with project for access control
+                raise ServiceError("Invalid conversation ID format - must be a valid UUID", ErrorCodes.VALIDATION_ERROR)
+        if not conv:
+            conv = await self.conversation_repo.create(
+                type=ConversationType.PDF,
+                entity=uuid.UUID(paper_ids[0]),
                 is_group=False,
                 created_by=uuid.UUID(user_id)
             )
             await self.session.commit()
-            conversation_id = str(conversation.id)
+            conversation_id = str(conv.id)
         else:
-            conversation_id = str(conversation.id)
+            conversation_id = str(conv.id)
         
-        # If file is provided, extract and persist context; otherwise, reuse stored context
-        if file is not None and getattr(file, 'filename', None):
-            if not file.filename.lower().endswith('.pdf'):
+        # Enforce or persist lock
+        locked_ids = await self._get_paper_lock(conversation_id)
+        if locked_ids:
+            # Ensure selection matches lock
+            if set(locked_ids) != set(paper_ids):
                 raise ServiceError(
-                    "Only PDF files are supported",
+                    f"This conversation is locked to papers {locked_ids}. Start a new chat to switch papers.",
                     ErrorCodes.VALIDATION_ERROR
                 )
-            file_id = str(uuid.uuid4())
-            pdf_content = await self._extract_content_from_upload(file, file_id)
-            file_name = file.filename
-            # Persist context for future turns
-            await self._ensure_drop_context(
-                conversation_id=conversation_id,
-                user_id=user_id,
-                project_id=project_id,
-                file_id=file_id,
-                file_name=file_name,
-                pdf_content=pdf_content
-            )
         else:
-            # Reuse stored context
-            stored_content, ctx = await self._get_drop_context(conversation_id)
-            pdf_content = stored_content
-            file_id = ctx.get("file_id") if ctx else None
-            file_name = ctx.get("file_name") if ctx else None
-            if not pdf_content:
-                raise ServiceError(
-                    "No stored PDF context found for this conversation. Please upload the PDF again.",
-                    ErrorCodes.NOT_FOUND_ERROR
-                )
+            await self._persist_paper_lock(conversation_id, user_id, paper_ids)
         
-        # Get conversation history
+        # Fetch or persist contexts; build combined content
+        combined_sections = []
+        titles = []
+        for pid in paper_ids:
+            paper = await self.paper_repo.get_paper_by_id(pid)
+            if not paper:
+                raise ServiceError(f"Paper with ID {pid} not found", ErrorCodes.NOT_FOUND_ERROR)
+            titles.append(paper.title)
+            # Try to fetch stored context first
+            stored_content, _ = await self._get_paper_context(conversation_id, pid)
+            if not stored_content:
+                content = await self._get_paper_content(paper)
+                await self._ensure_paper_context(conversation_id, user_id, pid, paper.title, content)
+                stored_content = content
+            combined_sections.append(f"## {paper.title or pid}\n\n{stored_content[:6000]}")
+        combined_content = "\n\n---\n\n".join(combined_sections)
+        
+        # History
         conversation_history = await self._get_conversation_history(conversation_id)
         
-        # Generate AI response
+        # Generate response with combined context and aggregated metadata
         ai_response = await self._generate_chat_response(
-            pdf_content=pdf_content,
+            pdf_content=combined_content,
             user_message=message,
             conversation_history=conversation_history,
             paper_metadata={
-                "filename": file_name,
-                "file_size": getattr(file, 'size', None)
+                "title": "; ".join([t for t in titles if t]),
+                "authors": None,
+                "abstract": None
             }
         )
         
-        # Save messages to MongoDB
+        # Save messages
         await self._save_chat_messages(
             conversation_id=conversation_id,
             user_id=user_id,
             user_message=message,
             ai_response=ai_response,
             metadata={
-                "file_id": file_id,
-                "file_name": file_name,
-                "conversation_type": "DROP",
+                "paper_ids": paper_ids,
+                "paper_titles": titles,
+                "conversation_type": "PDF",
                 "project_id": project_id
             }
         )
         
         processing_time = time.time() - start_time
-        
         return {
             "success": True,
             "response": ai_response,
             "conversation_id": conversation_id,
-            "file_id": file_id,
+            "paper_id": paper_ids[0],
             "processing_time": processing_time,
             "timestamp": datetime.utcnow().isoformat(),
             "metadata": {
-                "file_name": file_name,
-                "conversation_type": "DROP",
+                "paper_ids": paper_ids,
+                "paper_titles": titles,
+                "conversation_type": "PDF",
                 "project_id": project_id,
                 "user_id": user_id
             }
@@ -602,4 +601,87 @@ As you analyze this paper, consider:
             return doc.get("message", None), (doc.get("metadata", {}) or {})
         except Exception as e:
             logger.warning(f"Failed to retrieve drop PDF context: {e}")
+            return None, {} 
+
+    async def _persist_paper_lock(self, conversation_id: str, user_id: str, paper_ids: list) -> None:
+        try:
+            if self.mongo_db is None:
+                await self.initialize()
+            timestamp = datetime.utcnow()
+            await self.mongo_db.messages.insert_one({
+                "conversation_id": conversation_id,
+                "message_id": str(uuid.uuid4()),
+                "sender_id": user_id,
+                "message": json.dumps({"paper_ids": paper_ids}),
+                "message_type": "system",
+                "timestamp": timestamp,
+                "created_at": timestamp,
+                "updated_at": timestamp,
+                "metadata": {"paper_lock": True}
+            })
+        except Exception as e:
+            logger.warning(f"Failed to persist paper lock: {e}")
+
+    async def _get_paper_lock(self, conversation_id: str) -> list:
+        try:
+            if self.mongo_db is None:
+                await self.initialize()
+            doc = await self.mongo_db.messages.find_one({
+                "conversation_id": conversation_id,
+                "message_type": "system",
+                "metadata.paper_lock": True
+            })
+            if not doc:
+                return []
+            try:
+                payload = json.loads(doc.get("message", "{}"))
+            except Exception:
+                return []
+            return payload.get("paper_ids", [])
+        except Exception as e:
+            logger.warning(f"Failed to get paper lock: {e}")
+            return []
+
+    async def _ensure_paper_context(self, conversation_id: str, user_id: str, paper_id: str, paper_title: str, content: str) -> None:
+        try:
+            if self.mongo_db is None:
+                await self.initialize()
+            exists = await self.mongo_db.messages.find_one({
+                "conversation_id": conversation_id,
+                "message_type": "system",
+                "metadata.paper_pdf_context": True,
+                "metadata.paper_id": paper_id
+            })
+            if exists:
+                return
+            timestamp = datetime.utcnow()
+            await self.mongo_db.messages.insert_one({
+                "conversation_id": conversation_id,
+                "message_id": str(uuid.uuid4()),
+                "sender_id": user_id,
+                "message": content,
+                "message_type": "system",
+                "timestamp": timestamp,
+                "created_at": timestamp,
+                "updated_at": timestamp,
+                "metadata": {"paper_pdf_context": True, "paper_id": paper_id, "paper_title": paper_title}
+            })
+        except Exception as e:
+            logger.warning(f"Failed to store paper context: {e}")
+
+    async def _get_paper_context(self, conversation_id: str, paper_id: str) -> tuple[Optional[str], Dict[str, Any]]:
+        try:
+            if self.mongo_db is None:
+                await self.initialize()
+            doc = await self.mongo_db.messages.find_one({
+                "conversation_id": conversation_id,
+                "message_type": "system",
+                "metadata.paper_pdf_context": True,
+                "metadata.paper_id": paper_id
+            })
+            if not doc:
+                return None, {}
+            return doc.get("message"), doc.get("metadata", {})
+        except Exception as e:
+            logger.warning(f"Failed to retrieve paper context: {e}")
             return None, {} 

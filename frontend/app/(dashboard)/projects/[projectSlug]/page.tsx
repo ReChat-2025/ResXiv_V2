@@ -13,6 +13,7 @@ import remarkGfm from 'remark-gfm';
 
 import { agenticApi, ConversationHistoryMessage, ProjectConversationResponse, ProjectConversationsResponse } from '@/lib/api/agentic-api';
 import { projectsApi } from '@/lib/api/projects-api';
+import { papersApi } from '@/lib/api/papers-api';
 import { userApi, UserResponse } from '@/lib/api/user-api';
 
 interface ConversationItem {
@@ -67,6 +68,15 @@ function ProjectHomePage() {
   const [isLoading, setIsLoading] = useState(false);
   // Lock current chat mode once a conversation starts to avoid type mix-ups
   const [lockedMode, setLockedMode] = useState<ChatMode['type'] | null>(null);
+
+  // Paper selector modal state
+  const [isPaperSelectorOpen, setIsPaperSelectorOpen] = useState(false);
+  const [paperSearch, setPaperSearch] = useState('');
+  const [paperPage, setPaperPage] = useState(1);
+  const [paperPageSize] = useState(10);
+  const [isLoadingPapers, setIsLoadingPapers] = useState(false);
+  const [papers, setPapers] = useState<any[]>([]);
+  const [papersTotal, setPapersTotal] = useState(0);
 
   // Utility function to ensure unique message IDs and remove duplicates
   const ensureUniqueMessages = (messages: ConversationHistoryMessage[]): ConversationHistoryMessage[] => {
@@ -165,6 +175,59 @@ function ProjectHomePage() {
     }
     
     return fixedMessages;
+  };
+
+  // Fetch papers for selector
+  const loadPapers = async () => {
+    if (!projectId) return;
+    setIsLoadingPapers(true);
+    try {
+      const resp = await papersApi.getPapers({
+        project_id: projectId,
+        page: paperPage,
+        size: paperPageSize,
+        search: paperSearch || undefined,
+      });
+      setPapers(resp.papers || []);
+      setPapersTotal(resp.total || 0);
+    } catch (err) {
+      console.error('Failed to load papers:', err);
+      setPapers([]);
+      setPapersTotal(0);
+    } finally {
+      setIsLoadingPapers(false);
+    }
+  };
+
+  // Auto-load papers when modal opens or params change
+  useEffect(() => {
+    if (isPaperSelectorOpen) {
+      loadPapers();
+    }
+  }, [isPaperSelectorOpen, paperPage, paperSearch, projectId]);
+
+  const openPaperSelector = () => {
+    if (lockedMode && lockedMode !== 'paper') return;
+    setChatMode((prev) => ({ ...prev, type: 'paper' }));
+    setIsPaperSelectorOpen(true);
+  };
+
+  const handleSelectPaper = (paper: any) => {
+    setChatMode({ type: 'paper', paper_id: paper.id, paper_title: paper.title });
+    setIsPaperSelectorOpen(false);
+  };
+
+  const Pagination = ({ total, page, size, onPage }: { total: number; page: number; size: number; onPage: (p: number)=>void }) => {
+    const totalPages = Math.max(1, Math.ceil(total / size));
+    return (
+      <div className="flex items-center justify-between mt-3">
+        <span className="text-xs text-muted-foreground">Page {page} of {totalPages}</span>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)}>Prev</Button>
+          <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => onPage(page + 1)}>Next</Button>
+        </div>
+      </div>
+    );
   };
 
   // Map backend conversation type to UI chat mode
@@ -445,9 +508,16 @@ function ProjectHomePage() {
       
       switch (chatMode.type) {
         case 'paper':
-          if (!chatMode.paper_id) throw new Error('No paper selected');
+          // Support single or multiple paper selection (max 3)
+          const selectedIds: string[] = Array.from(new Set([
+            ...(chatMode.paper_id ? [chatMode.paper_id] : []),
+            ...(((chatMode as any).paper_ids && Array.isArray((chatMode as any).paper_ids)) ? (chatMode as any).paper_ids.filter((x: string) => !!x) : [])
+          ]));
+          if (selectedIds.length === 0) throw new Error('No paper selected');
+          if (selectedIds.length > 3) throw new Error('You can select at most 3 papers');
           response = await agenticApi.paperChat(projectId, {
-            paper_id: chatMode.paper_id,
+            paper_ids: selectedIds,
+            paper_id: selectedIds.length === 1 ? selectedIds[0] : undefined,
             message: messageToSend,
             conversation_id: currentConversationId || undefined
           });
@@ -1029,7 +1099,7 @@ function ProjectHomePage() {
                 <Button 
                   variant={chatMode.type === 'paper' ? 'default' : 'outline'} 
                   size="sm"
-                  onClick={() => setChatMode({ type: 'paper' })}
+                  onClick={openPaperSelector}
                   className="flex-shrink-0 h-9 px-4"
                   disabled={lockedMode !== null && lockedMode !== 'paper'}
                   title={lockedMode && lockedMode !== 'paper' ? 'Finish or start New Chat to switch mode' : ''}
@@ -1052,6 +1122,29 @@ function ProjectHomePage() {
                   <span>Attach pdf</span>
                 </Button>
               </div>
+
+              {/* Selected paper indicator in paper mode */}
+              {chatMode.type === 'paper' && (chatMode.paper_id || (chatMode as any).paper_ids) && (
+                <div className="text-xs text-muted-foreground flex items-center gap-2">
+                  <span>Paper:</span>
+                  <span className="px-2 py-0.5 rounded bg-muted">
+                    {(() => {
+                      const idSet = new Set<string>();
+                      if (chatMode.paper_id) idSet.add(chatMode.paper_id);
+                      if ((chatMode as any).paper_ids) (chatMode as any).paper_ids.forEach((x: string) => idSet.add(x));
+                      const ids = Array.from(idSet);
+                      const count = ids.length;
+                      if (count > 1) {
+                        return `${count} papers selected`;
+                      }
+                      return chatMode.paper_title || ids[0];
+                    })()}
+                  </span>
+                  {!lockedMode && (
+                    <Button variant="ghost" size="sm" className="h-6 px-2" onClick={() => setIsPaperSelectorOpen(true)}>Change</Button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1074,6 +1167,66 @@ function ProjectHomePage() {
           onChange={handleFileInputChange}
           className="hidden"
         />
+        
+        {/* Paper Selector Modal */}
+        {isPaperSelectorOpen && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+            <div className="bg-background rounded-xl shadow-xl w-full max-w-2xl border">
+              <div className="p-4 border-b flex items-center justify-between">
+                <h3 className="text-base font-semibold">Select a paper</h3>
+                <Button variant="ghost" size="sm" onClick={() => setIsPaperSelectorOpen(false)}><X className="w-4 h-4" /></Button>
+              </div>
+              <div className="p-4 space-y-3">
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="Search papers by title..."
+                    value={paperSearch}
+                    onChange={(e) => { setPaperSearch(e.target.value); setPaperPage(1); }}
+                  />
+                </div>
+                <div className="max-h-80 overflow-y-auto rounded border">
+                  {isLoadingPapers ? (
+                    <div className="p-4 flex items-center gap-2 text-muted-foreground text-sm">
+                      <Loader2 className="w-4 h-4 animate-spin" /> Loading papers...
+                    </div>
+                  ) : papers.length === 0 ? (
+                    <div className="p-4 text-muted-foreground text-sm">No papers found.</div>
+                  ) : (
+                    <div className="divide-y">
+                      {papers.map((p) => {
+                        const currentMulti = (chatMode as any).paper_ids || [];
+                        const selected = (chatMode.paper_id && chatMode.paper_id === p.id) || currentMulti.includes(p.id);
+                        const toggleSelect = () => {
+                          let ids = new Set<string>(currentMulti);
+                          if (chatMode.paper_id && chatMode.paper_id !== p.id) ids.add(chatMode.paper_id);
+                          if (ids.has(p.id)) ids.delete(p.id); else ids.add(p.id);
+                          const nextIds = Array.from(ids).slice(0, 3);
+                          setChatMode({ type: 'paper', paper_id: nextIds[0] || p.id, paper_title: p.title, ...(nextIds.length > 1 ? { paper_ids: nextIds } : {}) });
+                        };
+                        return (
+                          <div key={p.id} className={`p-3 flex items-center justify-between hover:bg-muted/40 ${selected ? 'bg-muted/30' : ''}`}>
+                            <div className="min-w-0">
+                              <div className="text-sm font-medium truncate">{p.title || 'Untitled paper'}</div>
+                              {p.authors && (
+                                <div className="text-xs text-muted-foreground truncate">{Array.isArray(p.authors) ? p.authors.join(', ') : p.authors}</div>
+                              )}
+                            </div>
+                            <Button size="sm" variant={selected ? 'default' : 'outline'} onClick={toggleSelect}>{selected ? 'Selected' : 'Select'}</Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                <Pagination total={papersTotal} page={paperPage} size={paperPageSize} onPage={setPaperPage} />
+                <div className="flex items-center justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsPaperSelectorOpen(false)}>Close</Button>
+                  <Button onClick={() => setIsPaperSelectorOpen(false)}>Done</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       </div>
   );

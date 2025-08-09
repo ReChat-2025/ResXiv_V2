@@ -94,12 +94,13 @@ class AgenticRequest(BaseModel):
 
 class PaperChatRequest(BaseModel):
     """Request model for paper chat functionality"""
-    paper_id: str = Field(..., description="UUID of the paper to chat with")
+    paper_id: Optional[str] = Field(None, description="UUID of a single paper to chat with (legacy)")
+    paper_ids: Optional[List[str]] = Field(None, description="List of paper UUIDs (1-3) to chat with")
     message: str = Field(
         ...,
         min_length=1,
         max_length=8000,
-        description="User message about the paper"
+        description="User message about the paper(s)"
     )
     conversation_id: Optional[str] = Field(
         None,
@@ -109,10 +110,27 @@ class PaperChatRequest(BaseModel):
     @validator('paper_id')
     def validate_paper_id(cls, v):
         """Validate paper UUID format"""
+        if v is None:
+            return v
         try:
             uuid.UUID(v)
         except ValueError:
             raise ValueError('Invalid paper ID format - must be UUID')
+        return v
+    
+    @validator('paper_ids')
+    def validate_paper_ids(cls, v):
+        if v is None:
+            return v
+        if not isinstance(v, list) or len(v) == 0:
+            raise ValueError('paper_ids must be a non-empty list of UUIDs')
+        if len(v) > 3:
+            raise ValueError('You can select at most 3 papers')
+        for pid in v:
+            try:
+                uuid.UUID(pid)
+            except ValueError:
+                raise ValueError('Invalid paper ID format in paper_ids - must be UUIDs')
         return v
     
     @validator('message')
@@ -125,8 +143,11 @@ class PaperChatRequest(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "paper_id": "1cc36034-44e7-4263-83a6-1429ddaf942d",
-                "message": "What are the main contributions of this paper?",
+                "paper_ids": [
+                    "1cc36034-44e7-4263-83a6-1429ddaf942d",
+                    "8bbad3f6-4b8c-4edb-9f7e-3e5f7a2f9e21"
+                ],
+                "message": "Compare the methodologies of these papers",
                 "conversation_id": "550e8400-e29b-41d4-a716-446655440000"
             }
         }

@@ -47,9 +47,15 @@ const transformBackendMessage = (backendMsg: any): ConversationHistoryMessage =>
   
   // Get content for role detection
   const content = backendMsg.content || backendMsg.message || '';
+
+  // Prefer explicit metadata from backend over heuristics
+  const aiByMetadata = Boolean(backendMsg.metadata && backendMsg.metadata.ai_response === true);
+  if (aiByMetadata) {
+    role = 'assistant';
+  }
   
   // Override for obvious AI greetings/responses (even when backend says user)
-  if (backendMsg.sender_type === 'user' && (
+  if (!aiByMetadata && backendMsg.sender_type === 'user' && (
     content.includes('How can I assist you today') ||
     content.includes('Hello! How can I') ||
     content.includes("I'm here to help") ||
@@ -60,7 +66,7 @@ const transformBackendMessage = (backendMsg: any): ConversationHistoryMessage =>
   }
   
   // Fallback: Content-based role detection for edge cases
-  if (!backendMsg.sender_type) {
+  if (!aiByMetadata && !backendMsg.sender_type) {
     // If sender_type is missing, try to detect from content patterns
     if (content.startsWith('###') || 
         content.includes('Based on') || 
@@ -143,7 +149,8 @@ export interface ConversationList {
 }
 
 export interface PaperChatRequest {
-  paper_id: string;
+  paper_id?: string;
+  paper_ids?: string[]; // up to 3
   message: string;
   conversation_id?: string | null;
 }

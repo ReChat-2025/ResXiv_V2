@@ -378,14 +378,24 @@ async def paper_chat(
         pdf_chat_service = PDFChatService(session)
         await pdf_chat_service.initialize()
         
-        # Process paper chat
-        result = await pdf_chat_service.chat_with_paper(
-            paper_id=chat_request.paper_id,
-            project_id=str(project_id),
-            user_id=user_id,
-            message=chat_request.message,
-            conversation_id=chat_request.conversation_id
-        )
+        # Process paper chat for single or multiple papers
+        result = None
+        if chat_request.paper_ids and len(chat_request.paper_ids) > 0:
+            result = await pdf_chat_service.chat_with_papers(
+                paper_ids=chat_request.paper_ids,
+                project_id=str(project_id),
+                user_id=user_id,
+                message=chat_request.message,
+                conversation_id=chat_request.conversation_id
+            )
+        else:
+            result = await pdf_chat_service.chat_with_paper(
+                paper_id=chat_request.paper_id or "",
+                project_id=str(project_id),
+                user_id=user_id,
+                message=chat_request.message,
+                conversation_id=chat_request.conversation_id
+            )
         
         # Format response
         return PaperChatResponse(
