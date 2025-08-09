@@ -2,6 +2,7 @@
 "use client";
 import { useVerifyEmail } from "@/hooks/useVerifyEmail";
 import { Loader } from "@/components/ui/loader";
+import { ErrorMessage } from "@/components/ui/error-message";
 import VerifyEmailForm from "./VerifyEmailForm";
 
 export function VerifyEmailContent() {
@@ -10,7 +11,7 @@ export function VerifyEmailContent() {
   if (loading) return <Loader message="Verifying your email..." />;
 
   if (!valid) {
-    return <p className="text-destructive">Invalid or expired link</p>;
+    return <ErrorMessage message="Invalid or expired link" />;
   }
 
   return <VerifyEmailForm token={token!} />;

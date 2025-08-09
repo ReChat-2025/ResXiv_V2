@@ -19,14 +19,20 @@ export function AuthLayout({
   className = "" 
 }: AuthLayoutProps) {
   return (
-    <div className={`min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8 ${className}`}>
-      <div className="w-full max-w-md space-y-8">
-        {/* Header */}
-        {/* <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            {title}
-          </h1>
-        </div> */}
+    <div className={`min-h-screen bg-background ${className}`}>
+      {/* Logo Header */}
+      <div className="flex justify-start p-6">
+        <Link href="/projects" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+            <span className="text-primary-foreground text-sm font-bold">R</span>
+          </div>
+          <span className="font-bold text-lg">ResXiv</span>
+        </Link>
+      </div>
+
+      {/* Centered Auth Content */}
+      <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8" style={{ minHeight: 'calc(100vh - 120px)' }}>
+        <div className="w-full max-w-md space-y-8">
 
         {/* Main Card */}
         <Card>
@@ -54,6 +60,7 @@ export function AuthLayout({
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

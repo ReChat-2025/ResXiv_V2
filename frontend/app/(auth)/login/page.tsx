@@ -11,6 +11,7 @@ import { SocialLogin } from "@/components/auth/social-login";
 import { authConfig } from "@/lib/auth-config";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import { authApi } from "@/lib/api/auth-api";
+import { Message } from "@/components/ui/message";
 
 export default function LoginPage() {
   const config = authConfig.login;
@@ -37,15 +38,11 @@ export default function LoginPage() {
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {successMessage && (
-          <div className="p-3 text-sm text-green-800 bg-green-50 border border-green-200 rounded-md">
-            {successMessage}
-          </div>
+          <Message message={successMessage} type="success" variant="alert" />
         )}
 
         {errors.general && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-            {errors.general}
-          </div>
+          <Message message={errors.general} type="error" variant="alert" />
         )}
 
         <div className="space-y-4">
@@ -97,7 +94,7 @@ export default function LoginPage() {
       </form>
 
       {/* Social Login */}
-      {config.socialLogin.enabled && (
+      {/* {config.socialLogin.enabled && (
         <SocialLogin
           providers={config.socialLogin.providers}
           dividerText={config.socialLogin.dividerText}
@@ -118,7 +115,7 @@ export default function LoginPage() {
             }
           }}
         />
-      )}
+      )} */}
     </AuthLayout>
   );
 }

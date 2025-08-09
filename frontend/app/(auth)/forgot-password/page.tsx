@@ -2,9 +2,11 @@
 
 import { useForgotPasswordForm } from "@/hooks/useForgotPasswordForm";
 import { AuthLayout } from "@/components/auth/auth-layout";
+import { ErrorMessage } from "@/components/ui/error-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Message } from "@/components/ui/message";
 
 // Success view component
 function SuccessView({ email, onResend }: { email: string; onResend: () => void }) {
@@ -77,9 +79,7 @@ export default function ForgotPasswordPage() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* General Error */}
         {errors.general && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-            {errors.general}
-          </div>
+          <Message message={errors.general} type="error" variant="alert" />
         )}
 
         <div className="space-y-2">
@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
             className={errors.email ? 'border-destructive' : ''}
           />
           {errors.email && (
-            <p className="text-sm text-destructive">{errors.email}</p>
+            <ErrorMessage message={errors.email} showIcon={false} />
           )}
           <p className="text-sm text-muted-foreground">
             We'll send you a link to reset your password.

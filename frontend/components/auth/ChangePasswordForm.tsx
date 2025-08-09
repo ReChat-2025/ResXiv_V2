@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getValidationMessage } from "@/lib/auth-config";
 import { authApi } from "@/lib/api/auth-api";
+import { Message } from "@/components/ui/message";
+import { ErrorMessage } from "@/components/ui/error-message";
 
 interface FormData {
   currentPassword: string;
@@ -156,9 +158,7 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
 
           {/* General Error */}
           {errors.general && (
-            <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-              {errors.general}
-            </div>
+            <Message message={errors.general} type="error" variant="alert" />
           )}
 
           {/* Current Password Field */}
@@ -177,7 +177,7 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
               className={errors.currentPassword ? "border-destructive" : undefined}
             />
             {errors.currentPassword && (
-              <p className="text-sm text-destructive">{errors.currentPassword}</p>
+              <ErrorMessage message={errors.currentPassword} showIcon={false} />
             )}
           </div>
 
@@ -197,7 +197,7 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
               className={errors.newPassword ? "border-destructive" : undefined}
             />
             {errors.newPassword && (
-              <p className="text-sm text-destructive">{errors.newPassword}</p>
+              <ErrorMessage message={errors.newPassword} showIcon={false} />
             )}
             <p className="text-xs text-muted-foreground">
               Must contain uppercase, lowercase, number and special character
@@ -220,7 +220,7 @@ export function ChangePasswordForm({ onSuccess, className = "" }: ChangePassword
               className={errors.confirmNewPassword ? "border-destructive" : undefined}
             />
             {errors.confirmNewPassword && (
-              <p className="text-sm text-destructive">{errors.confirmNewPassword}</p>
+              <ErrorMessage message={errors.confirmNewPassword} showIcon={false} />
             )}
           </div>
 

@@ -7,7 +7,13 @@ class ApiConfig {
   private readonly baseUrl: string;
   
   private constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    // In development, use empty string to use Next.js API proxy
+    // In production, use the full API URL
+    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+      this.baseUrl = ''; // Use Next.js API proxy for localhost
+    } else {
+      this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    }
   }
   
   public static getInstance(): ApiConfig {

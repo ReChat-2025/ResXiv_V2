@@ -8,6 +8,7 @@ import { FormField } from "@/components/auth/form-field";
 import { SocialLogin } from "@/components/auth/social-login";
 import { useSignupForm } from "@/hooks/useSignupForm";
 import { authApi } from "@/lib/api/auth-api";
+import { Message } from "@/components/ui/message";
 
 export default function SignupPage() {
   const {
@@ -32,9 +33,7 @@ export default function SignupPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {errors.general && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-            {errors.general}
-          </div>
+          <Message message={errors.general} type="error" variant="alert" />
         )}
 
         <div className="grid grid-cols-2 gap-4">
@@ -84,7 +83,7 @@ export default function SignupPage() {
         </Button>
       </form>
 
-      {config.socialLogin.enabled && (
+      {/* {config.socialLogin.enabled && (
         <SocialLogin
           providers={config.socialLogin.providers}
           dividerText={config.socialLogin.dividerText}
@@ -105,7 +104,7 @@ export default function SignupPage() {
             }
           }}
         />
-      )}
+      )} */}
       
     </AuthLayout>
   );

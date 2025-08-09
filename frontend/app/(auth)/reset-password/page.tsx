@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { authConfig, getValidationMessage } from "@/lib/auth-config";
 import { authApi } from "@/lib/api/auth-api";
+import { Message } from "@/components/ui/message";
+import { ErrorMessage } from "@/components/ui/error-message";
 
 interface FormData {
   newPassword: string;
@@ -220,9 +222,7 @@ function ResetPasswordForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* General Error */}
         {errors.general && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-            {errors.general}
-          </div>
+          <Message message={errors.general} type="error" variant="alert" />
         )}
 
         {/* New Password */}
@@ -238,7 +238,7 @@ function ResetPasswordForm() {
             className={errors.newPassword ? 'border-destructive' : ''}
           />
           {errors.newPassword && (
-            <p className="text-sm text-destructive">{errors.newPassword}</p>
+            <ErrorMessage message={errors.newPassword} showIcon={false} />
           )}
         </div>
 
@@ -255,7 +255,7 @@ function ResetPasswordForm() {
             className={errors.confirmNewPassword ? 'border-destructive' : ''}
           />
           {errors.confirmNewPassword && (
-            <p className="text-sm text-destructive">{errors.confirmNewPassword}</p>
+            <ErrorMessage message={errors.confirmNewPassword} showIcon={false} />
           )}
         </div>
 
