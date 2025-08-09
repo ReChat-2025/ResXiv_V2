@@ -94,9 +94,12 @@ export const PdfViewer = React.forwardRef<PdfViewerHandle, PdfViewerProps>(({
     const container = containerRef.current;
     if (!container) return;
     const offsets: number[] = [];
-    pageRefs.current.forEach((el, idx) => {
-      if (!el) return offsets.push(0);
-      const top = el.offsetTop;
+    pageRefs.current.forEach((el) => {
+      if (!el) {
+        offsets.push(0);
+        return;
+      }
+      const top = el.offsetTop; // since all are within the same offsetParent (container child), offsetTop works
       offsets.push(top);
     });
     pageOffsetsRef.current = offsets;

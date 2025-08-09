@@ -531,6 +531,8 @@ const GraphVisualization: React.FC<GraphVisualizationProps> = ({ data, selectedN
   const iframeSelectionCleanupRef = useRef<null | (() => void)>(null);
   // Host element that wraps the PDF viewer (used to scope selection detection)
   const pdfHostRef = useRef<HTMLDivElement>(null);
+  // Chat input ref to focus programmatically
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   const handleZoomIn = () => setPdfZoom((z) => Math.min(z + 0.1, 2));
   const handleZoomOut = () => setPdfZoom((z) => Math.max(z - 0.1, 0.5));
@@ -1669,6 +1671,7 @@ const GraphVisualization: React.FC<GraphVisualizationProps> = ({ data, selectedN
                       onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
                       disabled={!selectedPaper || isProcessingMessage}
                       className="flex-1"
+                      ref={chatInputRef}
                     />
                     <Button 
                       onClick={handleSendMessage} 
