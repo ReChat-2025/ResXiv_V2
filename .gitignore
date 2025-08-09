@@ -124,6 +124,17 @@ backend/dmypy.json
 backend/repositories/*/
 !backend/repositories/.gitkeep
 
+# Generated data directories (runtime files, not source code)
+data/
+bib/
+xml/
+papers/
+
+# Backend static files and generated content
+backend/resxiv_backend/static/
+backend/resxiv_backend/uploads/
+backend/resxiv_backend/downloads/
+
 # Compiled LaTeX outputs
 backend/repositories/*/compilations/
 *.pdf
@@ -134,6 +145,12 @@ backend/repositories/*/compilations/
 *.synctex.gz
 *.fls
 *.fdb_latexmk
+*.bib
+*.xml
+
+# Legacy paths
+backend/debug/
+ResXiv_V2/bib/
 
 # Paper uploads and processed files
 backend/uploads/
