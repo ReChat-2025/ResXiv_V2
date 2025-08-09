@@ -414,7 +414,7 @@ async def paper_chat(
 async def drop_chat(
     request: Request,
     project_id: uuid.UUID,
-    file: UploadFile = File(..., description="PDF file to chat with"),
+    file: Optional[UploadFile] = File(None, description="PDF file to chat with (optional for continuation)"),
     message: str = Form(..., description="Your message about the PDF"),
     conversation_id: Optional[str] = Form(None, description="Optional conversation ID"),
     current_user: Dict[str, Any] = Depends(get_current_user_required),
@@ -434,7 +434,7 @@ async def drop_chat(
     
     **Requires:** Project read access
     **Rate Limited:** 10 requests per minute per user
-    **File Limit:** Configurable (default 50MB) for research papers
+    **File Limit:** Configurable (default 50MB) for research papers. File optional for follow-up turns.
     """
     # Verify read access
     if not project_access.get("can_read", False):
@@ -443,28 +443,29 @@ async def drop_chat(
             detail="Insufficient permissions to access this project"
         )
     
-    # Validate file type
-    if not file.filename or not file.filename.lower().endswith('.pdf'):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only PDF files are supported"
-        )
+    # Validate file type when provided
+    if file is not None:
+        if not file.filename or not file.filename.lower().endswith('.pdf'):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Only PDF files are supported"
+            )
     
     # Validate file size using configurable limit
     settings = get_settings()
     max_file_size = settings.agentic.max_pdf_upload_size_mb * 1024 * 1024
     
     # Log file information for debugging
-    file_size_mb = round(file.size / (1024 * 1024), 2) if file.size else 0
-    logger.info(f"Processing PDF upload: {file.filename} ({file_size_mb}MB)")
-    
-    if file.size and file.size > max_file_size:
-        max_size_mb = settings.agentic.max_pdf_upload_size_mb
-        logger.warning(f"File size rejected: {file_size_mb}MB > {max_size_mb}MB limit")
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"File size ({file_size_mb}MB) exceeds the maximum allowed size of {max_size_mb}MB"
-        )
+    if file is not None:
+        file_size_mb = round(file.size / (1024 * 1024), 2) if file.size else 0
+        logger.info(f"Processing PDF upload: {file.filename} ({file_size_mb}MB)")
+        if file.size and file.size > max_file_size:
+            max_size_mb = settings.agentic.max_pdf_upload_size_mb
+            logger.warning(f"File size rejected: {file_size_mb}MB > {max_size_mb}MB limit")
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail=f"File size ({file_size_mb}MB) exceeds the maximum allowed size of {max_size_mb}MB"
+            )
     
     try:
         user_id = str(current_user["user_id"])

@@ -28,6 +28,9 @@ from app.database.connection import get_mongodb_database
 
 logger = logging.getLogger(__name__)
 
+# Include the last 8 turns (16 messages) for context
+HISTORY_TURNS = 8
+
 
 class PDFChatService:
     """
@@ -165,17 +168,19 @@ class PDFChatService:
     @handle_service_errors("chat with dropped file")
     async def chat_with_dropped_file(
         self,
-        file: UploadFile,
+        file: Optional[UploadFile],
         project_id: str,
         user_id: str,
         message: str,
         conversation_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Chat with a newly uploaded PDF file within a project context.
+        Chat with a PDF in a project context. Works for both:
+        - First turn with a newly uploaded file (stores PDF context)
+        - Subsequent turns without re-upload (reuses stored context)
         
         Args:
-            file: Uploaded PDF file
+            file: Uploaded PDF file (optional for continuation)
             project_id: Project UUID for access control and organization
             user_id: User UUID
             message: User's message about the file
@@ -186,32 +191,22 @@ class PDFChatService:
         """
         start_time = time.time()
         
-        # Validate file
-        if not file.filename.lower().endswith('.pdf'):
-            raise ServiceError(
-                "Only PDF files are supported",
-                ErrorCodes.VALIDATION_ERROR
-            )
-        
-        # Create temporary file and extract content
-        file_id = str(uuid.uuid4())
-        pdf_content = await self._extract_content_from_upload(file, file_id)
-        
+        file_id: Optional[str] = None
+        pdf_content: Optional[str] = None
+        file_name: Optional[str] = None
+
         # Get or create conversation
+        conversation = None
         if conversation_id and conversation_id.strip() and conversation_id != "string":
             try:
-                conversation = await self.conversation_repo.get_by_id(uuid.UUID(conversation_id))
-                if not conversation or conversation.type != ConversationType.DROP.value:
-                    raise ServiceError(
-                        "Invalid conversation ID for drop chat",
-                        ErrorCodes.VALIDATION_ERROR
-                    )
+                candidate = await self.conversation_repo.get_by_id(uuid.UUID(conversation_id))
+                if candidate and candidate.type == ConversationType.DROP.value:
+                    conversation = candidate
+                else:
+                    logger.info("Provided conversation_id is missing or not DROP; creating a new DROP conversation")
             except ValueError:
-                raise ServiceError(
-                    "Invalid conversation ID format - must be a valid UUID",
-                    ErrorCodes.VALIDATION_ERROR
-                )
-        else:
+                logger.info("Provided conversation_id is not a valid UUID; creating a new DROP conversation")
+        if conversation is None:
             # Create new DROP conversation associated with project
             conversation = await self.conversation_repo.create(
                 type=ConversationType.DROP,
@@ -221,6 +216,39 @@ class PDFChatService:
             )
             await self.session.commit()
             conversation_id = str(conversation.id)
+        else:
+            conversation_id = str(conversation.id)
+        
+        # If file is provided, extract and persist context; otherwise, reuse stored context
+        if file is not None and getattr(file, 'filename', None):
+            if not file.filename.lower().endswith('.pdf'):
+                raise ServiceError(
+                    "Only PDF files are supported",
+                    ErrorCodes.VALIDATION_ERROR
+                )
+            file_id = str(uuid.uuid4())
+            pdf_content = await self._extract_content_from_upload(file, file_id)
+            file_name = file.filename
+            # Persist context for future turns
+            await self._ensure_drop_context(
+                conversation_id=conversation_id,
+                user_id=user_id,
+                project_id=project_id,
+                file_id=file_id,
+                file_name=file_name,
+                pdf_content=pdf_content
+            )
+        else:
+            # Reuse stored context
+            stored_content, ctx = await self._get_drop_context(conversation_id)
+            pdf_content = stored_content
+            file_id = ctx.get("file_id") if ctx else None
+            file_name = ctx.get("file_name") if ctx else None
+            if not pdf_content:
+                raise ServiceError(
+                    "No stored PDF context found for this conversation. Please upload the PDF again.",
+                    ErrorCodes.NOT_FOUND_ERROR
+                )
         
         # Get conversation history
         conversation_history = await self._get_conversation_history(conversation_id)
@@ -231,8 +259,8 @@ class PDFChatService:
             user_message=message,
             conversation_history=conversation_history,
             paper_metadata={
-                "filename": file.filename,
-                "file_size": file.size
+                "filename": file_name,
+                "file_size": getattr(file, 'size', None)
             }
         )
         
@@ -244,7 +272,7 @@ class PDFChatService:
             ai_response=ai_response,
             metadata={
                 "file_id": file_id,
-                "file_name": file.filename,
+                "file_name": file_name,
                 "conversation_type": "DROP",
                 "project_id": project_id
             }
@@ -260,13 +288,13 @@ class PDFChatService:
             "processing_time": processing_time,
             "timestamp": datetime.utcnow().isoformat(),
             "metadata": {
-                "file_name": file.filename,
+                "file_name": file_name,
                 "conversation_type": "DROP",
                 "project_id": project_id,
                 "user_id": user_id
             }
         }
-    
+
     async def _get_paper_content(self, paper) -> str:
         """Extract content from paper using existing processing service"""
         try:
@@ -419,8 +447,8 @@ As you analyze this paper, consider:
                 "content": f"Here is the research paper you'll be analyzing from a researcher's perspective:\n\n{paper_context}"
             })
             
-            # Add conversation history (last 10 messages)
-            for msg in conversation_history[-10:]:
+            # Add conversation history (last 16 messages = last 8 turns)
+            for msg in conversation_history[-HISTORY_TURNS*2:]:
                 # Determine if it's an AI response based on metadata
                 is_ai_response = msg.get("metadata", {}).get("ai_response", False)
                 role = "assistant" if is_ai_response else "user"
@@ -516,3 +544,62 @@ As you analyze this paper, consider:
         except Exception as e:
             logger.error(f"Failed to save chat messages: {e}")
             # Don't raise error for message saving failure 
+
+    async def _ensure_drop_context(
+        self,
+        conversation_id: str,
+        user_id: str,
+        project_id: str,
+        file_id: str,
+        file_name: str,
+        pdf_content: str
+    ) -> None:
+        """Ensure a system message exists storing the PDF text for future turns."""
+        try:
+            if self.mongo_db is None:
+                await self.initialize()
+            existing = await self.mongo_db.messages.find_one({
+                "conversation_id": conversation_id,
+                "message_type": "system",
+                "metadata.drop_pdf_context": True
+            })
+            if existing:
+                return
+            timestamp = datetime.utcnow()
+            context_msg = {
+                "conversation_id": conversation_id,
+                "message_id": str(uuid.uuid4()),
+                "sender_id": user_id,
+                "message": pdf_content,
+                "message_type": "system",
+                "timestamp": timestamp,
+                "created_at": timestamp,
+                "updated_at": timestamp,
+                "metadata": {
+                    "drop_pdf_context": True,
+                    "file_id": file_id,
+                    "file_name": file_name,
+                    "project_id": project_id
+                }
+            }
+            await self.mongo_db.messages.insert_one(context_msg)
+            logger.info(f"Stored drop PDF context for conversation {conversation_id}")
+        except Exception as e:
+            logger.warning(f"Failed to store drop PDF context: {e}")
+
+    async def _get_drop_context(self, conversation_id: str) -> tuple[str | None, Dict[str, Any]]:
+        """Fetch stored PDF text and metadata from the system context message."""
+        try:
+            if self.mongo_db is None:
+                await self.initialize()
+            doc = await self.mongo_db.messages.find_one({
+                "conversation_id": conversation_id,
+                "message_type": "system",
+                "metadata.drop_pdf_context": True
+            })
+            if not doc:
+                return None, {}
+            return doc.get("message", None), (doc.get("metadata", {}) or {})
+        except Exception as e:
+            logger.warning(f"Failed to retrieve drop PDF context: {e}")
+            return None, {} 

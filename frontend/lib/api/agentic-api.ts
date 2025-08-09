@@ -303,7 +303,14 @@ export const agenticApi = {
     }
 
     // Transform backend messages to frontend format
-    const transformedMessages = (data.messages || []).map(transformBackendMessage);
+    const filtered = (data.messages || []).filter((m: any) => {
+      // Hide system messages and stored PDF context messages from UI
+      if (!m) return false;
+      const isSystem = (m.message_type && m.message_type.toLowerCase() === 'system');
+      const isDropContext = Boolean(m.metadata && (m.metadata.drop_pdf_context === true));
+      return !(isSystem || isDropContext);
+    });
+    const transformedMessages = filtered.map(transformBackendMessage);
     
     // Sort messages by timestamp to ensure chronological order
     transformedMessages.sort((a: ConversationHistoryMessage, b: ConversationHistoryMessage) => 
@@ -546,7 +553,7 @@ export const agenticApi = {
    */
   async dropChat(
     projectId: string, 
-    file: File, 
+    file: File | null, 
     message: string, 
     conversationId?: string
   ): Promise<DropChatResponse> {
@@ -558,7 +565,9 @@ export const agenticApi = {
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    if (file) {
+      formData.append('file', file);
+    }
     formData.append('message', message);
     if (conversationId) {
       formData.append('conversation_id', conversationId);

@@ -65,6 +65,8 @@ function ProjectHomePage() {
   
   // UI state
   const [isLoading, setIsLoading] = useState(false);
+  // Lock current chat mode once a conversation starts to avoid type mix-ups
+  const [lockedMode, setLockedMode] = useState<ChatMode['type'] | null>(null);
 
   // Utility function to ensure unique message IDs and remove duplicates
   const ensureUniqueMessages = (messages: ConversationHistoryMessage[]): ConversationHistoryMessage[] => {
@@ -163,6 +165,22 @@ function ProjectHomePage() {
     }
     
     return fixedMessages;
+  };
+
+  // Map backend conversation type to UI chat mode
+  const mapConversationTypeToMode = (type: string): ChatMode['type'] => {
+    switch ((type || '').toUpperCase()) {
+      case 'AI':
+        return 'simple';
+      case 'DROP':
+        return 'drop';
+      case 'PDF':
+      case 'PAPER':
+        return 'paper';
+      case 'AGENTIC':
+      default:
+        return 'agentic';
+    }
   };
 
   // Auto-scroll to bottom when messages change
@@ -398,6 +416,12 @@ function ProjectHomePage() {
     if (!currentMessage.trim() || !projectId) return;
     
     setIsLoading(true);
+    // Prevent sending with a different mode than the one locked for this conversation
+    if (lockedMode && lockedMode !== chatMode.type) {
+      setIsLoading(false);
+      alert(`This conversation is in "${lockedMode}" mode. Click "New Chat" to switch modes.`);
+      return;
+    }
     
     // Add user message immediately
     const userMessage: ConversationHistoryMessage = {
@@ -430,10 +454,10 @@ function ProjectHomePage() {
           break;
           
         case 'drop':
-          if (!chatMode.uploaded_file) throw new Error('No file uploaded');
+          if (!chatMode.uploaded_file && !currentConversationId) throw new Error('No file uploaded');
           response = await agenticApi.dropChat(
             projectId,
-            chatMode.uploaded_file,
+            chatMode.uploaded_file || null,
             messageToSend,
             currentConversationId || undefined
           );
@@ -475,6 +499,11 @@ function ProjectHomePage() {
       setCurrentConversationId(response.conversation_id);
       }
 
+      // Lock the mode on first successful response within this conversation
+      if (!lockedMode) {
+        setLockedMode(chatMode.type);
+      }
+
     } catch (error) {
       console.error('Failed to send message:', error);
       
@@ -495,6 +524,7 @@ function ProjectHomePage() {
     setCurrentConversationId(projectConversation?.conversation_id || null);
     setCurrentMessage('');
     setChatMode({ type: 'agentic' });
+    setLockedMode(null);
     removeUploadedFile();
   };
 
@@ -503,6 +533,13 @@ function ProjectHomePage() {
     
     try {
       setCurrentConversationId(conversationId);
+      // Align UI mode and lock to the selected conversation type to avoid mix-ups
+      const selected = pastConversations.find(c => c.id === conversationId);
+      if (selected) {
+        const mode = mapConversationTypeToMode(selected.type);
+        setChatMode({ type: mode });
+        setLockedMode(mode);
+      }
       
       // Load the conversation history
       const history = await agenticApi.getConversationHistory(projectId, conversationId);
@@ -972,6 +1009,8 @@ function ProjectHomePage() {
                   size="sm"
                   onClick={() => setChatMode({ type: 'agentic' })}
                   className="flex-shrink-0 h-9 px-4"
+                  disabled={lockedMode !== null && lockedMode !== 'agentic'}
+                  title={lockedMode && lockedMode !== 'agentic' ? 'Finish or start New Chat to switch mode' : ''}
                 >
                   <Brain className="w-4 h-4 mr-2" />
                   <span>Agentic</span>
@@ -981,6 +1020,8 @@ function ProjectHomePage() {
                   size="sm"
                   onClick={() => setChatMode({ type: 'simple' })}
                   className="flex-shrink-0 h-9 px-4"
+                  disabled={lockedMode !== null && lockedMode !== 'simple'}
+                  title={lockedMode && lockedMode !== 'simple' ? 'Finish or start New Chat to switch mode' : ''}
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
                   <span>AI Chat</span>
@@ -990,6 +1031,8 @@ function ProjectHomePage() {
                   size="sm"
                   onClick={() => setChatMode({ type: 'paper' })}
                   className="flex-shrink-0 h-9 px-4"
+                  disabled={lockedMode !== null && lockedMode !== 'paper'}
+                  title={lockedMode && lockedMode !== 'paper' ? 'Finish or start New Chat to switch mode' : ''}
                 >
                   <Tag className="w-4 h-4 mr-2" />
                   <span>Tag papers</span>
@@ -1002,6 +1045,8 @@ function ProjectHomePage() {
                     fileInputRef.current?.click();
                   }}
                   className="flex-shrink-0 h-9 px-4"
+                  disabled={lockedMode !== null && lockedMode !== 'drop'}
+                  title={lockedMode && lockedMode !== 'drop' ? 'Finish or start New Chat to switch mode' : ''}
                 >
                   <Upload className="w-4 h-4 mr-2" />
                   <span>Attach pdf</span>

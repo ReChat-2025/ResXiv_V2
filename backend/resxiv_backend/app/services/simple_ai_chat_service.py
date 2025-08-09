@@ -22,6 +22,9 @@ from app.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
+# Include the last 8 turns (16 messages) for context
+HISTORY_TURNS = 8
+
 
 class SimpleAIChatService:
     """
@@ -203,8 +206,8 @@ class SimpleAIChatService:
                 }
             ]
             
-            # Add conversation history
-            for msg in history[-6:]:  # Last 6 messages for context
+            # Add conversation history (last 16 messages = last 8 turns)
+            for msg in history[-HISTORY_TURNS*2:]:
                 is_ai_response = msg.get("metadata", {}).get("ai_response", False)
                 role = "assistant" if is_ai_response else "user"
                 messages.append({
